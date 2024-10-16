@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 const heroSchema = new mongoose.Schema({
     logo: { type: String, required: true },
+    imagePublicId: { type: String, required: true },
     menu: [{ type: String, required: true }], 
     title: { type: String, required: true },
     description: { type: String, required: true },
