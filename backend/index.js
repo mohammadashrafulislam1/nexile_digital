@@ -2,6 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import { config as configDotenv } from "dotenv";
+import { heroRouter } from "./Router/hero.js";
 
 // Load environment variables
 configDotenv();
@@ -11,6 +12,9 @@ const port = process.env.PORT || 3000;
 
 // Middleware to parse JSON
 app.use(express.json());
+
+// ENDPOINT SETUP:
+app.use('/api/hero', heroRouter)
 
 // Check if the required environment variables are available
 if (!process.env.MnongoDB_User || !process.env.MnongoDB_Pass) {
