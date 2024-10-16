@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import cors from "cors";
 import { config as configDotenv } from "dotenv";
 import { heroRouter } from "./Router/hero.js";
+import { serviceRouter } from "./Router/services.js";
 
 // Load environment variables
 configDotenv();
@@ -15,6 +16,7 @@ app.use(express.json());
 
 // ENDPOINT SETUP:
 app.use('/api/hero', heroRouter)
+app.use('/api/service', serviceRouter)
 
 // Check if the required environment variables are available
 if (!process.env.MnongoDB_User || !process.env.MnongoDB_Pass) {
