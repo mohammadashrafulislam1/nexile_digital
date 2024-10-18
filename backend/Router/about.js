@@ -1,6 +1,6 @@
 import express from "express";
 import { upload } from "../Middleware/multer.js";
-import { addAboutUs, updateAboutUs } from "../Controllers/AboutController.js";
+import { addAboutUs, getAboutUs, updateAboutUs } from "../Controllers/AboutController.js";
 
 export const aboutRouter = express.Router();
 
@@ -25,5 +25,8 @@ aboutRouter.put(
     ]),
     updateAboutUs
 );
+
+// get about:
+aboutRouter.get('/', getAboutUs)
 
 export default aboutRouter;
