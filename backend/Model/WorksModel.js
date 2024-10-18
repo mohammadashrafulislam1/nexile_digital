@@ -1,36 +1,44 @@
 import mongoose from "mongoose";
 
 const showcaseSchema = new mongoose.Schema({
-  category: { type: String, required: true }, // Category of the showcase (e.g., Web Development, Video Editing)
-  title: { type: String, required: true }, // Title of the project
-  images: [{ type: String, required: true }], // Array of image URLs
-  technologies: [{ type: String, required: true }], // List of technologies used
-  client: { type: String, required: true }, // Name of the client
-  shortDescription: { type: String, required: true }, // Short description of the project
-  problemGoal: { type: String, required: true }, // Problem or goal faced by the client
-  servicesProvided: [{ type: String, required: true }], // List of services provided
-  projectTimeline: { type: String, required: true }, // Explanation of the project timeline
-  customSolutions: { type: String, required: true }, // Description of tailored solutions
+  category: { type: String}, // Category of the showcase (e.g., Web Development, Video Editing)
+  title: { type: String}, // Title of the project
+  projectUrl: { type: String}, // URL for the live project or case study
+  images: [{
+    publicId: { type: String, required: true }, // Public ID for image (for use with Cloudinary or similar services)
+    url: { type: String, required: true } // URL of the image
+  }], // Array of image objects with publicId and URL
+  client: { type: String}, // Name of the client
+  shortDescription: { type: String}, // Short description of the project
+  problemGoal: { type: String}, // Problem or goal faced by the client
+  servicesProvided: [{ type: String}], // List of services provided
+  projectTimeline: { type: String}, // Explanation of the project timeline
+  customSolutions: { type: String}, // Description of tailored solutions
   metricsData: { 
-    trafficIncrease: { type: String, required: false }, // Metrics on website traffic
-    conversionRateImprovement: { type: String, required: false }, // Metrics on conversion rates
-    pageSpeedImprovement: { type: String, required: false }, // Page speed metrics
-    seoImprovements: { type: String, required: false }, // SEO improvement metrics
-    videoEngagement: { type: String, required: false } // Video engagement metrics
+    trafficIncrease: { type: String}, // Metrics on website traffic
+    conversionRateImprovement: { type: String}, // Metrics on conversion rates
+    pageSpeedImprovement: { type: String}, // Page speed metrics
+    seoImprovements: { type: String}, // SEO improvement metrics
+    videoEngagement: { type: String} // Video engagement metrics
   },
   clientTestimonial: { type: mongoose.Schema.Types.ObjectId, ref: 'ClientTestimonial' }, // Reference to ClientTestimonial model
   techStack: [{ 
     title: {type: String, required: true},
     description: {type: String, required: true},
-    image: {type: String, required: true},
+    image: {type: String, required: true},   
+    publicId: { type: String, required: true },
    }], // Technologies and tools used
-  pluginsIntegrations: [{ type: String, required: false }], // Plugins or integrations used
-  callToAction: { type: String, required: true } // Call-to-action message
-}, { timestamps: true }); // Automatically add createdAt and updatedAt timestamps
-
+   tags: [{ type: String }], // Array of tags/keywords for easier categorization and search
+   isFeatured: { type: Boolean, default: false }, // Mark whether this showcase is featured
+   completionDate: { type: Date }, // Date when the project was completed
+   metaDescription: { type: String, required: false }, // SEO meta description for the project
+   metaKeywords: [{ type: String }], // SEO meta keywords for the project
+  created_at: { type: Date,
+    default: Date.now} 
+});
 const worksSchema = new mongoose.Schema({
-  sectionTitle: { type: String, required: true }, // Title for the works section
-  description: { type: String, required: true }, // Description for the works section
+  sectionTitle: { type: String}, // Title for the works section
+  description: { type: String}, // Description for the works section
   showcases: [showcaseSchema] // Array of showcases
 });
 

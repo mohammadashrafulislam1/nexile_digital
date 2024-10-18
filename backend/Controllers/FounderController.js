@@ -12,8 +12,10 @@ export const addFounder = async (req, res) => {
             return res.status(400).json({ message: "All fields are required." });
         }
 
-        // Upload image to Cloudinary
-        const result = await cloudinary.uploader.upload(req.file.path);
+        // Upload image to Cloudinary with folder specification
+        const result = await cloudinary.uploader.upload(req.file.path, {
+            folder: 'nexile_digital/founders' // Specify folder for founder images
+        });
         
         // Create a new founder entry
         const newFounder = new FounderModel({
@@ -69,8 +71,10 @@ export const updateFounder = async (req, res) => {
             // Delete the old image from Cloudinary
             await cloudinary.uploader.destroy(founder.publicId);
 
-            // Upload the new image to Cloudinary
-            const result = await cloudinary.uploader.upload(req.file.path);
+            // Upload the new image to Cloudinary with folder specification
+            const result = await cloudinary.uploader.upload(req.file.path, {
+                folder: 'nexile_digital/founders' // Specify folder for founder images
+            });
             updatedData.founderImage = result.secure_url; // Update image URL
             updatedData.publicId = result.public_id; // Update public ID
         }
