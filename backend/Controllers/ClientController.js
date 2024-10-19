@@ -114,3 +114,38 @@ export const getAllClients = async (req, res) => {
         res.status(500).json({ message: 'Error fetching team members' });
     }
 };
+
+
+// Controller to delete a client
+export const deleteClient = async (req, res) => {
+    try {
+        const { id, clientId } = req.params; // Section ID and Client ID
+
+        // Find the client section by ID
+        const clientSection = await ClientModel.findById(id);
+        if (!clientSection) {
+            return res.status(404).json({ success: false, message: 'Client section not found' });
+        }
+
+        // Find the client within the section by clientId
+        const client = clientSection.clients.id(clientId);
+        if (!client) {
+            return res.status(404).json({ success: false, message: 'Client not found' });
+        }
+
+        // If the client has an image, delete it from Cloudinary
+        if (client.publicId) {
+            await cloudinary.uploader.destroy(client.publicId);
+        }
+
+        // Remove the client from the array
+        client.remove();
+
+        // Save the updated section after removal
+        await clientSection.save();
+
+        res.status(200).json({ success: true, message: 'Client deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};

@@ -1,5 +1,5 @@
 import express from "express";
-import { addClient, getAllClients, updateClient } from "../Controllers/ClientController.js";
+import { addClient, deleteClient, getAllClients, updateClient } from "../Controllers/ClientController.js";
 import { upload } from "../Middleware/multer.js";
 
 export const clientRouter = express.Router();
@@ -13,3 +13,6 @@ clientRouter.put('/:id/:clientId', upload.single('image'), updateClient);
 
 // Get all clients:
 clientRouter.get('/', getAllClients)
+
+// Route to delete an existing client
+clientRouter.delete('/:id/:clientId', deleteClient);
