@@ -12,6 +12,7 @@ import { workRouter } from "./Router/works.js";
 import { clientTestimonialsRouter } from "./Router/clientTestimonial.js";
 import { clientRouter } from "./Router/client.js";
 import { faqRouter } from "./Router/faq.js";
+import { blogsRouter } from "./Router/blogs.js";
 
 // Load environment variables
 configDotenv();
@@ -33,6 +34,7 @@ app.use('/api/works', workRouter)
 app.use('/api/clientTestimonial', clientTestimonialsRouter)
 app.use('/api/client', clientRouter)
 app.use('/api/faq', faqRouter)
+app.use('/api/blog', blogsRouter)
 
 // Check if the required environment variables are available
 if (!process.env.MnongoDB_User || !process.env.MnongoDB_Pass) {
