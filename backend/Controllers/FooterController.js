@@ -113,3 +113,46 @@ export const updateFooter = async (req, res) => {
         res.status(500).json({ success: false, message: error.message });
     }
 };
+
+// Controller to get an existing footer entry by ID
+export const getFooterById = async (req, res) => {
+    try {
+        const { id } = req.params; // Footer entry ID
+        
+        // Find the footer entry by ID
+        const footerEntry = await FooterModel.findById(id);
+        if (!footerEntry) {
+            return res.status(404).json({ success: false, message: 'Footer entry not found' });
+        }
+
+        // Return the footer entry
+        res.status(200).json({ success: true, data: footerEntry });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+// Controller to delete an existing footer entry by ID
+export const deleteFooter = async (req, res) => {
+    try {
+        const { id } = req.params; // Footer entry ID
+        
+        // Find the footer entry by ID
+        const footerEntry = await FooterModel.findById(id);
+        if (!footerEntry) {
+            return res.status(404).json({ success: false, message: 'Footer entry not found' });
+        }
+
+        // If the footer entry has a logo, delete it from Cloudinary
+        if (footerEntry.public_id) {
+            await cloudinary.uploader.destroy(footerEntry.public_id);
+        }
+
+        // Delete the footer entry from the database
+        await FooterModel.findByIdAndDelete(id);
+
+        res.status(200).json({ success: true, message: 'Footer entry deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+};
