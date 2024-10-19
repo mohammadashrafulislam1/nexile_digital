@@ -129,3 +129,29 @@ export const getBlogWithName = async (req, res) => {
         res.status(500).json({ success: false, message: 'Error fetching blog' });
     }
 };
+
+// Controller to delete a blog post
+export const deleteBlog = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        // Find the blog post by ID
+        const blogPost = await BlogsModel.findById(id);
+        if (!blogPost) {
+            return res.status(404).json({ success: false, message: 'Blog post not found' });
+        }
+
+        // If the blog post has an associated image, delete it from Cloudinary
+        if (blogPost.public_id) {
+            await cloudinary.uploader.destroy(blogPost.public_id);
+        }
+
+        // Delete the blog post from the database
+        await blogPost.remove();
+
+        res.status(200).json({ success: true, message: 'Blog post deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting blog post:', error);
+        res.status(500).json({ success: false, message: 'Error deleting blog post' });
+    }
+};

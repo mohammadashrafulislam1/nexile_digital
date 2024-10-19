@@ -1,6 +1,6 @@
 import express from "express";
 import { upload } from "../Middleware/multer.js";
-import { addBlog, getAllBlogs, getBlogWithName, updateBlog } from "../Controllers/BlogsController.js";
+import { addBlog, deleteBlog, getAllBlogs, getBlogWithName, updateBlog } from "../Controllers/BlogsController.js";
 
 export const blogsRouter = express.Router();
 
@@ -15,3 +15,6 @@ blogsRouter.get('/', getAllBlogs)
 
 // get blog with name:
 blogsRouter.get('/:title', getBlogWithName)
+
+// delete blog router:
+blogsRouter.delete('/:id', deleteBlog);
