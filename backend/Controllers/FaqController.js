@@ -71,3 +71,22 @@ export const getAllFaq = async (req, res) => {
     }
   };
 
+
+// Delete hero with id
+export const deleteFaq = async (req, res) => {
+    try {
+      const { id } = req.params; 
+      const existingFaq = await FaqModel.findById(id);
+      if (!existingFaq) {
+        return res.status(404).json({ message: 'Faq not found' });
+      }
+  
+      // Delete the Faq from the database
+      await FaqModel.findByIdAndDelete(id);
+  
+      res.status(200).json({ message: 'Faq deleted successfully' });
+    } catch (error) {
+      console.error('Error deleting Faq:', error);
+      res.status(500).json({ message: 'Error deleting Faq' });
+    }
+  };

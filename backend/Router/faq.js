@@ -1,5 +1,5 @@
 import express from "express";
-import { addFaq, getAllFaq, updateFaq } from "../Controllers/FaqController.js";
+import { addFaq, deleteFaq, getAllFaq, updateFaq } from "../Controllers/FaqController.js";
 
 export const faqRouter = express.Router();
 
@@ -11,3 +11,6 @@ faqRouter.put('/:id/:faqId', updateFaq)
 
 // get all faq:
 faqRouter.get('/', getAllFaq)
+
+// delete faq:
+faqRouter.delete('/:id', deleteFaq)
