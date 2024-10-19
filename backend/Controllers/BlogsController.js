@@ -97,3 +97,14 @@ export const updateBlog = async (req, res) => {
         res.status(500).json({ success: false, message: error.message });
     }
 };
+
+// Get all Team Members
+export const getAllBlogs = async (req, res) => {
+    try {
+        const blogs = await BlogsModel.find();
+        res.status(200).json(blogs);
+    } catch (error) {
+        console.error('Error fetching team members:', error);
+        res.status(500).json({ message: 'Error fetching team members' });
+    }
+};
