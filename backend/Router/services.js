@@ -14,7 +14,7 @@ serviceRouter.put("/:id", upload.single("image"), updateService);
 // Route to get all services
 serviceRouter.get("/", getAllServices);
 
-serviceRouter.get("/:id", getOneService);
+serviceRouter.get("/:title", getOneService);
 
 // Route to delete a service
 serviceRouter.delete("/:id", deleteService);

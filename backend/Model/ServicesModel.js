@@ -25,6 +25,8 @@ const subServiceSchema = new mongoose.Schema({
 const servicesSchema = new mongoose.Schema({
   title: { type: String}, 
   description: { type: String},
+  MetaTitle: { type: String}, 
+  MetaDescription: { type: String},
   services: [subServiceSchema],
 }, { timestamps: true });
 

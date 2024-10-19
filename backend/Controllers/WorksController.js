@@ -201,6 +201,31 @@ export const getAllShowcases = async (req, res) => {
     }
   };
   
+  // Function to get a showcase by title
+export const getShowcaseByTitle = async (req, res) => {
+  try {
+    const { title } = req.params; // Get the title from the request parameters
+
+    // Find the work document that contains the showcase with the specified title
+    const work = await WorksModel.findOne({ "showcases.title": title });
+
+    if (!work) {
+      return res.status(404).json({ success: false, message: 'Work not found' });
+    }
+
+    // Filter the showcase to find the one with the matching title
+    const showcase = work.showcases.find(showcase => showcase.title === title);
+
+    if (!showcase) {
+      return res.status(404).json({ success: false, message: 'Showcase not found' });
+    }
+
+    res.status(200).json({ success: true, showcase });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
 // Function to delete a showcase
 export const deleteShowcase = async (req, res) => {
     try {

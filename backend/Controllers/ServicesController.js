@@ -45,6 +45,8 @@ export const addService = async (req, res) => {
       const newService = new ServicesModel({
         title: req.body.title,
         description: req.body.description,
+        MetaTitle: req.body.MetaTitle,
+        MetaDescription: req.body.MetaDescription,
         services: processedSubServices,
         image: serviceImageUrl, // Add the main service image URL here
       });
@@ -71,6 +73,8 @@ export const updateService = async (req, res) => {
       const updatedData = {
         title: req.body.title || existingService.title,
         description: req.body.description || existingService.description,
+        MetaTitle: req.body.MetaTitle || existingService.MetaTitle,
+        MetaDescription: req.body.MetaDescription || existingService.MetaDescription,
         services: existingService.services,
       };
   
@@ -127,10 +131,10 @@ export const updateService = async (req, res) => {
   
 // Get one service by ID
 export const getOneService = async (req, res) => {
-    const { id } = req.params;
+    const { title } = req.params;
 
     try {
-        const findService = await ServicesModel.findById(id);
+        const findService = await ServicesModel.findOne({title: title});
         if (!findService) {
             return res.status(404).json({ message: 'Service not found' });
         } else {
