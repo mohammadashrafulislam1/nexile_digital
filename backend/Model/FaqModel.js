@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 const faqDetailsSchema = new mongoose.Schema({
     title: { type: String },
     description: { type: String },
-})
+}, { timestamps: true })
 
 const faqSchema = new mongoose.Schema({
     sectionTitle: { type: String}, 
