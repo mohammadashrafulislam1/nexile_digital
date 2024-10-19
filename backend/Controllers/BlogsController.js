@@ -108,3 +108,24 @@ export const getAllBlogs = async (req, res) => {
         res.status(500).json({ message: 'Error fetching team members' });
     }
 };
+
+// get blog with name:
+export const getBlogWithName = async (req, res) => {
+    const { title } = req.params;
+    
+    try {
+        // Search for a blog with the given title
+        const findBlog = await BlogsModel.findOne({ title: title });
+
+        // If no blog is found, return a 404 response
+        if (!findBlog) {
+            return res.status(404).json({message: 'Blog not found' });
+        }
+
+        // If the blog is found, return it in the response
+        res.status(200).json({findBlog });
+    } catch (error) {
+        console.error('Error fetching blog:', error);
+        res.status(500).json({ success: false, message: 'Error fetching blog' });
+    }
+};
