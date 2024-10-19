@@ -1,5 +1,5 @@
 import express from "express";
-import { addFaq, updateFaq } from "../Controllers/FaqController.js";
+import { addFaq, getAllFaq, updateFaq } from "../Controllers/FaqController.js";
 
 export const faqRouter = express.Router();
 
@@ -8,3 +8,6 @@ faqRouter.post('/', addFaq)
 
 // update faq:
 faqRouter.put('/:id/:faqId', updateFaq)
+
+// get all faq:
+faqRouter.get('/', getAllFaq)
