@@ -1,6 +1,6 @@
 import fs from 'fs';
 import { cloudinary } from '../utils/cloudinary.js';
-import { ClientModel } from '../models/ClientModel.js'; // Adjust the path if necessary
+import { ClientModel } from '../Model/ClientModel.js';
 
 // Helper function for uploading images to Cloudinary
 const uploadImage = async (filePath) => {
@@ -101,5 +101,16 @@ export const updateClient = async (req, res) => {
         res.status(200).json({ success: true, data: clientSection });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
+    }
+};
+
+// Get all Team Members
+export const getAllClients = async (req, res) => {
+    try {
+        const clients = await ClientModel.find();
+        res.status(200).json(clients);
+    } catch (error) {
+        console.error('Error fetching team members:', error);
+        res.status(500).json({ message: 'Error fetching team members' });
     }
 };
