@@ -4,6 +4,7 @@ import { endPoint } from "../Components/ForAll/ForAll";
 import { FaTrashAlt } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import { Link } from "react-router-dom";
 
 const Hero = () => {
   const [loading, setLoading] = useState(true);
@@ -149,10 +150,10 @@ const Hero = () => {
   
   return (
     <div className="p-8">
-      <div className="breadcrumbs text-sm">
+      <div className="breadcrumbs text-sm lg:w-1/2 md:w-[80%] w-[90%] mx-auto">
         <ul className="my-6">
           <li>
-            <a>
+            <Link to="/" className="inline-flex items-center gap-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -165,7 +166,7 @@ const Hero = () => {
                   d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
               </svg>
               Home
-            </a>
+            </Link>
           </li>
           <li>
             <span className="inline-flex items-center gap-2">
@@ -335,7 +336,7 @@ const Hero = () => {
 
       {selectedHero && (
         <button
-          className="btn btn-error mt-4"
+          className="btn bg-red-600 text-white w-[30%] mx-auto flex justify-center mt-4"
           onClick={handleDelete}
         >
           Delete Hero
