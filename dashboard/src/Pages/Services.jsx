@@ -43,30 +43,32 @@ const Services = () => {
   };
 
   const handleAddService = async (e) => {
-    e.preventDefault();
-    
+    e.preventDefault();    
     // Create FormData to handle file uploads
-    const formData = new FormData();
-    
+    const formData = new FormData();  
     formData.append("title", title);
     formData.append("description", description);
     formData.append("metaTitle", metaTitle);
     formData.append("metaDescription", metaDescription);
-  
     // Add sub-services to FormData
     subServices.forEach((subService, index) => {
+       // Append the sub-service ID if it exists
+       if (subService._id) {
+        formData.append(`services[${index}][id]`, subService._id); // Append service ID
+    }
       formData.append(`services[${index}][title]`, subService.title);
       formData.append(`services[${index}][subtitle]`, subService.subtitle);
-  
       // Add the main image for the sub-service
       if (subService.image) {
         formData.append(`image`, subService.image);  // Matches 'image' field in multer config
       }
-  
       // Add approach section (images should match multer's field config)
       subService.approach.forEach((approach, appIndex) => {
         formData.append(`services[${index}][approach][${appIndex}][title]`, approach.title);
         formData.append(`services[${index}][approach][${appIndex}][description]`, approach.description);
+        if (approach._id) {
+          formData.append(`services[${index}][approach][${appIndex}][id]`, approach._id); // Append approach ID
+      }
         if (approach.image) {
           formData.append(`approachImages`, approach.image);  // Matches 'approachImages' in multer config
         }
@@ -76,6 +78,9 @@ const Services = () => {
       subService.process.forEach((process, procIndex) => {
         formData.append(`services[${index}][process][${procIndex}][title]`, process.title);
         formData.append(`services[${index}][process][${procIndex}][description]`, process.description);
+        if (process._id) {
+          formData.append(`services[${index}][process][${procIndex}][id]`, process._id); // Append process ID
+      }
         if (process.image) {
           formData.append(`processImages`, process.image);  // Matches 'processImages' in multer config
         }
@@ -85,6 +90,9 @@ const Services = () => {
       subService.why.forEach((why, whyIndex) => {
         formData.append(`services[${index}][why][${whyIndex}][title]`, why.title);
         formData.append(`services[${index}][why][${whyIndex}][description]`, why.description);
+        if (why._id) {
+          formData.append(`services[${index}][why][${whyIndex}][id]`, why._id); // Append why ID
+      }
         if (why.image) {
           formData.append(`whyImages`, why.image);  // Matches 'whyImages' in multer config
         }
@@ -94,6 +102,9 @@ const Services = () => {
       subService.tools.forEach((tool, toolIndex) => {
         formData.append(`services[${index}][tools][${toolIndex}][title]`, tool.title);
         formData.append(`services[${index}][tools][${toolIndex}][description]`, tool.description);
+        if (tool._id) {
+          formData.append(`services[${index}][tools][${toolIndex}][id]`, tool._id); // Append tool ID
+      }
         if (tool.image) {
           formData.append(`toolsImages`, tool.image);  // Matches 'toolsImages' in multer config
         }
@@ -197,11 +208,12 @@ const Services = () => {
     setSelectedService(service);
     setTitle(service.title);
     setDescription(service.description);
-    console.log(service)
+    console.log(service.services)
     setMetaTitle(service.MetaTitle);
     setMetaDescription(service.MetaDescription);
     setSubServices(service.services); // Assuming service has a subServices property
   };
+  
 
   const handleDeleteService =async(service)=>{
     console.log(service)
@@ -327,7 +339,7 @@ const Services = () => {
               <label className="block text-sm font-medium mb-1">Sub-Service Image</label>
               {
                 subService?.mainServiceImage && 
-              <img src={subService?.mainServiceImage} alt={subService?.title} className="w-24 h-24"/>
+              <img src={subService?.mainServiceImage} alt={subService?.title} className="w-24 h-24 mb-2"/>
               }
               <input
                 type="file"
@@ -523,6 +535,9 @@ const Services = () => {
             <button type="button" onClick={() => addNewItem(index, "tools")} className="text-blue-700 font-bold text-3xl mb-4">
               +
             </button>
+            <button type="button"  className="bg-black text-white btn btn-sm w-full mb-4">
+              Save Sub Service
+            </button>
           </div>
         ))}
         <button type="button" onClick={() => setSubServices([...subServices, {
@@ -544,11 +559,32 @@ const Services = () => {
 
       <div className="mt-8">
         <h2 className="text-lg font-semibold mb-3">Existing Services</h2>
-        <div className="grid md:grid-cols-2 md:gap-6">
-        {services.map((service) => (
+        <div className="">
+        {services.map((service, index) => (
           <div key={service.id} className="p-4 bg-white border rounded-2xl mb-4">
-            <h3 className="font-semibold">{service.title}</h3>
-            <p>{service.description}</p>
+            <h3 className="font-semibold text-xl">Section Title: {service.title}</h3>
+            <p className="text-[16px]">Section Description: {service.description}</p>
+            <div>
+              <h3 className="text-2xl font-semibold my-5">Sub Services:</h3>
+              <div className="md:grid lg:grid-cols-3 md:grid-cols-2 gap-3">
+              {
+              service?.services?.map((subService) => 
+          <div key={subService._id} className="p-4 bg-white border rounded-2xl mb-4 flex justify-between items-start">
+            <div className="flex gap-3 items-center">
+            <img src={subService?.mainServiceImage} alt={`${subService.title}, Nexile Digital`} className="w-32 h-32 rounded-2xl"/>
+            <div><h3 className="font-semibold text-xl">{subService.title}</h3>
+            <p>{subService.subtitle}</p></div>
+            </div>
+            
+            <button onClick={() => handleDeleteSubService(index)} className="text-red-600 ml-4">
+              <FaTrashAlt/>
+            </button>
+            
+            </div>
+            )
+            }
+              </div>
+            </div>
             <button onClick={() => handleEditService(service)} className="text-blue-600">
               Edit
             </button>
