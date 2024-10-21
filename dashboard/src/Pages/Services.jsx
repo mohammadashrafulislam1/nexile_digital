@@ -3,9 +3,11 @@ import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { endPoint } from "../Components/ForAll/ForAll"; // Ensure this points to your API endpoint
 import { FaTrashAlt } from "react-icons/fa";
+import axios from "axios";
 
 const Services = () => {
   const [services, setServices] = useState([]);
+  const [selectedService, setSelectedService] = useState(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [metaTitle, setMetaTitle] = useState("");
@@ -102,17 +104,27 @@ const Services = () => {
     
     try {
       setLoading(true); // Start loading
-  
-      const response = await fetch(`${endPoint}/service`, {
-        method: "POST",
-        body: formData, // Send FormData instead of JSON
-      });
-  
-      if (response.ok) {
-        toast.success("Service added successfully!");
-        fetchAllServices(); // Refresh the list
+      let response;
+
+      // Check if we are updating or adding a new service
+      if (selectedService) {
+        response = await fetch(`${endPoint}/service/${selectedService._id}`, {
+          method: "PUT",
+          body: formData,
+        });
       } else {
-        toast.error("Failed to add service.");
+        response = await fetch(`${endPoint}/service`, {
+          method: "POST",
+          body: formData,
+        });
+      }
+
+      if (response.ok) {
+        toast.success(selectedService ? "Service updated successfully!" : "Service added successfully!");
+        fetchAllServices(); // Refresh the list
+        resetForm(); // Reset the form after submission
+      } else {
+        toast.error("Failed to add/update service.");
       }
     } catch (error) {
       console.error("Error adding service:", error);
@@ -151,31 +163,6 @@ const Services = () => {
   };
 
 
-  const handleSaveSubService = async (subService, index) => {
-    try {
-      setLoading(true); // Start loading
-      // Handle image uploads for each section of the sub-service
-      const uploadedApproaches = await Promise.all(
-        subService.approach.map(async (approach) => {
-          if (approach.image) {
-            approach.image = await uploadImage(approach.image);
-          }
-          return approach;
-        })
-      );
-
-      const updatedSubServices = [...subServices];
-      updatedSubServices[index].approach = uploadedApproaches;
-      setSubServices(updatedSubServices);
-      toast.success("Sub-Service saved successfully!");
-    } catch (error) {
-      console.error("Error saving sub-service:", error);
-      toast.error("Error saving sub-service");
-    } finally {
-      setLoading(false); // End loading
-    }
-  };
-
   const handleDeleteSubService = (index) => {
     const newSubServices = subServices.filter((_, i) => i !== index);
     setSubServices(newSubServices);
@@ -203,6 +190,26 @@ const Services = () => {
         <span className="loading loading-bars loading-lg"></span>
       </div>
     );
+  
+  }
+  console.log(selectedService, subServices)
+  const handleEditService = (service) => {
+    setSelectedService(service);
+    setTitle(service.title);
+    setDescription(service.description);
+    console.log(service)
+    setMetaTitle(service.MetaTitle);
+    setMetaDescription(service.MetaDescription);
+    setSubServices(service.services); // Assuming service has a subServices property
+  };
+
+  const handleDeleteService =async(service)=>{
+    console.log(service)
+   // Make DELETE request to your API
+   await axios.delete(`${endPoint}/service/${service?._id}`);
+   toast.success(`Service: ${service?.title} deleted successfully`);
+   const updatedServices = services.filter(service => service._id !== service?._id);
+   setServices(updatedServices)
   }
 
   return (
@@ -275,7 +282,7 @@ const Services = () => {
         </div>
 
         {/* Sub-service fields */}
-        {subServices.map((subService, index) => (
+        {subServices?.map((subService, index) => (
           <div key={index} className="mb-6 p-4 border border-gray-300 rounded-2xl">
             <div className="flex justify-between mb-8"><h3 className="text-lg font-semibold">Sub-Service {index + 1}</h3>
             <button type="button" onClick={() => handleDeleteSubService(index)} className="text-red-600 md:pr-4">
@@ -318,6 +325,10 @@ const Services = () => {
              {/* Sub-Service Image */}
              <div className="mb-4">
               <label className="block text-sm font-medium mb-1">Sub-Service Image</label>
+              {
+                subService?.mainServiceImage && 
+              <img src={subService?.mainServiceImage} alt={subService?.title} className="w-24 h-24"/>
+              }
               <input
                 type="file"
                 onChange={(e) => handleFileChange(index, "image", null, e.target.files[0])}
@@ -357,6 +368,10 @@ const Services = () => {
                   placeholder="Approach Description"
                   required
                 />
+                 {
+                approach?.image && 
+                <img src={approach?.image} alt={approach?.title} className="w-24 h-24"/>
+              }
                 <input
                   type="file"
                   onChange={(e) => handleFileChange(index, "approach", approachIndex, e.target.files[0])}
@@ -400,6 +415,10 @@ const Services = () => {
                   placeholder="Process Description"
                   required
                 />
+                {
+                process?.image && 
+                <img src={process?.image} alt={process?.title} className="w-24 h-24"/>
+              }
                 <input
                   type="file"
                   onChange={(e) => handleFileChange(index, "process", processIndex, e.target.files[0])}
@@ -443,6 +462,10 @@ const Services = () => {
                   placeholder="Why Description"
                   required
                 />
+                {
+                  whyItem?.image &&
+                <img src={whyItem?.image} alt={whyItem?.title} className="w-24 h-24"/>
+                }
                 <input
                   type="file"
                   onChange={(e) => handleFileChange(index, "why", whyIndex, e.target.files[0])}
@@ -486,6 +509,10 @@ const Services = () => {
                   placeholder="Tool Description"
                   required
                 />
+                {
+                  tool?.image &&
+                  <img src={tool?.image} alt={tool?.title} className="w-24 h-24"/>
+                }
                 <input
                   type="file"
                   onChange={(e) => handleFileChange(index, "tools", toolIndex, e.target.files[0])}
@@ -495,9 +522,6 @@ const Services = () => {
             ))}
             <button type="button" onClick={() => addNewItem(index, "tools")} className="text-blue-700 font-bold text-3xl mb-4">
               +
-            </button>
-            <button type="button" onClick={() => handleSaveSubService(subService, index)} className="btn btn-sm w-full bg-black text-white">
-              Save Sub-Service
             </button>
           </div>
         ))}
@@ -510,13 +534,31 @@ const Services = () => {
           why: [{ title: "", description: "", image: "" }],
           tools: [{ title: "", description: "", image: "" }],
           portfolio: [{ title: "", description: "", image: "" }],
-        }])} className="btn btn-primary mb-4">
+        }])} className="btn btn-sm bg-black text-white mb-4">
           Add New Sub-Service
         </button>
-        <button type="submit" className="btn bg-blue-700 w-full text-white">
-          Submit All Services
+        <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded">
+          {selectedService ? "Update Service" : "Add Service"}
         </button>
       </form>
+
+      <div className="mt-8">
+        <h2 className="text-lg font-semibold mb-3">Existing Services</h2>
+        <div className="grid md:grid-cols-2 md:gap-6">
+        {services.map((service) => (
+          <div key={service.id} className="p-4 bg-white border rounded-2xl mb-4">
+            <h3 className="font-semibold">{service.title}</h3>
+            <p>{service.description}</p>
+            <button onClick={() => handleEditService(service)} className="text-blue-600">
+              Edit
+            </button>
+            <button onClick={() => handleDeleteService(service)} className="text-red-600 ml-4">
+              Delete
+            </button>
+          </div>
+        ))}
+        </div>
+      </div>
     </div>
   );
 };
