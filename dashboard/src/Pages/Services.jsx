@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { endPoint } from "../Components/ForAll/ForAll"; // Ensure this points to your API endpoint
+import { FaTrashAlt } from "react-icons/fa";
 
 const Services = () => {
   const [services, setServices] = useState([]);
@@ -17,7 +18,6 @@ const Services = () => {
     process: [{ title: "", description: "", image: "" }],
     why: [{ title: "", description: "", image: "" }],
     tools: [{ title: "", description: "", image: "" }],
-    portfolio: [{ title: "", description: "", image: "" }],
   }]);
   const [loading, setLoading] = useState(false); // New loading state
 
@@ -42,19 +42,75 @@ const Services = () => {
 
   const handleAddService = async (e) => {
     e.preventDefault();
-    const serviceData = { title, description, metaTitle, metaDescription, services: subServices };
-    setLoading(true); // Start loading
-
+    
+    // Create FormData to handle file uploads
+    const formData = new FormData();
+    
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("metaTitle", metaTitle);
+    formData.append("metaDescription", metaDescription);
+  
+    // Add sub-services to FormData
+    subServices.forEach((subService, index) => {
+      formData.append(`services[${index}][title]`, subService.title);
+      formData.append(`services[${index}][subtitle]`, subService.subtitle);
+  
+      // Add the main image for the sub-service
+      if (subService.image) {
+        formData.append(`image`, subService.image);  // Matches 'image' field in multer config
+      }
+  
+      // Add approach section (images should match multer's field config)
+      subService.approach.forEach((approach, appIndex) => {
+        formData.append(`services[${index}][approach][${appIndex}][title]`, approach.title);
+        formData.append(`services[${index}][approach][${appIndex}][description]`, approach.description);
+        if (approach.image) {
+          formData.append(`approachImages`, approach.image);  // Matches 'approachImages' in multer config
+        }
+      });
+  
+      // Add process section
+      subService.process.forEach((process, procIndex) => {
+        formData.append(`services[${index}][process][${procIndex}][title]`, process.title);
+        formData.append(`services[${index}][process][${procIndex}][description]`, process.description);
+        if (process.image) {
+          formData.append(`processImages`, process.image);  // Matches 'processImages' in multer config
+        }
+      });
+  
+      // Add why section
+      subService.why.forEach((why, whyIndex) => {
+        formData.append(`services[${index}][why][${whyIndex}][title]`, why.title);
+        formData.append(`services[${index}][why][${whyIndex}][description]`, why.description);
+        if (why.image) {
+          formData.append(`whyImages`, why.image);  // Matches 'whyImages' in multer config
+        }
+      });
+  
+      // Add tools section
+      subService.tools.forEach((tool, toolIndex) => {
+        formData.append(`services[${index}][tools][${toolIndex}][title]`, tool.title);
+        formData.append(`services[${index}][tools][${toolIndex}][description]`, tool.description);
+        if (tool.image) {
+          formData.append(`toolsImages`, tool.image);  // Matches 'toolsImages' in multer config
+        }
+      });
+    });
+  
+    console.log("FormData:", Array.from(formData.entries()));  // Log FormData to inspect
+    
     try {
+      setLoading(true); // Start loading
+  
       const response = await fetch(`${endPoint}/service`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(serviceData),
+        body: formData, // Send FormData instead of JSON
       });
+  
       if (response.ok) {
         toast.success("Service added successfully!");
         fetchAllServices(); // Refresh the list
-        resetForm(); // Reset form after successful submission
       } else {
         toast.error("Failed to add service.");
       }
@@ -65,6 +121,8 @@ const Services = () => {
       setLoading(false); // End loading
     }
   };
+  
+  
 
   const resetForm = () => {
     setTitle("");
@@ -79,32 +137,19 @@ const Services = () => {
       process: [{ title: "", description: "", image: "" }],
       why: [{ title: "", description: "", image: "" }],
       tools: [{ title: "", description: "", image: "" }],
-      portfolio: [{ title: "", description: "", image: "" }],
     }]);
   };
 
   const handleFileChange = (index, sectionType, sectionIndex, file) => {
     const newSubServices = [...subServices];
-    newSubServices[index][sectionType][sectionIndex].image = file;
+    if (sectionType === "image") {
+      newSubServices[index].image = file; // Handle main sub-service image
+    } else {
+      newSubServices[index][sectionType][sectionIndex].image = file; // Handle images for sections like approach, process, etc.
+    }
     setSubServices(newSubServices);
   };
 
-  const uploadImage = async (file) => {
-    const formData = new FormData();
-    formData.append("image", file);
-
-    const uploadResponse = await fetch(`${endPoint}/upload`, {
-      method: "POST",
-      body: formData,
-    });
-
-    if (uploadResponse.ok) {
-      const uploadedData = await uploadResponse.json();
-      return uploadedData.imageUrl; // Adjust based on your API response
-    } else {
-      throw new Error("Image upload failed");
-    }
-  };
 
   const handleSaveSubService = async (subService, index) => {
     try {
@@ -162,7 +207,7 @@ const Services = () => {
 
   return (
     <div className="p-6">
-      <div className="breadcrumbs text-sm lg:w-1/2 md:w-[80%] w-[90%] mx-auto">
+      <div className="breadcrumbs text-sm lg:w-1/2 md:w-[80%] w-[96%] mx-auto">
         <ul className="my-6">
           <li>
             <Link to="/" className="inline-flex items-center gap-2 text-blue-600 hover:underline">
@@ -178,7 +223,7 @@ const Services = () => {
         <ToastContainer />
       </div>
 
-      <form onSubmit={handleAddService} className="lg:w-1/2 md:w-[80%] w-[90%] mx-auto bg-white p-6 rounded-2xl shadow-md">
+      <form onSubmit={handleAddService} className="lg:w-1/2 md:w-[80%] w-[96%] mx-auto bg-white p-6 rounded-2xl shadow-md">
         {/* Meta Title */}
         <div className="mb-4">
           <label className="block text-sm font-medium mb-1">Meta Title</label>
@@ -231,8 +276,11 @@ const Services = () => {
 
         {/* Sub-service fields */}
         {subServices.map((subService, index) => (
-          <div key={index} className="mb-6 p-4 border border-gray-300 rounded">
-            <h3 className="text-lg font-semibold">Sub-Service {index + 1}</h3>
+          <div key={index} className="mb-6 p-4 border border-gray-300 rounded-2xl">
+            <div className="flex justify-between mb-8"><h3 className="text-lg font-semibold">Sub-Service {index + 1}</h3>
+            <button type="button" onClick={() => handleDeleteSubService(index)} className="text-red-600 md:pr-4">
+             <FaTrashAlt/>
+            </button></div>
             {/* Sub-Service Title */}
             <div className="mb-4">
               <label className="block text-sm font-medium mb-1">Sub-Service Title</label>
@@ -267,10 +315,20 @@ const Services = () => {
               />
             </div>
 
+             {/* Sub-Service Image */}
+             <div className="mb-4">
+              <label className="block text-sm font-medium mb-1">Sub-Service Image</label>
+              <input
+                type="file"
+                onChange={(e) => handleFileChange(index, "image", null, e.target.files[0])}
+                className="w-full"
+              />
+            </div>
+
             {/* Approach Section */}
             <h4 className="font-semibold mb-2">Approach</h4>
             {subService.approach.map((approach, approachIndex) => (
-              <div key={approachIndex} className="mb-4 p-2 border rounded bg-gray-100">
+              <div key={approachIndex} className="mb-4 p-4 border rounded-2xl bg-white">
                 <div className="flex justify-between">
                   <input
                     type="text"
@@ -284,8 +342,8 @@ const Services = () => {
                     placeholder="Approach Title"
                     required
                   />
-                  <button type="button" onClick={() => removeItem(index, "approach", approachIndex)} className="btn btn-danger">
-                    Delete
+                  <button type="button" onClick={() => removeItem(index, "approach", approachIndex)} className="text-red-600 md:pr-4">
+                  <FaTrashAlt/>
                   </button>
                 </div>
                 <textarea
@@ -306,14 +364,14 @@ const Services = () => {
                 />
               </div>
             ))}
-            <button type="button" onClick={() => addNewItem(index, "approach")} className="btn btn-primary mb-4">
-              Add Approach
+            <button type="button" onClick={() => addNewItem(index, "approach")} className="text-blue-700 font-bold text-3xl mb-4">
+              +
             </button>
 
             {/* Process Section */}
             <h4 className="font-semibold mb-2">Process</h4>
             {subService.process.map((process, processIndex) => (
-              <div key={processIndex} className="mb-4 p-2 border rounded bg-gray-100">
+              <div key={processIndex} className="mb-4 p-4 border rounded-2xl bg-white">
                 <div className="flex justify-between">
                   <input
                     type="text"
@@ -327,8 +385,8 @@ const Services = () => {
                     placeholder="Process Title"
                     required
                   />
-                  <button type="button" onClick={() => removeItem(index, "process", processIndex)} className="btn btn-danger">
-                    Delete
+                  <button type="button" onClick={() => removeItem(index, "process", processIndex)} className="text-red-600 md:pr-4">
+                  <FaTrashAlt/>
                   </button>
                 </div>
                 <textarea
@@ -349,14 +407,14 @@ const Services = () => {
                 />
               </div>
             ))}
-            <button type="button" onClick={() => addNewItem(index, "process")} className="btn btn-primary mb-4">
-              Add Process
+            <button type="button" onClick={() => addNewItem(index, "process")} className="text-blue-700 font-bold text-3xl mb-4">
+             +
             </button>
 
             {/* Why Section */}
             <h4 className="font-semibold mb-2">Why</h4>
             {subService.why.map((whyItem, whyIndex) => (
-              <div key={whyIndex} className="mb-4 p-2 border rounded bg-gray-100">
+              <div key={whyIndex} className="mb-4 p-4 border rounded-2xl bg-white">
                 <div className="flex justify-between">
                   <input
                     type="text"
@@ -370,8 +428,8 @@ const Services = () => {
                     placeholder="Why Title"
                     required
                   />
-                  <button type="button" onClick={() => removeItem(index, "why", whyIndex)} className="btn btn-danger">
-                    Delete
+                  <button type="button" onClick={() => removeItem(index, "why", whyIndex)} className="text-red-600 md:pr-4">
+                  <FaTrashAlt/>
                   </button>
                 </div>
                 <textarea
@@ -392,14 +450,14 @@ const Services = () => {
                 />
               </div>
             ))}
-            <button type="button" onClick={() => addNewItem(index, "why")} className="btn btn-primary mb-4">
-              Add Why
+            <button type="button" onClick={() => addNewItem(index, "why")} className="text-blue-700 font-bold text-3xl mb-4">
+              +
             </button>
 
             {/* Tools Section */}
             <h4 className="font-semibold mb-2">Tools</h4>
             {subService.tools.map((tool, toolIndex) => (
-              <div key={toolIndex} className="mb-4 p-2 border rounded bg-gray-100">
+              <div key={toolIndex} className="mb-4 p-4 border rounded-2xl bg-white">
                 <div className="flex justify-between">
                   <input
                     type="text"
@@ -409,12 +467,12 @@ const Services = () => {
                       newSubServices[index].tools[toolIndex].title = e.target.value;
                       setSubServices(newSubServices);
                     }}
-                    className="w-3/4 p-2 border rounded"
+                    className="w-[90%] p-2 border rounded"
                     placeholder="Tool Title"
                     required
                   />
-                  <button type="button" onClick={() => removeItem(index, "tools", toolIndex)} className="btn btn-danger">
-                    Delete
+                  <button type="button" onClick={() => removeItem(index, "tools", toolIndex)} className="text-red-600 md:pr-4">
+                    <FaTrashAlt/>
                   </button>
                 </div>
                 <textarea
@@ -435,57 +493,10 @@ const Services = () => {
                 />
               </div>
             ))}
-            <button type="button" onClick={() => addNewItem(index, "tools")} className="btn btn-primary mb-4">
-              Add Tool
+            <button type="button" onClick={() => addNewItem(index, "tools")} className="text-blue-700 font-bold text-3xl mb-4">
+              +
             </button>
-
-            {/* Portfolio Section */}
-            <h4 className="font-semibold mb-2">Portfolio</h4>
-            {subService.portfolio.map((portfolioItem, portfolioIndex) => (
-              <div key={portfolioIndex} className="mb-4 p-2 border rounded bg-gray-100">
-                <div className="flex justify-between">
-                  <input
-                    type="text"
-                    value={portfolioItem.title}
-                    onChange={(e) => {
-                      const newSubServices = [...subServices];
-                      newSubServices[index].portfolio[portfolioIndex].title = e.target.value;
-                      setSubServices(newSubServices);
-                    }}
-                    className="w-3/4 p-2 border rounded"
-                    placeholder="Portfolio Title"
-                    required
-                  />
-                  <button type="button" onClick={() => removeItem(index, "portfolio", portfolioIndex)} className="btn btn-danger">
-                    Delete
-                  </button>
-                </div>
-                <textarea
-                  value={portfolioItem.description}
-                  onChange={(e) => {
-                    const newSubServices = [...subServices];
-                    newSubServices[index].portfolio[portfolioIndex].description = e.target.value;
-                    setSubServices(newSubServices);
-                  }}
-                  className="w-full p-2 border rounded mt-2"
-                  placeholder="Portfolio Description"
-                  required
-                />
-                <input
-                  type="file"
-                  onChange={(e) => handleFileChange(index, "portfolio", portfolioIndex, e.target.files[0])}
-                  className="mt-2"
-                />
-              </div>
-            ))}
-            <button type="button" onClick={() => addNewItem(index, "portfolio")} className="btn btn-primary mb-4">
-              Add Portfolio Item
-            </button>
-
-            <button type="button" onClick={() => handleDeleteSubService(index)} className="btn btn-danger">
-              Delete Sub-Service
-            </button>
-            <button type="button" onClick={() => handleSaveSubService(subService, index)} className="btn btn-success">
+            <button type="button" onClick={() => handleSaveSubService(subService, index)} className="btn btn-sm w-full bg-black text-white">
               Save Sub-Service
             </button>
           </div>
@@ -502,7 +513,7 @@ const Services = () => {
         }])} className="btn btn-primary mb-4">
           Add New Sub-Service
         </button>
-        <button type="submit" className="btn btn-success">
+        <button type="submit" className="btn bg-blue-700 w-full text-white">
           Submit All Services
         </button>
       </form>
