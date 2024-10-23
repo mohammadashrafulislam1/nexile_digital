@@ -34,5 +34,5 @@ workRouter.get('/:id/:showcaseId', getShowcaseById);
 workRouter.delete('/:id/:showcaseId', deleteShowcase);
 
 // get showcase by title
-worksRouter.get("/:title", getShowcaseByTitle);
+workRouter.get("/:title", getShowcaseByTitle);
   

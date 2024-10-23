@@ -9,25 +9,15 @@ const sectionSchema = new mongoose.Schema({
 });
 
 // Sub-service schema for individual services within a main service
-const subServiceSchema = new mongoose.Schema({
+const servicesSchema = new mongoose.Schema({
   title: { type: String}, 
-  image: { type: String},
-  imagePublicId: { type: String},
+  mainServiceImage: { type: String},
+  mainServiceImagePublicId: { type: String},
   subtitle: { type: String},
   approach: { type: [sectionSchema]},
   process: { type: [sectionSchema]}, 
   why: { type: [sectionSchema]},
   tools: { type: [sectionSchema]}, 
-  portfolio: { type: [sectionSchema]},
-});
-
-// Main service schema for broader categories like Web Development, Web Design, SEO, etc.
-const servicesSchema = new mongoose.Schema({
-  title: { type: String}, 
-  description: { type: String},
-  MetaTitle: { type: String}, 
-  MetaDescription: { type: String},
-  services: [subServiceSchema],
 }, { timestamps: true });
 
 export const ServicesModel = mongoose.model('Service', servicesSchema);

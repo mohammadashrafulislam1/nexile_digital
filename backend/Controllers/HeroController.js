@@ -10,10 +10,14 @@ export const addHero = async (req, res) => {
     if (!req.file) {
       return res.status(400).json({ message: 'No logo uploaded' });
     }
-
+    console.log(req.body)
+// Ensure `menu` is an array of objects
+if (!Array.isArray(req.body.menu)) {
+  return res.status(400).json({ error: "Menu must be an array of objects." });
+}
     // Upload logo to Cloudinary
     const result = await cloudinary.uploader.upload(req.file.path, {
-      folder: 'nexile digital', 
+      folder: 'nexile digital/hero', 
     });
 
     // Delete the file from the local server after upload
@@ -70,7 +74,7 @@ export const updateHero = async (req, res) => {
         await cloudinary.uploader.destroy(existingHero.imagePublicId); // Ensure you have this field in your schema
         // Upload new logo to Cloudinary
         const result = await cloudinary.uploader.upload(req.file.path, {
-          folder: 'nexile digital', // Cloudinary folder
+          folder: 'nexile digital/hero', // Cloudinary folder
         });
         updatedData.logo = result.secure_url; // Update the logo with new URL
         updatedData.imagePublicId = result.public_id; // Store the public ID for future deletions

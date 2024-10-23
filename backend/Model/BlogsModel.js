@@ -9,7 +9,7 @@ const blogsSchema = new mongoose.Schema({
     metaTitle: { type: String}, 
     metaDescription: { type: String}, 
     tags: [{ type: String}], 
-    created_at: {type: Data}
+    created_at: { type: Date, default: Date.now },
 })
 
 export const BlogsModel = mongoose.model('blogs', blogsSchema);
