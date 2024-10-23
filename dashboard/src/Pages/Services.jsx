@@ -1,241 +1,151 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
-import { endPoint } from "../Components/ForAll/ForAll"; // Ensure this points to your API endpoint
+import { endPoint } from "../Components/ForAll/ForAll";
 import { FaTrashAlt } from "react-icons/fa";
 import axios from "axios";
+import { BsPencilSquare } from "react-icons/bs";
 
 const Services = () => {
   const [services, setServices] = useState([]);
-  const [selectedService, setSelectedService] = useState(null);
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [metaTitle, setMetaTitle] = useState("");
-  const [metaDescription, setMetaDescription] = useState("");
-  const [subServices, setSubServices] = useState([{
+  const [selectedService, setSelectedService] = useState({
     title: "",
-    image: "",
     subtitle: "",
+    // Ensure each section is initialized with one default item
     approach: [{ title: "", description: "", image: "" }],
     process: [{ title: "", description: "", image: "" }],
     why: [{ title: "", description: "", image: "" }],
     tools: [{ title: "", description: "", image: "" }],
-  }]);
-  const [loading, setLoading] = useState(false); // New loading state
+  });
+  const [loading, setLoading] = useState(false);
+  const [mainServiceImage, setMainServiceImage] = useState(null);
 
-  // Fetch all services on component mount
   useEffect(() => {
     fetchAllServices();
   }, []);
 
   const fetchAllServices = async () => {
     try {
-      setLoading(true); // Start loading
-      const response = await fetch(`${endPoint}/service`);
-      const data = await response.json();
-      setServices(data);
+      setLoading(true);
+      const response = await axios.get(`${endPoint}/service`);
+      setServices(response.data);
     } catch (error) {
       console.error("Error fetching services:", error);
       toast.error("Error fetching services");
     } finally {
-      setLoading(false); // End loading
+      setLoading(false);
     }
   };
 
   const handleAddService = async (e) => {
-    e.preventDefault();    
-    // Create FormData to handle file uploads
-    const formData = new FormData();  
-    formData.append("title", title);
-    formData.append("description", description);
-    formData.append("metaTitle", metaTitle);
-    formData.append("metaDescription", metaDescription);
+    e.preventDefault();
+    const formData = new FormData();
     
-    // Add sub-services to FormData
-    if (Array.isArray(subServices) && subServices.length > 0) {
-        subServices.forEach((subService, index) => {
-            // Append the sub-service ID if it exists
-            if (subService._id) {
-                formData.append(`services[${index}][id]`, subService._id); // Append service ID
-            }
-            formData.append(`services[${index}][title]`, subService.title);
-            formData.append(`services[${index}][subtitle]`, subService.subtitle);
-            
-            // Add the main image for the sub-service
-            if (subService.image) {
-                formData.append(`mainServiceImage`, subService.image); // Change to mainServiceImage for the main service image
-            }
+    formData.append("title", selectedService?.title || "");
+    formData.append("subtitle", selectedService?.subtitle || "");
+    formData.append("mainServiceImage", mainServiceImage);
 
-            // Add approach section
-            if (Array.isArray(subService.approach)) {
-                subService.approach.forEach((approach, appIndex) => {
-                    formData.append(`services[${index}][approach][${appIndex}][title]`, approach.title);
-                    formData.append(`services[${index}][approach][${appIndex}][description]`, approach.description);
-                    if (approach._id) {
-                        formData.append(`services[${index}][approach][${appIndex}][id]`, approach._id); // Append approach ID
-                    }
-                    if (approach.image) {
-                        formData.append(`approachImages`, approach.image);  // Appending approach image
-                    }
-                });
-            }
+    ["approach", "process", "why", "tools"].forEach((section) => {
+      selectedService?.[section]?.forEach((item, index) => {
+        formData.append(`${section}[${index}][title]`, item.title);
+        formData.append(`${section}[${index}][description]`, item.description);
+        if (item.image instanceof File) {
+          formData.append(`${section}[image]`, item.image);
+        }
+      });
+    });
 
-            // Add process section
-            if (Array.isArray(subService.process)) {
-                subService.process.forEach((process, procIndex) => {
-                    formData.append(`services[${index}][process][${procIndex}][title]`, process.title);
-                    formData.append(`services[${index}][process][${procIndex}][description]`, process.description);
-                    if (process._id) {
-                        formData.append(`services[${index}][process][${procIndex}][id]`, process._id); // Append process ID
-                    }
-                    if (process.image) {
-                        formData.append(`processImages`, process.image);  // Appending process image
-                    }
-                });
-            }
-
-            // Add why section
-            if (Array.isArray(subService.why)) {
-                subService.why.forEach((why, whyIndex) => {
-                    formData.append(`services[${index}][why][${whyIndex}][title]`, why.title);
-                    formData.append(`services[${index}][why][${whyIndex}][description]`, why.description);
-                    if (why._id) {
-                        formData.append(`services[${index}][why][${whyIndex}][id]`, why._id); // Append why ID
-                    }
-                    if (why.image) {
-                        formData.append(`whyImages`, why.image);  // Appending why image
-                    }
-                });
-            }
-
-            // Add tools section
-            if (Array.isArray(subService.tools)) {
-                subService.tools.forEach((tool, toolIndex) => {
-                    formData.append(`services[${index}][tools][${toolIndex}][title]`, tool.title);
-                    formData.append(`services[${index}][tools][${toolIndex}][description]`, tool.description);
-                    if (tool._id) {
-                        formData.append(`services[${index}][tools][${toolIndex}][id]`, tool._id); // Append tool ID
-                    }
-                    if (tool.image) {
-                        formData.append(`toolsImages`, tool.image);  // Appending tool image
-                    }
-                });
-            }
-        });
-    }
-
-    console.log("FormData:", Array.from(formData.entries()));  // Log FormData to inspect
-    
     try {
-        setLoading(true); // Start loading
-        let response;
+      setLoading(true);
+      let response;
 
-        // Check if we are updating or adding a new service
-        if (selectedService) {
-            response = await fetch(`${endPoint}/service/${selectedService._id}`, {
-                method: "PUT",
-                body: formData,
-            });
-        } else {
-            response = await fetch(`${endPoint}/service`, {
-                method: "POST",
-                body: formData,
-            });
-        }
+      if (selectedService?._id) {
+        response = await fetch(`${endPoint}/service/${selectedService._id}`, {
+          method: "PUT",
+          body: formData,
+        });
+      } else {
+        response = await fetch(`${endPoint}/service`, {
+          method: "POST",
+          body: formData,
+        });
+      }
 
-        if (response.ok) {
-            toast.success(selectedService ? "Service updated successfully!" : "Service added successfully!");
-            fetchAllServices(); // Refresh the list
-        } else {
-            toast.error("Failed to add/update service.");
-        }
+      if (response.ok) {
+        toast.success(selectedService ? "Service updated successfully!" : "Service added successfully!");
+        fetchAllServices();
+      } else {
+        toast.error("Failed to add/update service.");
+      }
     } catch (error) {
-        console.error("Error adding service:", error);
-        toast.error("Error adding service");
+      console.error("Error adding service:", error);
+      toast.error("Error adding service");
     } finally {
-        setLoading(false); // End loading
+      setLoading(false);
     }
-};
+  };
 
+  const handleFileChange = (section, index, file) => {
+    const updatedService = { ...selectedService };
+    updatedService[section][index].image = file;
+    setSelectedService(updatedService);
+  };
 
+  const handleMainImageChange = (file) => {
+    setMainServiceImage(file);
+  };
+
+  const handleDeleteService = async (service) => {
+    try {
+      await axios.delete(`${endPoint}/service/${service._id}`);
+      toast.success(`Service: ${service.title} deleted successfully`);
+      fetchAllServices();
+    } catch (error) {
+      toast.error("Error deleting service");
+    }
+  };
+
+  const addNewItem = (section) => {
+    const updatedService = { ...selectedService };
+    // Initialize section with an empty array if it's undefined
+    if (!updatedService[section]) {
+      updatedService[section] = [];
+    }
+    updatedService[section].push({ title: "", description: "", image: "" });
+    setSelectedService(updatedService);
+  };
   
-  
-
   const resetForm = () => {
-    setTitle("");
-    setDescription("");
-    setMetaTitle("");
-    setMetaDescription("");
-    setSubServices([{
+    setSelectedService({
       title: "",
-      image: "",
       subtitle: "",
+      // Ensure each section is initialized with one default item
       approach: [{ title: "", description: "", image: "" }],
       process: [{ title: "", description: "", image: "" }],
       why: [{ title: "", description: "", image: "" }],
       tools: [{ title: "", description: "", image: "" }],
-    }]);
+    });
+    setMainServiceImage(null);
+  };
+  
+
+  const removeItem = (section, itemIndex) => {
+    const updatedService = { ...selectedService };
+    updatedService[section] = updatedService[section].filter((_, i) => i !== itemIndex);
+    setSelectedService(updatedService);
   };
 
-  const handleFileChange = (index, sectionType, sectionIndex, file) => {
-    const newSubServices = [...subServices];
-    if (sectionType === "image") {
-      newSubServices[index].image = file; // Handle main sub-service image
-    } else {
-      newSubServices[index][sectionType][sectionIndex].image = file; // Handle images for sections like approach, process, etc.
-    }
-    setSubServices(newSubServices);
+  const handleEditService = (service) => {
+    setSelectedService(service);
+    setMainServiceImage(service.mainServiceImage);
   };
 
-
-  const handleDeleteSubService = (index) => {
-    const newSubServices = subServices.filter((_, i) => i !== index);
-    setSubServices(newSubServices);
-    toast.success("Sub-Service deleted successfully!");
-  };
-
-  // Function to add new items to a section
-  const addNewItem = (index, section) => {
-    const newSubServices = [...subServices];
-    newSubServices[index][section].push({ title: "", description: "", image: "" });
-    setSubServices(newSubServices);
-  };
-
-  // Function to remove an item from a section
-  const removeItem = (index, section, itemIndex) => {
-    const newSubServices = [...subServices];
-    newSubServices[index][section] = newSubServices[index][section].filter((_, i) => i !== itemIndex);
-    setSubServices(newSubServices);
-  };
-
-  // Show loader if loading is true
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
         <span className="loading loading-bars loading-lg"></span>
       </div>
     );
-  
-  }
-  console.log(selectedService, subServices)
-  const handleEditService = (service) => {
-    setSelectedService(service);
-    setTitle(service.title);
-    setDescription(service.description);
-    console.log(service.services)
-    setMetaTitle(service.MetaTitle);
-    setMetaDescription(service.MetaDescription);
-    setSubServices(service.services); // Assuming service has a subServices property
-  };
-  
-
-  const handleDeleteService =async(service)=>{
-    console.log(service)
-   // Make DELETE request to your API
-   await axios.delete(`${endPoint}/service/${service?._id}`);
-   toast.success(`Service: ${service?.title} deleted successfully`);
-   const updatedServices = services.filter(service => service._id !== service?._id);
-   setServices(updatedServices)
   }
 
   return (
@@ -248,366 +158,135 @@ const Services = () => {
             </Link>
           </li>
           <li>
-            <span className="inline-flex items-center gap-2 text-gray-700">
-              Services
-            </span>
+            <span className="inline-flex items-center gap-2 text-gray-700">Services</span>
           </li>
         </ul>
         <ToastContainer />
       </div>
 
       <form onSubmit={handleAddService} className="lg:w-1/2 md:w-[80%] w-[96%] mx-auto bg-white p-6 rounded-2xl shadow-md">
-        {/* Meta Title */}
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">Meta Title</label>
+          <label className="block text-gray-700 mb-1">Title</label>
           <input
             type="text"
-            value={metaTitle}
-            onChange={(e) => setMetaTitle(e.target.value)}
-            className="w-full p-2 border rounded"
-            placeholder="Enter Meta Title"
+            className="input input-bordered w-full"
+            value={selectedService?.title || ""}
+            onChange={(e) => setSelectedService({ ...selectedService, title: e.target.value })}
             required
           />
         </div>
-
-        {/* Title */}
+        
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">Title</label>
+          <label className="block text-gray-700 mb-1">Subtitle</label>
           <input
             type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="w-full p-2 border rounded"
-            placeholder="Enter Title"
+            className="input input-bordered w-full"
+            value={selectedService?.subtitle || ""}
+            onChange={(e) => setSelectedService({ ...selectedService, subtitle: e.target.value })}
             required
           />
         </div>
 
-        {/* Description */}
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">Description</label>
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            className="w-full p-2 border rounded"
-            placeholder="Enter Description"
-            required
+          <label className="block text-gray-700 mb-1">Main Service Image</label>
+          {
+          selectedService?.mainServiceImage && 
+          <img src={selectedService?.mainServiceImage} alt={selectedService?.title} className="w-24 h-24 rounded-md object-cover my-3" />
+          }
+          <input
+            type="file"
+            className="file-input w-full"
+            onChange={(e) => handleMainImageChange(e.target.files[0])}
           />
         </div>
 
-        {/* Meta Description */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">Meta Description</label>
-          <textarea
-            value={metaDescription}
-            onChange={(e) => setMetaDescription(e.target.value)}
-            className="w-full p-2 border rounded"
-            placeholder="Enter Meta Description"
-            required
-          />
-        </div>
-
-        {/* Sub-service fields */}
-        {subServices?.map((subService, index) => (
-          <div key={index} className="mb-6 p-4 border border-gray-300 rounded-2xl">
-            <div className="flex justify-between mb-8"><h3 className="text-lg font-semibold">Sub-Service {index + 1}</h3>
-            <button type="button" onClick={() => handleDeleteSubService(index)} className="text-red-600 md:pr-4">
-             <FaTrashAlt/>
-            </button></div>
-            {/* Sub-Service Title */}
-            <div className="mb-4">
-              <label className="block text-sm font-medium mb-1">Sub-Service Title</label>
-              <input
-                type="text"
-                value={subService.title}
-                onChange={(e) => {
-                  const newSubServices = [...subServices];
-                  newSubServices[index].title = e.target.value;
-                  setSubServices(newSubServices);
-                }}
-                className="w-full p-2 border rounded"
-                placeholder="Enter Sub-Service Title"
-                required
-              />
-            </div>
-
-            {/* Subtitle */}
-            <div className="mb-4">
-              <label className="block text-sm font-medium mb-1">Subtitle</label>
-              <input
-                type="text"
-                value={subService.subtitle}
-                onChange={(e) => {
-                  const newSubServices = [...subServices];
-                  newSubServices[index].subtitle = e.target.value;
-                  setSubServices(newSubServices);
-                }}
-                className="w-full p-2 border rounded"
-                placeholder="Enter Subtitle"
-                required
-              />
-            </div>
-
-             {/* Sub-Service Image */}
-             <div className="mb-4">
-              <label className="block text-sm font-medium mb-1">Sub-Service Image</label>
-              {
-                subService?.mainServiceImage && 
-              <img src={subService?.mainServiceImage} alt={subService?.title} className="w-24 h-24 mb-2"/>
-              }
-              <input
-                type="file"
-                onChange={(e) => handleFileChange(index, "image", null, e.target.files[0])}
-                className="w-full"
-              />
-            </div>
-
-            {/* Approach Section */}
-            <h4 className="font-semibold mb-2">Approach</h4>
-            {subService.approach.map((approach, approachIndex) => (
-              <div key={approachIndex} className="mb-4 p-4 border rounded-2xl bg-white">
-                <div className="flex justify-between">
+        {/* Dynamic Sections */}
+        {["approach", "process", "why", "tools"].map((section) => (
+          <div key={section} className="mb-4">
+            <h3 className="text-lg font-bold capitalize mb-2">{section}</h3>
+            {selectedService?.[section]?.map((item, index) => (
+              <div key={index} className="mb-2 border p-4 rounded-md">
+                <div className="mb-2 flex items-center gap-2 justify-between">
+                  <div className="w-[90%]"><label className="block text-gray-700 mb-1">Title</label>
                   <input
                     type="text"
-                    value={approach.title}
+                    className="input input-bordered w-full"
+                    value={item.title}
                     onChange={(e) => {
-                      const newSubServices = [...subServices];
-                      newSubServices[index].approach[approachIndex].title = e.target.value;
-                      setSubServices(newSubServices);
+                      const updatedService = { ...selectedService };
+                      updatedService[section][index].title = e.target.value;
+                      setSelectedService(updatedService);
                     }}
-                    className="w-3/4 p-2 border rounded"
-                    placeholder="Approach Title"
+                    required
+                  /></div>
+                <button type="button" className="w-[10%] text-2xl text-red-600 flex justify-end" onClick={() => removeItem(section, index)}>
+                  <FaTrashAlt />
+                </button>
+                </div>
+                <div className="mb-2">
+                  <label className="block text-gray-700 mb-1">Description</label>
+                  <input
+                    type="text"
+                    className="input input-bordered w-full"
+                    value={item.description}
+                    onChange={(e) => {
+                      const updatedService = { ...selectedService };
+                      updatedService[section][index].description = e.target.value;
+                      setSelectedService(updatedService);
+                    }}
                     required
                   />
-                  <button type="button" onClick={() => removeItem(index, "approach", approachIndex)} className="text-red-600 md:pr-4">
-                  <FaTrashAlt/>
-                  </button>
                 </div>
-                <textarea
-                  value={approach.description}
-                  onChange={(e) => {
-                    const newSubServices = [...subServices];
-                    newSubServices[index].approach[approachIndex].description = e.target.value;
-                    setSubServices(newSubServices);
-                  }}
-                  className="w-full p-2 border rounded mt-2"
-                  placeholder="Approach Description"
-                  required
-                />
-                 {
-                approach?.image && 
-                <img src={approach?.image} alt={approach?.title} className="w-24 h-24"/>
-              }
-                <input
-                  type="file"
-                  onChange={(e) => handleFileChange(index, "approach", approachIndex, e.target.files[0])}
-                  className="mt-2"
-                />
+                <div className="mb-2">
+                  <label className="block text-gray-700 mb-1">Image</label>
+                  {
+                    selectedService[section][index]?.image && 
+                  <img src={selectedService[section][index]?.image} alt={selectedService[section][index]?.title} className="w-24 h-24 rounded-md object-cover my-3" />
+                  }
+                  <input
+                    type="file"
+                    className="file-input w-full"
+                    onChange={(e) => handleFileChange(section, index, e.target.files[0])}
+                  />
+                </div>
               </div>
             ))}
-            <button type="button" onClick={() => addNewItem(index, "approach")} className="text-blue-700 font-bold text-3xl mb-4">
+            <button type="button" className="text-7xl text-black" onClick={() => addNewItem(section)}>
               +
-            </button>
-
-            {/* Process Section */}
-            <h4 className="font-semibold mb-2">Process</h4>
-            {subService.process.map((process, processIndex) => (
-              <div key={processIndex} className="mb-4 p-4 border rounded-2xl bg-white">
-                <div className="flex justify-between">
-                  <input
-                    type="text"
-                    value={process.title}
-                    onChange={(e) => {
-                      const newSubServices = [...subServices];
-                      newSubServices[index].process[processIndex].title = e.target.value;
-                      setSubServices(newSubServices);
-                    }}
-                    className="w-3/4 p-2 border rounded"
-                    placeholder="Process Title"
-                    required
-                  />
-                  <button type="button" onClick={() => removeItem(index, "process", processIndex)} className="text-red-600 md:pr-4">
-                  <FaTrashAlt/>
-                  </button>
-                </div>
-                <textarea
-                  value={process.description}
-                  onChange={(e) => {
-                    const newSubServices = [...subServices];
-                    newSubServices[index].process[processIndex].description = e.target.value;
-                    setSubServices(newSubServices);
-                  }}
-                  className="w-full p-2 border rounded mt-2"
-                  placeholder="Process Description"
-                  required
-                />
-                {
-                process?.image && 
-                <img src={process?.image} alt={process?.title} className="w-24 h-24"/>
-              }
-                <input
-                  type="file"
-                  onChange={(e) => handleFileChange(index, "process", processIndex, e.target.files[0])}
-                  className="mt-2"
-                />
-              </div>
-            ))}
-            <button type="button" onClick={() => addNewItem(index, "process")} className="text-blue-700 font-bold text-3xl mb-4">
-             +
-            </button>
-
-            {/* Why Section */}
-            <h4 className="font-semibold mb-2">Why</h4>
-            {subService.why.map((whyItem, whyIndex) => (
-              <div key={whyIndex} className="mb-4 p-4 border rounded-2xl bg-white">
-                <div className="flex justify-between">
-                  <input
-                    type="text"
-                    value={whyItem.title}
-                    onChange={(e) => {
-                      const newSubServices = [...subServices];
-                      newSubServices[index].why[whyIndex].title = e.target.value;
-                      setSubServices(newSubServices);
-                    }}
-                    className="w-3/4 p-2 border rounded"
-                    placeholder="Why Title"
-                    required
-                  />
-                  <button type="button" onClick={() => removeItem(index, "why", whyIndex)} className="text-red-600 md:pr-4">
-                  <FaTrashAlt/>
-                  </button>
-                </div>
-                <textarea
-                  value={whyItem.description}
-                  onChange={(e) => {
-                    const newSubServices = [...subServices];
-                    newSubServices[index].why[whyIndex].description = e.target.value;
-                    setSubServices(newSubServices);
-                  }}
-                  className="w-full p-2 border rounded mt-2"
-                  placeholder="Why Description"
-                  required
-                />
-                {
-                  whyItem?.image &&
-                <img src={whyItem?.image} alt={whyItem?.title} className="w-24 h-24"/>
-                }
-                <input
-                  type="file"
-                  onChange={(e) => handleFileChange(index, "why", whyIndex, e.target.files[0])}
-                  className="mt-2"
-                />
-              </div>
-            ))}
-            <button type="button" onClick={() => addNewItem(index, "why")} className="text-blue-700 font-bold text-3xl mb-4">
-              +
-            </button>
-
-            {/* Tools Section */}
-            <h4 className="font-semibold mb-2">Tools</h4>
-            {subService.tools.map((tool, toolIndex) => (
-              <div key={toolIndex} className="mb-4 p-4 border rounded-2xl bg-white">
-                <div className="flex justify-between">
-                  <input
-                    type="text"
-                    value={tool.title}
-                    onChange={(e) => {
-                      const newSubServices = [...subServices];
-                      newSubServices[index].tools[toolIndex].title = e.target.value;
-                      setSubServices(newSubServices);
-                    }}
-                    className="w-[90%] p-2 border rounded"
-                    placeholder="Tool Title"
-                    required
-                  />
-                  <button type="button" onClick={() => removeItem(index, "tools", toolIndex)} className="text-red-600 md:pr-4">
-                    <FaTrashAlt/>
-                  </button>
-                </div>
-                <textarea
-                  value={tool.description}
-                  onChange={(e) => {
-                    const newSubServices = [...subServices];
-                    newSubServices[index].tools[toolIndex].description = e.target.value;
-                    setSubServices(newSubServices);
-                  }}
-                  className="w-full p-2 border rounded mt-2"
-                  placeholder="Tool Description"
-                  required
-                />
-                {
-                  tool?.image &&
-                  <img src={tool?.image} alt={tool?.title} className="w-24 h-24"/>
-                }
-                <input
-                  type="file"
-                  onChange={(e) => handleFileChange(index, "tools", toolIndex, e.target.files[0])}
-                  className="mt-2"
-                />
-              </div>
-            ))}
-            <button type="button" onClick={() => addNewItem(index, "tools")} className="text-blue-700 font-bold text-3xl mb-4">
-              +
-            </button>
-            <button type="button"  className="bg-black text-white btn btn-sm w-full mb-4">
-              Save Sub Service
             </button>
           </div>
         ))}
-        <button type="button" onClick={() => setSubServices([...subServices, {
-          title: "",
-          image: "",
-          subtitle: "",
-          approach: [{ title: "", description: "", image: "" }],
-          process: [{ title: "", description: "", image: "" }],
-          why: [{ title: "", description: "", image: "" }],
-          tools: [{ title: "", description: "", image: "" }],
-          portfolio: [{ title: "", description: "", image: "" }],
-        }])} className="btn btn-sm bg-black text-white mb-4">
-          Add New Sub-Service
-        </button>
-        <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded">
-          {selectedService ? "Update Service" : "Add Service"}
+
+        <button type="submit" className="btn btn-md bg-black text-white w-full text-center mt-4">
+          {selectedService?._id ? "Update Service" : "Add Service"}
         </button>
       </form>
 
-      <div className="mt-8">
-        <h2 className="text-lg font-semibold mb-3">Existing Services</h2>
-        <div className="">
+      {/* List of services */}
+      {
+          services ? <h2 className="text-xl font-semibold">Explore Services</h2>: <p className="p-4 bg-white rounded-md">no services found</p>
+        }
+      <div className="mt-6 flex flex-warp gap-4">
         {services?.map((service, index) => (
-          <div key={service.id} className="p-4 bg-white border rounded-2xl mb-4">
-            <h3 className="font-semibold text-xl">Section Title: {service.title}</h3>
-            <p className="text-[16px]">Section Description: {service.description}</p>
-            <div>
-              <h3 className="text-2xl font-semibold my-5">Sub Services:</h3>
-              <div className="md:grid lg:grid-cols-3 md:grid-cols-2 gap-3">
-              {
-              service?.services?.map((subService) => 
-          <div key={subService._id} className="p-4 bg-white border rounded-2xl mb-4 flex justify-between items-start">
+          <div key={index} className="p-4 border bg-white rounded-md mb-4">
             <div className="flex gap-3 items-center">
-            <img src={subService?.mainServiceImage} alt={`${subService.title}, Nexile Digital`} className="w-32 h-32 rounded-2xl"/>
-            <div><h3 className="font-semibold text-xl">{subService.title}</h3>
-            <p>{subService.subtitle}</p></div>
+              <img src={service?.mainServiceImage} alt={`${service.title}, Nexile Digital`} className="w-32 h-32 rounded-md object-cover my-3"/>
+            <div>
+            <h3 className="text-lg font-bold">{service.title}</h3>
+            <p>{service.subtitle}</p>
+            </div>
+            <div className="flex justify-between gap-2 mt-4 items-center">
+              <button className="text-2xl text-blue-600 " onClick={() => handleEditService(service)}>
+              <BsPencilSquare />
+              </button>
+                <button type="button" className="text-2xl text-red-600" onClick={() => handleDeleteService(service)}>
+                  <FaTrashAlt />
+                </button>
+            </div>
             </div>
             
-            <button onClick={() => handleDeleteSubService(index)} className="text-red-600 ml-4">
-              <FaTrashAlt/>
-            </button>
-            
-            </div>
-            )
-            }
-              </div>
-            </div>
-            <button onClick={() => handleEditService(service)} className="text-blue-600">
-              Edit
-            </button>
-            <button onClick={() => handleDeleteService(service)} className="text-red-600 ml-4">
-              Delete
-            </button>
           </div>
         ))}
-        </div>
       </div>
     </div>
   );
