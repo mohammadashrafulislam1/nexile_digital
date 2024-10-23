@@ -50,100 +50,114 @@ const Services = () => {
     formData.append("description", description);
     formData.append("metaTitle", metaTitle);
     formData.append("metaDescription", metaDescription);
+    
     // Add sub-services to FormData
-    subServices.forEach((subService, index) => {
-       // Append the sub-service ID if it exists
-       if (subService._id) {
-        formData.append(`services[${index}][id]`, subService._id); // Append service ID
+    if (Array.isArray(subServices) && subServices.length > 0) {
+        subServices.forEach((subService, index) => {
+            // Append the sub-service ID if it exists
+            if (subService._id) {
+                formData.append(`services[${index}][id]`, subService._id); // Append service ID
+            }
+            formData.append(`services[${index}][title]`, subService.title);
+            formData.append(`services[${index}][subtitle]`, subService.subtitle);
+            
+            // Add the main image for the sub-service
+            if (subService.image) {
+                formData.append(`mainServiceImage`, subService.image); // Change to mainServiceImage for the main service image
+            }
+
+            // Add approach section
+            if (Array.isArray(subService.approach)) {
+                subService.approach.forEach((approach, appIndex) => {
+                    formData.append(`services[${index}][approach][${appIndex}][title]`, approach.title);
+                    formData.append(`services[${index}][approach][${appIndex}][description]`, approach.description);
+                    if (approach._id) {
+                        formData.append(`services[${index}][approach][${appIndex}][id]`, approach._id); // Append approach ID
+                    }
+                    if (approach.image) {
+                        formData.append(`approachImages`, approach.image);  // Appending approach image
+                    }
+                });
+            }
+
+            // Add process section
+            if (Array.isArray(subService.process)) {
+                subService.process.forEach((process, procIndex) => {
+                    formData.append(`services[${index}][process][${procIndex}][title]`, process.title);
+                    formData.append(`services[${index}][process][${procIndex}][description]`, process.description);
+                    if (process._id) {
+                        formData.append(`services[${index}][process][${procIndex}][id]`, process._id); // Append process ID
+                    }
+                    if (process.image) {
+                        formData.append(`processImages`, process.image);  // Appending process image
+                    }
+                });
+            }
+
+            // Add why section
+            if (Array.isArray(subService.why)) {
+                subService.why.forEach((why, whyIndex) => {
+                    formData.append(`services[${index}][why][${whyIndex}][title]`, why.title);
+                    formData.append(`services[${index}][why][${whyIndex}][description]`, why.description);
+                    if (why._id) {
+                        formData.append(`services[${index}][why][${whyIndex}][id]`, why._id); // Append why ID
+                    }
+                    if (why.image) {
+                        formData.append(`whyImages`, why.image);  // Appending why image
+                    }
+                });
+            }
+
+            // Add tools section
+            if (Array.isArray(subService.tools)) {
+                subService.tools.forEach((tool, toolIndex) => {
+                    formData.append(`services[${index}][tools][${toolIndex}][title]`, tool.title);
+                    formData.append(`services[${index}][tools][${toolIndex}][description]`, tool.description);
+                    if (tool._id) {
+                        formData.append(`services[${index}][tools][${toolIndex}][id]`, tool._id); // Append tool ID
+                    }
+                    if (tool.image) {
+                        formData.append(`toolsImages`, tool.image);  // Appending tool image
+                    }
+                });
+            }
+        });
     }
-      formData.append(`services[${index}][title]`, subService.title);
-      formData.append(`services[${index}][subtitle]`, subService.subtitle);
-      // Add the main image for the sub-service
-      if (subService.image) {
-        formData.append(`image`, subService.image);  // Matches 'image' field in multer config
-      }
-      // Add approach section (images should match multer's field config)
-      subService.approach.forEach((approach, appIndex) => {
-        formData.append(`services[${index}][approach][${appIndex}][title]`, approach.title);
-        formData.append(`services[${index}][approach][${appIndex}][description]`, approach.description);
-        if (approach._id) {
-          formData.append(`services[${index}][approach][${appIndex}][id]`, approach._id); // Append approach ID
-      }
-        if (approach.image) {
-          formData.append(`approachImages`, approach.image);  // Matches 'approachImages' in multer config
-        }
-      });
-  
-      // Add process section
-      subService.process.forEach((process, procIndex) => {
-        formData.append(`services[${index}][process][${procIndex}][title]`, process.title);
-        formData.append(`services[${index}][process][${procIndex}][description]`, process.description);
-        if (process._id) {
-          formData.append(`services[${index}][process][${procIndex}][id]`, process._id); // Append process ID
-      }
-        if (process.image) {
-          formData.append(`processImages`, process.image);  // Matches 'processImages' in multer config
-        }
-      });
-  
-      // Add why section
-      subService.why.forEach((why, whyIndex) => {
-        formData.append(`services[${index}][why][${whyIndex}][title]`, why.title);
-        formData.append(`services[${index}][why][${whyIndex}][description]`, why.description);
-        if (why._id) {
-          formData.append(`services[${index}][why][${whyIndex}][id]`, why._id); // Append why ID
-      }
-        if (why.image) {
-          formData.append(`whyImages`, why.image);  // Matches 'whyImages' in multer config
-        }
-      });
-  
-      // Add tools section
-      subService.tools.forEach((tool, toolIndex) => {
-        formData.append(`services[${index}][tools][${toolIndex}][title]`, tool.title);
-        formData.append(`services[${index}][tools][${toolIndex}][description]`, tool.description);
-        if (tool._id) {
-          formData.append(`services[${index}][tools][${toolIndex}][id]`, tool._id); // Append tool ID
-      }
-        if (tool.image) {
-          formData.append(`toolsImages`, tool.image);  // Matches 'toolsImages' in multer config
-        }
-      });
-    });
-  
+
     console.log("FormData:", Array.from(formData.entries()));  // Log FormData to inspect
     
     try {
-      setLoading(true); // Start loading
-      let response;
+        setLoading(true); // Start loading
+        let response;
 
-      // Check if we are updating or adding a new service
-      if (selectedService) {
-        response = await fetch(`${endPoint}/service/${selectedService._id}`, {
-          method: "PUT",
-          body: formData,
-        });
-      } else {
-        response = await fetch(`${endPoint}/service`, {
-          method: "POST",
-          body: formData,
-        });
-      }
+        // Check if we are updating or adding a new service
+        if (selectedService) {
+            response = await fetch(`${endPoint}/service/${selectedService._id}`, {
+                method: "PUT",
+                body: formData,
+            });
+        } else {
+            response = await fetch(`${endPoint}/service`, {
+                method: "POST",
+                body: formData,
+            });
+        }
 
-      if (response.ok) {
-        toast.success(selectedService ? "Service updated successfully!" : "Service added successfully!");
-        fetchAllServices(); // Refresh the list
-        resetForm(); // Reset the form after submission
-      } else {
-        toast.error("Failed to add/update service.");
-      }
+        if (response.ok) {
+            toast.success(selectedService ? "Service updated successfully!" : "Service added successfully!");
+            fetchAllServices(); // Refresh the list
+        } else {
+            toast.error("Failed to add/update service.");
+        }
     } catch (error) {
-      console.error("Error adding service:", error);
-      toast.error("Error adding service");
+        console.error("Error adding service:", error);
+        toast.error("Error adding service");
     } finally {
-      setLoading(false); // End loading
+        setLoading(false); // End loading
     }
-  };
+};
+
+
   
   
 
@@ -560,7 +574,7 @@ const Services = () => {
       <div className="mt-8">
         <h2 className="text-lg font-semibold mb-3">Existing Services</h2>
         <div className="">
-        {services.map((service, index) => (
+        {services?.map((service, index) => (
           <div key={service.id} className="p-4 bg-white border rounded-2xl mb-4">
             <h3 className="font-semibold text-xl">Section Title: {service.title}</h3>
             <p className="text-[16px]">Section Description: {service.description}</p>
