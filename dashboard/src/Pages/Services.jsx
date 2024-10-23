@@ -5,6 +5,7 @@ import { endPoint } from "../Components/ForAll/ForAll";
 import { FaTrashAlt } from "react-icons/fa";
 import axios from "axios";
 import { BsPencilSquare } from "react-icons/bs";
+import Swal from "sweetalert2";
 
 const Services = () => {
   const [services, setServices] = useState([]);
@@ -96,12 +97,23 @@ const Services = () => {
   };
 
   const handleDeleteService = async (service) => {
-    try {
-      await axios.delete(`${endPoint}/service/${service._id}`);
-      toast.success(`Service: ${service.title} deleted successfully`);
-      fetchAllServices();
-    } catch (error) {
-      toast.error("Error deleting service");
+    const result = await Swal.fire({
+      title: 'Are you sure?',
+      text: `You are about to delete the service: ${service.title}`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, delete it!',
+    });
+  
+    if (result.isConfirmed) {
+      try {
+        await axios.delete(`${endPoint}/service/${service._id}`);
+        toast.success(`Service: ${service.title} deleted successfully`);
+      } catch (error) {
+        toast.error("Error deleting service");
+      }
     }
   };
 
@@ -264,7 +276,7 @@ const Services = () => {
 
       {/* List of services */}
       {
-          services ? <h2 className="text-xl font-semibold">Explore Services</h2>: <p className="p-4 bg-white rounded-md">no services found</p>
+          services.length < 0 ? <h2 className="text-xl font-semibold mt-4 ">Explore Services</h2> : <p className="lg:w-1/2 md:w-[80%] w-[96%] mx-auto text-white p-4 bg-red-400 rounded-md mt-5">no services found</p>
         }
       <div className="mt-6 flex flex-warp gap-4">
         {services?.map((service, index) => (
