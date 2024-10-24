@@ -51,7 +51,7 @@ const Services = () => {
         formData.append(`${section}[${index}][title]`, item.title);
         formData.append(`${section}[${index}][description]`, item.description);
         if (item.image instanceof File) {
-          formData.append(`${section}[image]`, item.image);
+          formData.append(`${section}[${index}][image]`, item.image);
         }
       });
     });
@@ -71,10 +71,18 @@ const Services = () => {
           body: formData,
         });
       }
+      console.log("response:", response.ok)
 
       if (response.ok) {
-        toast.success(selectedService ? "Service updated successfully!" : "Service added successfully!");
         fetchAllServices();
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: `${selectedService? "Service updated successfully!" :"Service added successfully!" }`,
+          showConfirmButton: false,
+          timer: 1500
+        });
+        toast.success(selectedService ? "Service updated successfully!" : "Service added successfully!");
       } else {
         toast.error("Failed to add/update service.");
       }
@@ -151,6 +159,9 @@ const Services = () => {
     setSelectedService(service);
     setMainServiceImage(service.mainServiceImage);
   };
+  const handleReload = () => {
+    window.location.reload();
+  };
 
   if (loading) {
     return (
@@ -175,7 +186,9 @@ const Services = () => {
         </ul>
         <ToastContainer />
       </div>
-
+      {selectedService?._id && 
+     <button className="btn btn-sm flex justify-center items-center mx-auto bg-black text-white" onClick={handleReload}>Add Another</button>}
+     {selectedService?._id ? <h3 className="lg:w-1/2 md:w-[80%] w-[96%] mx-auto text-center my-8 font-bold text-xl">Update Service</h3>: <h3 className="lg:w-1/2 md:w-[80%] w-[96%] mx-auto text-center my-8 font-bold text-xl">Add Service</h3> } 
       <form onSubmit={handleAddService} className="lg:w-1/2 md:w-[80%] w-[96%] mx-auto bg-white p-6 rounded-2xl shadow-md">
         <div className="mb-4">
           <label className="block text-gray-700 mb-1">Title</label>
@@ -237,9 +250,9 @@ const Services = () => {
                 </div>
                 <div className="mb-2">
                   <label className="block text-gray-700 mb-1">Description</label>
-                  <input
+                  <textarea
                     type="text"
-                    className="input input-bordered w-full"
+                    className="textarea textarea-bordered w-full"
                     value={item.description}
                     onChange={(e) => {
                       const updatedService = { ...selectedService };
@@ -276,7 +289,7 @@ const Services = () => {
 
       {/* List of services */}
       {
-          services.length < 0 ? <h2 className="text-xl font-semibold mt-4 ">Explore Services</h2> : <p className="lg:w-1/2 md:w-[80%] w-[96%] mx-auto text-white p-4 bg-red-400 rounded-md mt-5">no services found</p>
+          services.length > 0 ? <h2 className="text-xl font-semibold mt-10 ">Explore Services</h2> : <p className="lg:w-1/2 md:w-[80%] w-[96%] mx-auto text-white p-4 bg-red-400 rounded-md mt-5">no services found</p>
         }
       <div className="mt-6 flex flex-warp gap-4">
         {services?.map((service, index) => (
@@ -297,7 +310,7 @@ const Services = () => {
             </div>
             </div>
             
-          </div>
+            </div>
         ))}
       </div>
     </div>
