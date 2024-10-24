@@ -86,7 +86,6 @@ export const addService = async (req, res) => {
   }
 };
 
-
 export const updateService = async (req, res) => {
   const { id } = req.params; // Get the service ID from the request parameters
   try {
@@ -94,7 +93,8 @@ export const updateService = async (req, res) => {
     const { title, subtitle, approach, process, why, tools } = req.body;
 
     console.log("Received request body:", req.body);
-    console.log("Received files:", req.files);
+    console.log("Received files:", JSON.stringify(req.files, null, 2));
+
 
     // Find the existing service by ID
     const service = await ServicesModel.findById(id);
@@ -102,44 +102,54 @@ export const updateService = async (req, res) => {
       return res.status(404).json({ message: 'Service not found' });
     }
 
-    // Initialize arrays for each section
-    const approachItems = [];
-    const processItems = [];
-    const whyItems = [];
-    const toolsItems = [];
-
-    // Function to handle uploads for each section
-    const handleUploads = async (sectionItems, sectionName) => {
-      if (Array.isArray(req.body[sectionName]) && req.files[`${sectionName}[image]`]) {
-        const uploadPromises = req.files[`${sectionName}[image]`].map(async (file, index) => {
-          try {
-            const result = await cloudinary.uploader.upload(file.path, {
-              folder: `nexile digital/services/${sectionName}`, // Add folder structure
-            });
-            fs.unlinkSync(file.path); // Clean up local file storage
-            return {
-              title: req.body[sectionName][index]?.title || '',
-              description: req.body[sectionName][index]?.description || '',
-              image: result.secure_url,
-              imagePublicId: result.public_id,
+    const handleUploads = async (existingItems = [], sectionName) => {
+      const updatedItems = [...existingItems];
+    
+      if (Array.isArray(req.body[sectionName])) {
+        for (let i = 0; i < req.body[sectionName].length; i++) {
+          const newItem = req.body[sectionName][i];
+          console.log(`Processing ${sectionName} item ${i}:`, newItem);
+    
+          const fileField = `${sectionName}[${i}][image]`;
+    
+          if (req.files[fileField] && req.files[fileField].length > 0) {
+            const fileArray = req.files[fileField];
+            for (const file of fileArray) {
+              try {
+                const result = await cloudinary.uploader.upload(file.path, {
+                  folder: `nexile digital/services/${sectionName}`,
+                });
+                fs.unlinkSync(file.path); // Clean up local file storage
+    
+                updatedItems[i] = {
+                  ...newItem,
+                  image: result.secure_url,
+                  imagePublicId: result.public_id,
+                };
+              } catch (uploadError) {
+                console.error(`Error uploading file for ${sectionName}:`, uploadError);
+              }
+            }
+          } else {
+            updatedItems[i] = {
+              ...updatedItems[i],
+              title: newItem?.title || updatedItems[i].title,
+              description: newItem?.description || updatedItems[i].description,
             };
-          } catch (uploadError) {
-            console.error(`Error uploading file for ${sectionName}:`, uploadError);
-            return null; // Return null for failed uploads
           }
-        });
-
-        const uploadedItems = await Promise.all(uploadPromises);
-        return uploadedItems.filter(item => item !== null); // Only include successful uploads
+        }
       }
-      return []; // Return empty if no items
+    
+      return updatedItems;
     };
+    
+      
 
-    // Handle uploads for each section
-    approachItems.push(...await handleUploads(approach, 'approach'));
-    processItems.push(...await handleUploads(process, 'process'));
-    whyItems.push(...await handleUploads(why, 'why'));
-    toolsItems.push(...await handleUploads(tools, 'tools'));
+    // Handle updates for each section
+    const updatedApproach = await handleUploads(service.approach, 'approach');
+    const updatedProcess = await handleUploads(service.process, 'process');
+    const updatedWhy = await handleUploads(service.why, 'why');
+    const updatedTools = await handleUploads(service.tools, 'tools');
 
     // Handle the main service image upload if a new one is provided
     let mainServiceImageUrl = service.mainServiceImage; // Keep the existing image by default
@@ -149,7 +159,7 @@ export const updateService = async (req, res) => {
       const mainImageUpload = await cloudinary.uploader.upload(mainImageFile.path, {
         folder: `nexile digital/services`, // Add folder structure
       });
-      mainServiceImageUrl = mainImageUpload.secure_url; 
+      mainServiceImageUrl = mainImageUpload.secure_url;
       mainServiceImagePublicId = mainImageUpload.public_id;
       fs.unlinkSync(mainImageFile.path);
     }
@@ -157,10 +167,10 @@ export const updateService = async (req, res) => {
     // Update the service fields
     service.title = title || service.title;
     service.subtitle = subtitle || service.subtitle;
-    service.approach = approachItems.length > 0 ? approachItems : service.approach;
-    service.process = processItems.length > 0 ? processItems : service.process;
-    service.why = whyItems.length > 0 ? whyItems : service.why;
-    service.tools = toolsItems.length > 0 ? toolsItems : service.tools;
+    service.approach = updatedApproach;
+    service.process = updatedProcess;
+    service.why = updatedWhy;
+    service.tools = updatedTools;
     service.mainServiceImage = mainServiceImageUrl;
     service.mainServiceImagePublicId = mainServiceImagePublicId;
 
@@ -173,10 +183,6 @@ export const updateService = async (req, res) => {
     res.status(500).json({ message: 'Error updating service', error: error.message });
   }
 };
-
-
-
-
 
   
 // Get one service by ID
@@ -210,62 +216,37 @@ export const getAllServices = async (req, res) => {
 
 // Delete a service
 export const deleteService = async (req, res) => {
-    try {
-      const { id } = req.params; // Get service ID from request parameters
-  
-      // Find the service to delete
-      const serviceToDelete = await ServicesModel.findById(id);
-      if (!serviceToDelete) {
-        return res.status(404).json({ message: 'Service not found' });
-      }
-      console.log(serviceToDelete)
-      // Delete main service image from Cloudinary
-      const publicId = serviceToDelete.mainServiceImagePublicId; // Assuming you store the public ID of the main service image
-      if (publicId) {
-        await cloudinary.uploader.destroy(publicId);
-      }
-  
-      // Delete sub-service images from Cloudinary
-      for (const subService of serviceToDelete.services) {
-        const subServicePublicId = subService.imagePublicId; // Assuming you store public IDs for sub-service images
-        if (subServicePublicId) {
-          await cloudinary.uploader.destroy(subServicePublicId);
-        }
-  
-        // Delete section images from each sub-service
-        for (const section of subService.approach) {
-          if (section.imagePublicId) {
-            await cloudinary.uploader.destroy(section.imagePublicId);
-          }
-        }
-  
-        for (const section of subService.process) {
-          if (section.imagePublicId) {
-            await cloudinary.uploader.destroy(section.imagePublicId);
-          }
-        }
-  
-        for (const section of subService.why) {
-          if (section.imagePublicId) {
-            await cloudinary.uploader.destroy(section.imagePublicId);
-          }
-        }
-  
-        for (const section of subService.tools) {
-          if (section.imagePublicId) {
-            await cloudinary.uploader.destroy(section.imagePublicId);
-          }
-        }
-      }
-  
-      // Delete the service record from the database
-      await ServicesModel.findByIdAndDelete(id);
-      res.status(204).send(); // No content to send back
-  
-    } catch (error) {
-      console.error('Error deleting service:', error);
-      res.status(500).json({ message: 'Error deleting service' });
+  try {
+    const { id } = req.params; // Assuming the service ID is passed in the URL
+
+    // Find the service by ID
+    const service = await ServicesModel.findById(id);
+    if (!service) {
+      return res.status(404).json({ message: 'Service not found' });
     }
-  };
-  
+
+    // Delete the main service image from Cloudinary
+    if (service.mainServiceImagePublicId) {
+      await cloudinary.uploader.destroy(service.mainServiceImagePublicId);
+    }
+
+    // Delete images from each section
+    const sections = ['approach', 'process', 'why', 'tools'];
+    for (const section of sections) {
+      for (const item of service[section]) {
+        if (item.imagePublicId) {
+          await cloudinary.uploader.destroy(item.imagePublicId);
+        }
+      }
+    }
+
+    // Delete the service from the database
+    await ServicesModel.findByIdAndDelete(id);
+
+    res.status(200).json({ message: 'Service deleted successfully' });
+  } catch (error) {
+    console.error("Error in deleteService controller:", error);
+    res.status(500).json({ message: 'Error deleting service', error: error.message });
+  }
+};
   

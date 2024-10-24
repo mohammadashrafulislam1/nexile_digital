@@ -5,13 +5,20 @@ import { addService, deleteService, getAllServices, getOneService, updateService
 
 export const serviceRouter = express.Router();
 
+const maxImagesPerSection = 10; // Define a maximum limit for uploads
+
 const uploadFields = [
   { name: 'mainServiceImage', maxCount: 1 },
-    { name: 'approach[image]', maxCount: 10 }, // Allow multiple images
-    { name: 'process[image]', maxCount: 10 },
-    { name: 'why[image]', maxCount: 10 },
-    { name: 'tools[image]', maxCount: 10 },  
 ];
+
+// Dynamically generate upload fields for each section
+const sections = ['approach', 'process', 'why', 'tools'];
+sections.forEach(section => {
+  for (let i = 0; i < maxImagesPerSection; i++) {
+    uploadFields.push({ name: `${section}[${i}][image]`, maxCount: 1 });
+  }
+});
+
 
 
 // Route to add a new service with image upload
