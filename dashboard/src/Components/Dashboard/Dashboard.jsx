@@ -1,7 +1,7 @@
 import { useContext, useState } from "react";
 import "./Dashboard.css";
 import { CiMenuFries } from "react-icons/ci";
-import { RxCross1 } from "react-icons/rx";
+import { RxAvatar, RxCross1 } from "react-icons/rx";
 import { FaBell, FaCity, FaDashcube, FaDev, FaHome, FaLocationArrow, FaUserCircle } from "react-icons/fa";
 import { Link, Outlet } from "react-router-dom";
 import { MdMiscellaneousServices, MdOutlineHandshake, MdOutlineLibraryAdd, MdOutlineRealEstateAgent, MdReviews } from "react-icons/md";
@@ -226,6 +226,15 @@ const Dashboard = () => {
             </li>
             <li>
               <Link
+                to={"/founder"}
+                className="p-3 bg-[#7e7e7e1a] rounded flex items-center gap-2 side-li mt-2 "
+              >
+                <RxAvatar />
+                <span className="sidebar-text">Founder</span>
+              </Link>
+            </li>
+            <li>
+              <Link
                 to={"/partners"}
                 className="p-3 bg-[#7e7e7e1a] rounded flex items-center gap-2 side-li mt-2"
               >
@@ -275,11 +284,11 @@ const Dashboard = () => {
     </li>
       <li>
       <Link
-        to={"/why"}
+        to={"/howwework"}
         className="p-3 bg-[#7e7e7e1a] rounded flex items-center gap-2 side-li "
       >
         <RiQuestionLine />
-        <span className="sidebar-text">Why Us</span>
+        <span className="sidebar-text">How We Work</span>
       </Link>
     </li>
       

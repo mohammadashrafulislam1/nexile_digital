@@ -189,7 +189,7 @@ const Hero = () => {
       </div>
 
       {/* Form for Adding/Updating Hero */}
-      <form onSubmit={handleSubmit} className="space-y-4 lg:w-1/2 md:w-[80%] w-[90%] mx-auto bg-white p-6 rounded-2xl shadow-md">
+      <form onSubmit={handleSubmit} className="lg:w-1/2 md:w-[80%] w-[96%] mx-auto bg-white p-6 rounded-2xl shadow-md">
         <h4 className="text-xl font-semibold text-center mb-4">
           {selectedHero ? "Update Hero" : "Add Hero"}
         </h4>
@@ -197,7 +197,7 @@ const Hero = () => {
         {/* Dynamic Menu Items */}
         <div className="space-y-4">
           {formData?.menu.map((menuItem, index) => (
-            <div key={index} className="flex space-x-4 items-center justify-center">
+            <div key={index} className="flex gap-3 items-center justify-center">
               <div className="flex flex-col w-full">
                 <label className="font-medium">Menu Name</label>
                 <input
@@ -205,7 +205,7 @@ const Hero = () => {
                   name="name"
                   value={menuItem.name}
                   onChange={(e) => handleMenuChange(index, e)}
-                  className="p-2 border rounded-md"
+                  className="input input-bordered"
                   placeholder="Menu Name"
                 />
               </div>
@@ -216,14 +216,14 @@ const Hero = () => {
                   name="link"
                   value={menuItem.link}
                   onChange={(e) => handleMenuChange(index, e)}
-                  className="p-2 border rounded-md"
+                  className="input input-bordered "
                   placeholder="Menu Link"
                 />
               </div>
               <button
                 type="button"
                 onClick={() => handleRemoveMenuItem(index)}
-                className="btn-sm bg-red-500 text-white rounded-xl"
+                className="w-[10%] text-xl text-red-600 flex"
               ><FaTrashAlt />
               </button>
             </div>
@@ -231,21 +231,21 @@ const Hero = () => {
           <button
             type="button"
             onClick={handleAddMenuItem}
-            className="px-4 py-2 bg-green-500 text-white rounded-md"
+            className="text-5xl text-green-800"
           >
-            Add Menu Item
+            +
           </button>
         </div>
 
         {/* Other fields */}
-        <div className="flex flex-col">
+        <div className="flex flex-col mt-5">
           <label className="mb-1 font-medium">Title</label>
           <input
             type="text"
             name="title"
             value={formData.title}
             onChange={handleInputChange}
-            className="p-2 border rounded-md"
+            className="input input-bordered "
             placeholder="Title"
           />
         </div>
@@ -256,7 +256,7 @@ const Hero = () => {
             name="description"
             value={formData.description}
             onChange={handleInputChange}
-            className="p-2 border rounded-md"
+            className="textarea textarea-bordered "
             placeholder="Description"
           ></textarea>
         </div>
@@ -268,7 +268,7 @@ const Hero = () => {
             name="googleReview"
             value={formData.googleReview}
             onChange={handleInputChange}
-            className="p-2 border rounded-md"
+            className="input input-bordered"
             placeholder="Google Review"
           />
         </div>
@@ -280,7 +280,7 @@ const Hero = () => {
             name="nexileReview"
             value={formData.nexileReview}
             onChange={handleInputChange}
-            className="p-2 border rounded-md"
+            className="input input-bordered"
             placeholder="Nexile Review"
           />
         </div>
@@ -292,7 +292,7 @@ const Hero = () => {
             name="clients"
             value={formData.clients}
             onChange={handleInputChange}
-            className="p-2 border rounded-md"
+            className="input input-bordered"
             placeholder="Clients"
           />
         </div>
@@ -304,7 +304,7 @@ const Hero = () => {
             name="experience"
             value={formData.experience}
             onChange={handleInputChange}
-            className="p-2 border rounded-md"
+            className="input input-bordered"
             placeholder="Experience"
           />
         </div>
@@ -315,7 +315,7 @@ const Hero = () => {
             type="file"
             accept="image/*"
             onChange={handleFileChange}
-            className="p-2 border rounded-md"
+            className="file-input input-bordered"
           />
           {logoPreview && (
             <img
@@ -328,7 +328,7 @@ const Hero = () => {
 
         <button
           type="submit"
-          className={`btn w-full ${formLoading ? "loading" : ""}`}
+          className={`btn w-full ${formLoading ? "loading" : ""} bg-black text-white btn-sm mt-4`}
         >
           {formLoading ? "Submitting..." : "Submit"}
         </button>
@@ -336,7 +336,7 @@ const Hero = () => {
 
       {selectedHero && (
         <button
-          className="btn bg-red-600 text-white w-[30%] mx-auto flex justify-center mt-4"
+          className="btn btn-sm bg-red-600 text-white w-[30%] mx-auto flex justify-center mt-4"
           onClick={handleDelete}
         >
           Delete Hero
