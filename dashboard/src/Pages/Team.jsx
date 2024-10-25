@@ -44,9 +44,7 @@ const Team = () => {
 
   // Handle image change
   const handleImageChange = (e) => {
-    setImage(e.target.files[0]);
-    const previewUrl = URL.createObjectURL(e.target.files[0]);
-    setImage(previewUrl);
+    setImage(e.target.files[0])
   };
 
   // Submit form handler for add or update
@@ -57,8 +55,13 @@ const Team = () => {
     formData.append('detail', detail);
     formData.append('role', role);
     formData.append('des', des);
+     // Log the FormData keys and values for debugging
+  for (let [key, value] of formData.entries()) {
+    console.log(`${key}:`, value);
+  }
     if (image) {
       formData.append('image', image);
+      console.log(image)
     }
 
     try {
@@ -83,7 +86,7 @@ const Team = () => {
         Swal.fire({
           position: "top-end",
           icon: "success",
-          title: `Team member added successfully!`,
+          title: `${isUpdating ? "Team member updated successfully!":"Team member added successfully!"}`,
           showConfirmButton: false,
           timer: 1500,
         });
@@ -98,7 +101,13 @@ const Team = () => {
       fetchEntries();
     } catch (error) {
       console.error('Error submitting form:', error);
-      alert('Error submitting form');
+      Swal.fire({
+        position: "top-end",
+        icon: "error",
+        title: `${error?.response?.data?.message}`,
+        showConfirmButton: false,
+        timer: 1500,
+      })
     } finally {
       setLoading(false);
     }
@@ -109,30 +118,49 @@ const Team = () => {
     setIsUpdating(true);
     setName(entry.name);
     setDetail(entry.detail);
+    setImage(entry.image);
     setRole(entry.role);
     setDes(entry.des);
     setEntryId(entry._id); // Set the entry ID
   };
 
   const handleDeleteEntry = async (entryId) => {
-    try {
-      setLoading(true);
-      await axios.delete(`${endPoint}/team/${entryId}`);
-      Swal.fire({
-        position: "top-end",
-        icon: "success",
-        title: `Team member deleted successfully!`,
-        showConfirmButton: false,
-        timer: 1500,
-      });
-      fetchEntries();
-    } catch (error) {
-      console.error('Error deleting entry:', error);
-      alert('Error deleting entry');
-    } finally {
-      setLoading(false);
+    // Ask for confirmation before deleting the entry
+    const result = await Swal.fire({
+        title: 'Are you sure?',
+        text: 'This action cannot be undone. Do you want to continue?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'No, cancel!',
+    });
+
+    // If the user confirms the deletion
+    if (result.isConfirmed) {
+        try {
+            setLoading(true); // Show loading state
+            await axios.delete(`${endPoint}/team/${entryId}`); // Send delete request
+
+            // Show success message
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: `Team member deleted successfully!`,
+                showConfirmButton: false,
+                timer: 1500,
+            });
+
+            fetchEntries(); // Refresh the entries list
+        } catch (error) {
+            const errorMessage = error.response?.data?.message || 'Error deleting entry';
+            console.error('Error deleting entry:', error); // Log error for debugging
+            alert(errorMessage); // Display specific error message
+        } finally {
+            setLoading(false); // Hide loading state
+        }
     }
-  };
+};
+
 
   if (loading) {
     return (
