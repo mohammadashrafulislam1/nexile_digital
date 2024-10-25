@@ -4,6 +4,7 @@ import { BsPencilSquare } from 'react-icons/bs'; // Ensure you have react-icons 
 import { FaTrashAlt } from 'react-icons/fa'; // Ensure you have react-icons installed
 import { endPoint } from '../Components/ForAll/ForAll'; // Adjust the import according to your file structure
 import Swal from 'sweetalert2';
+import { Link } from 'react-router-dom';
 
 const Team = () => {
   const [name, setName] = useState('');
@@ -169,12 +170,58 @@ const Team = () => {
       </div>
     );
   }
+  
+  const truncateDescription = (description, limit = 100) => {
+    if (!description) return '';
+    return description.length > limit ? `${description.substring(0, limit)}...` : description;
+};
 
+  const handleReload = () => {
+    window.location.reload();
+  };
   return (
     <div className="my-10 p-6">
+        <div className="breadcrumbs text-sm lg:w-1/2 md:w-[80%] w-[90%] mx-auto">
+        <ul className="my-6">
+          <li>
+            <Link to="/" className="inline-flex items-center gap-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                className="h-4 w-4 stroke-current">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+              </svg>
+              Home
+            </Link>
+          </li>
+          <li>
+            <span className="inline-flex items-center gap-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                className="h-4 w-4 stroke-current">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+              </svg>
+              Manage Team
+            </span>
+          </li>
+        </ul>
+      </div>
       <h2 className="text-2xl font-semibold text-center mb-4">
         {isUpdating ? 'Update Team Member' : 'Add Team Member'}
       </h2>
+      {isUpdating && 
+     <button className="btn btn-sm flex justify-center items-center mx-auto bg-black text-white mb-5" onClick={handleReload}>Add Another</button>}
 
       <form onSubmit={handleSubmit} className="bg-white shadow-md rounded-lg p-5 lg:w-1/2 md:w-[80%] w-[96%] mx-auto">
         {/* Form fields */}
@@ -256,7 +303,7 @@ const Team = () => {
               )}
               <div>
                 <h3 className="text-lg font-bold">{entry.name}</h3>
-                <p>{entry.detail}</p>
+                <p>{truncateDescription(entry.detail, 40)}</p>
                 <p><strong>Role:</strong> {entry.role}</p>
               </div>
               <div className="flex justify-between gap-2 mt-4 items-center">

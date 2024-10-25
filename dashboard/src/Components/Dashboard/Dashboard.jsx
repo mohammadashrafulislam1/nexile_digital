@@ -11,6 +11,7 @@ import { RiBloggerLine, RiContactsLine, RiErrorWarningLine, RiGridLine, RiQuesti
 import { IoAddCircleOutline } from "react-icons/io5";
 import { BiCategory } from "react-icons/bi";
 import { TbLayoutBottombar, TbLayoutNavbar } from "react-icons/tb";
+import { FaPeopleGroup } from "react-icons/fa6";
 // import { AuthContext } from "../../AuthContext/AuthContext";
 
 const Dashboard = () => {
@@ -231,6 +232,15 @@ const Dashboard = () => {
               >
                 <RxAvatar />
                 <span className="sidebar-text">Founder</span>
+              </Link>
+            </li>
+            <li>
+              <Link
+                to={"/team"}
+                className="p-3 bg-[#7e7e7e1a] rounded flex items-center gap-2 side-li mt-2 "
+              >
+                <FaPeopleGroup />
+                <span className="sidebar-text">Team</span>
               </Link>
             </li>
             <li>

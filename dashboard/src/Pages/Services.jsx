@@ -104,6 +104,11 @@ const Services = () => {
     setMainServiceImage(file);
   };
 
+  const truncateDescription = (description, limit = 100) => {
+    if (!description) return '';
+    return description.length > limit ? `${description.substring(0, limit)}...` : description;
+};
+
   const handleDeleteService = async (service) => {
     const result = await Swal.fire({
       title: 'Are you sure?',
@@ -320,7 +325,7 @@ const Services = () => {
               <img src={service?.mainServiceImage} alt={`${service.title}, Nexile Digital`} className="w-32 h-32 rounded-md object-cover my-3"/>
             <div>
             <h3 className="text-lg font-bold">{service.title}</h3>
-            <p>{service.subtitle}</p>
+            <p>{truncateDescription(service.subtitle, 40)}</p>
             </div>
             <div className="flex justify-between gap-2 mt-4 items-center">
               <button className="text-2xl text-blue-600 " onClick={() => handleEditService(service)}>
