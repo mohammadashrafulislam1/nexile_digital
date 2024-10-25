@@ -8,20 +8,20 @@ export const aboutRouter = express.Router();
 aboutRouter.post(
     "/",
     upload.fields([
-        { name: "storyImage", maxCount: 1 },    // Image for the story
-        { name: "missionImage", maxCount: 1 },   // Image for the mission
-        { name: "visionImage", maxCount: 1 }     // Image for the vision
+        { name: "storyImage", maxCount: 1 },    
+        { name: "missionImage", maxCount: 1 },   
+        { name: "visionImage", maxCount: 1 } 
     ]),
     addAboutUs
 );
 
 // Route to update About Us
 aboutRouter.put(
-    "/",
+    "/:id",
     upload.fields([
-        { name: "storyImage", maxCount: 1 },    // Image for the story
-        { name: "missionImage", maxCount: 1 },   // Image for the mission
-        { name: "visionImage", maxCount: 1 }     // Image for the vision
+        { name: "storyImage", maxCount: 1 },    
+        { name: "missionImage", maxCount: 1 },   
+        { name: "visionImage", maxCount: 1 } 
     ]),
     updateAboutUs
 );

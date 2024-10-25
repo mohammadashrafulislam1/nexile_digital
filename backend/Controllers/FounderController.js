@@ -82,6 +82,9 @@ export const updateFounder = async (req, res) => {
         // Update the founder entry
         const updatedFounder = await FounderModel.findByIdAndUpdate(id, updatedData, { new: true, runValidators: true });
 
+        // Remove the temporary file
+        fs.unlinkSync(req.file.path);
+        
         res.status(200).json({ message: "Founder updated successfully!", founder: updatedFounder });
     } catch (error) {
         res.status(500).json({ message: "Failed to update founder", error: error.message });

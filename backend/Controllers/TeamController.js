@@ -5,10 +5,10 @@ import { TeamModel } from '../Model/TeamModel.js';
 // Add Team Member
 export const addTeamMember = async (req, res) => {
     try {
-        const { name, detail, des } = req.body;
-
+        const { name, detail, des, role } = req.body;
+        console.log(req.body, req.files, req.file)
         // Ensure all required fields are present
-        if (!name || !detail || !des || !req.file) {
+        if (!name || !detail || !des) {
             return res.status(400).json({ message: "All fields are required." });
         }
 
@@ -21,6 +21,7 @@ export const addTeamMember = async (req, res) => {
         const newTeamMember = new TeamModel({
             name,
             detail,
+            role,
             des,
             image: result.secure_url, // Cloudinary URL
             publicId: result.public_id // Cloudinary public ID for later deletion
@@ -42,19 +43,22 @@ export const addTeamMember = async (req, res) => {
 export const updateTeamMember = async (req, res) => {
     try {
         const { id } = req.params;
-        const { name, detail, des } = req.body;
+        const { name, detail, des, role } = req.body;
 
         // Find the team member by ID
         const teamMember = await TeamModel.findById(id);
         if (!teamMember) {
             return res.status(404).json({ message: "Team member not found." });
         }
+        console.log(req.body, req.file)
 
-        let updatedData = {
-            name,
-            detail,
-            des
-        };
+        // Prepare the updated data
+    let updatedData = {
+        name: name || teamMember.name,
+        detail: detail || teamMember.detail,
+        role: role || teamMember.role,
+        des: des || teamMember.des
+    };
 
         // If a new image is uploaded, handle Cloudinary upload
         if (req.file) {
@@ -68,6 +72,9 @@ export const updateTeamMember = async (req, res) => {
 
             updatedData.image = result.secure_url; // Update image URL
             updatedData.publicId = result.public_id; // Update public ID
+            
+        // Remove the temporary file
+        fs.unlinkSync(req.file.path);
         }
 
         // Update the team member entry

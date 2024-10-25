@@ -18,6 +18,7 @@ const uploadImage = async (filePath) => {
 // Add About Us
 export const addAboutUs = async (req, res) => {
     try {
+        console.log(req.body)
         const {
             sectionTitle,
             sectionDes,
@@ -31,7 +32,6 @@ export const addAboutUs = async (req, res) => {
             coreValues,
             whyChooseUs,
             ourImpact,
-            socialProof
         } = req.body;
 
         // Upload images
@@ -67,7 +67,6 @@ export const addAboutUs = async (req, res) => {
             coreValues: parsedCoreValues,
             whyChooseUs: whyChooseUs ? JSON.parse(whyChooseUs) : [],
             ourImpact: ourImpact ? JSON.parse(ourImpact) : [],
-            socialProof: socialProof ? JSON.parse(socialProof) : []
         });
 
         // Save the About Us document
@@ -76,6 +75,15 @@ export const addAboutUs = async (req, res) => {
     } catch (error) {
         console.error('Error adding About Us:', error.message);
         res.status(500).json({ message: error.message });
+    }
+};
+
+// Helper function for deleting images from Cloudinary
+const deleteImage = async (public_id) => {
+    try {
+        await cloudinary.uploader.destroy(public_id);
+    } catch (error) {
+        console.error('Error deleting image:', error.message);
     }
 };
 
@@ -103,7 +111,6 @@ export const updateAboutUs = async (req, res) => {
             coreValues,
             whyChooseUs,
             ourImpact,
-            socialProof
         } = req.body;
 
         // Update fields while retaining existing values if new ones are not provided
@@ -114,27 +121,37 @@ export const updateAboutUs = async (req, res) => {
         existingAboutUs.intro.tagline = tagline || existingAboutUs.intro.tagline;
         existingAboutUs.intro.whoWeAre = whoWeAre || existingAboutUs.intro.whoWeAre;
 
-        // Upload images for ourStory, ourMission, and ourVision
-        existingAboutUs.ourStory = {
-            description: ourStory.description || existingAboutUs.ourStory.description,
-            image: await uploadImage(req.files?.storyImage?.[0]) || existingAboutUs.ourStory.image
-        };
+        // Update ourStory image and description
+        if (req.files?.storyImage?.[0]) {
+            if (existingAboutUs.ourStory.image.public_id) {
+                await deleteImage(existingAboutUs.ourStory.image.public_id);
+            }
+            existingAboutUs.ourStory.image = await uploadImage(req.files.storyImage[0].path);
+        }
+        existingAboutUs.ourStory.description = ourStory?.description || existingAboutUs.ourStory.description;
 
-        existingAboutUs.ourMission = {
-            description: ourMission.description || existingAboutUs.ourMission.description,
-            image: await uploadImage(req.files?.missionImage?.[0]) || existingAboutUs.ourMission.image
-        };
+        // Update ourMission image and description
+        if (req.files?.missionImage?.[0]) {
+            if (existingAboutUs.ourMission.image.public_id) {
+                await deleteImage(existingAboutUs.ourMission.image.public_id);
+            }
+            existingAboutUs.ourMission.image = await uploadImage(req.files.missionImage[0].path);
+        }
+        existingAboutUs.ourMission.description = ourMission?.description || existingAboutUs.ourMission.description;
 
-        existingAboutUs.ourVision = {
-            description: ourVision.description || existingAboutUs.ourVision.description,
-            image: await uploadImage(req.files?.visionImage?.[0]) || existingAboutUs.ourVision.image
-        };
+        // Update ourVision image and description
+        if (req.files?.visionImage?.[0]) {
+            if (existingAboutUs.ourVision.image.public_id) {
+                await deleteImage(existingAboutUs.ourVision.image.public_id);
+            }
+            existingAboutUs.ourVision.image = await uploadImage(req.files.visionImage[0].path);
+        }
+        existingAboutUs.ourVision.description = ourVision?.description || existingAboutUs.ourVision.description;
 
-        // Update coreValues and other fields
+        // Update other fields
         existingAboutUs.coreValues = coreValues ? JSON.parse(coreValues) : existingAboutUs.coreValues;
         existingAboutUs.whyChooseUs = whyChooseUs ? JSON.parse(whyChooseUs) : existingAboutUs.whyChooseUs;
         existingAboutUs.ourImpact = ourImpact ? JSON.parse(ourImpact) : existingAboutUs.ourImpact;
-        existingAboutUs.socialProof = socialProof ? JSON.parse(socialProof) : existingAboutUs.socialProof;
 
         // Save the updated AboutUs document
         const savedAboutUs = await existingAboutUs.save();
@@ -144,6 +161,7 @@ export const updateAboutUs = async (req, res) => {
         res.status(500).json({ message: 'Error updating About Us' });
     }
 };
+
 
 // Controller to fetch the "About Us" section
 export const getAboutUs = async (req, res) => {

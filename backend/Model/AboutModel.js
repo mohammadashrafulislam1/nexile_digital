@@ -4,10 +4,10 @@ import mongoose from "mongoose";
 const CoreValueSchema = new mongoose.Schema({
   title: {
     type: String,
-    required: true, // e.g., "Integrity"
+    required: true, 
   },
   description: {
-    type: String, // e.g., "We operate with honesty and transparency..."
+    type: String,
   }
 });
 
@@ -15,42 +15,27 @@ const CoreValueSchema = new mongoose.Schema({
 const WhyChooseUsSchema = new mongoose.Schema({
   title: {
     type: String,
-    required: true, // e.g., "Expertise"
+    required: true, 
   },
   description: {
-    type: String, // e.g., "With years of experience in the digital world..."
+    type: String,
   }
-});
-
-// Schema for Social Proof (client logos or awards)
-const SocialProofSchema = new mongoose.Schema({
-  title: {
-    type: String, // e.g., "Our Clients"
-  },
-  images: [{
-    url: {
-      type: String, // URL for the image (e.g., Cloudinary URL)
-    },
-    public_id: {
-      type: String, // Cloudinary public ID for easy deletion
-    }
-  }]
 });
 
 // Schema for Our Impact
 const ImpactSchema = new mongoose.Schema({
   title: {
-    type: String, // e.g., "X websites designed and developed"
+    type: String,
   },
   description: {
-    type: String, // Detailed description about the impact
+    type: String, 
   },
   image: {
     url: {
-      type: String, // URL for the impact image (e.g., Cloudinary URL)
+      type: String,
     },
     public_id: {
-      type: String, // Cloudinary public ID for the impact image
+      type: String,
     }
   }
 });
@@ -71,55 +56,54 @@ const AboutUsSchema = new mongoose.Schema({
   },
   intro: {
     tagline: {
-      type: String, // e.g., "Empowering businesses through cutting-edge digital solutions."
+      type: String, 
     },
     whoWeAre: {
-      type: String, // A short description about the company
+      type: String,
     }
   },
   ourStory: {
     description: {
-      type: String, // e.g., "Nexile Digital was born out of a desire to provide businesses with..."
+      type: String, 
     },
     image: {
       url: {
-        type: String, // URL for the story image (e.g., Cloudinary URL)
+        type: String, 
       },
       public_id: {
-        type: String, // Cloudinary public ID for the story image
+        type: String, 
       }
     }
   },
   ourMission: {
     description: {
-      type: String, // e.g., "Our mission is to deliver scalable and innovative digital solutions..."
+      type: String,
     },
     image: {
       url: {
-        type: String, // URL for the mission image (e.g., Cloudinary URL)
+        type: String, 
       },
       public_id: {
-        type: String, // Cloudinary public ID for the mission image
+        type: String, 
       }
     }
   },
   ourVision: {
     description: {
-      type: String, // e.g., "Our vision is to be a leader in the digital space..."
+      type: String,
     },
     image: {
       url: {
-        type: String, // URL for the vision image (e.g., Cloudinary URL)
+        type: String,
       },
       public_id: {
-        type: String, // Cloudinary public ID for the vision image
+        type: String, 
       }
     }
   },
-  coreValues: [CoreValueSchema], // Array of core values with title and description
-  whyChooseUs: [WhyChooseUsSchema], // Array for Why Choose Us sections with title and description
-  ourImpact: [ImpactSchema], // Array for impacts with title, description, and image
-  socialProof: [SocialProofSchema], // Array of images and titles for social proof
+  coreValues: [CoreValueSchema], 
+  whyChooseUs: [WhyChooseUsSchema], 
+  ourImpact: [ImpactSchema],
   createdAt: {
     type: Date,
     default: Date.now
