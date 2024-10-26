@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { FaTrashAlt } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { endPoint } from '../Components/ForAll/ForAll';
 
 const Work = () => {
@@ -32,14 +32,36 @@ const Work = () => {
     metaDescription: '',
     metaKeywords: [],
   });
-
+  const { state } = useLocation();
   const [images, setImages] = useState([]);
   const [techStackImage, setTechStackImage] = useState([]);
   const [previewImages, setPreviewImages] = useState([]);
   const [techStackItem, setTechStackItem] = useState({ title: '', description: '', image: '' });
   const [service, setService] = useState('');
   const [tag, setTag] = useState('');
+  const [loading, setLoading] = useState(false);
   const [metaKeyword, setMetaKeyword] = useState('');
+  const [workToUpdate, setWorkToUpdate] = useState();
+  const workToEdit = state?.work;
+  
+  console.log(images)
+
+
+  useEffect(() => {
+    const fetchWorkData = async () => {
+        try {
+            const response = await axios.get(`${endPoint}/works/${workToEdit?._id}`);
+            setWorkToUpdate(response?.data?.work);
+            setFormData(response?.data?.work); // Populate formData with fetched work data
+        setImages(response?.data?.work.images || []); // Set existing images if available
+            console.log(response?.data?.work);
+        } catch (error) {
+            console.error('Error fetching property data:', error);
+        }
+    };
+
+    fetchWorkData();
+}, [workToEdit]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -98,6 +120,7 @@ const Work = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true)
 
     // Create a FormData object to send files and data
     const formDataToSend = new FormData();
@@ -145,6 +168,7 @@ const Work = () => {
             headers: { 'Content-Type': 'multipart/form-data' },
         });
         console.log('Project added successfully:', response.data);
+        setLoading(false)
     } catch (error) {
         console.error('Error adding project:', error);
     }
@@ -157,7 +181,13 @@ const Work = () => {
     updatedItems.splice(index, 1);
     setFormData({ ...formData, [section]: updatedItems });
   };
-console.log(techStackImage)
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <span className="loading loading-bars loading-lg"></span>
+      </div>
+    );
+  }
   return (
    <div>
      <div className="breadcrumbs text-sm lg:w-1/2 md:w-[80%] w-[96%] mx-auto">
@@ -447,23 +477,28 @@ console.log(techStackImage)
 
       {/* Metrics Data Section */}
       <div className="mb-4">
-        <h3 className="text-lg font-bold capitalize mb-2">Metrics Data</h3>
-        {Object.keys(formData.metricsData).map((key) => (
-          <div key={key}>
-            <input
-              type="text"
-              placeholder={key.replace(/([A-Z])/g, ' $1').toLowerCase()}
-              name={key}
-              value={formData.metricsData[key]}
-              onChange={(e) => setFormData({
-                ...formData,
-                metricsData: { ...formData.metricsData, [key]: e.target.value },
-              })}
-              className="input input-bordered w-full mb-2"
-            />
-          </div>
-        ))}
+  <h3 className="text-lg font-bold capitalize mb-2">Metrics Data</h3>
+  {formData.metricsData && typeof formData.metricsData === 'object' ? (
+    Object.keys(formData.metricsData).map((key) => (
+      <div key={key}>
+        <input
+          type="text"
+          placeholder={key.replace(/([A-Z])/g, ' $1').toLowerCase()}
+          name={key}
+          value={formData.metricsData[key]}
+          onChange={(e) => setFormData({
+            ...formData,
+            metricsData: { ...formData.metricsData, [key]: e.target.value },
+          })}
+          className="input input-bordered w-full mb-2"
+        />
       </div>
+    ))
+  ) : (
+    <p>No metrics data available</p> // Optional: message when there's no data
+  )}
+</div>
+
 
       <textarea 
         name="clientTestimonial" 
@@ -512,24 +547,44 @@ console.log(techStackImage)
         accept="image/*"
         multiple // Allow multiple uploads
       />
-     <div className='flex flex-wrap gap-3 mt-3'>
-     {previewImages.map((img, index) => (
-        <div key={index} className="flex justify-between items-center mb-2 relative w-28 h-28 rounded-md">
-          <img
-            src={img}
-            alt={`Uploaded preview ${index}`}
-            className="w-28 h-28 object-cover mr-2 rounded-md" // Thumbnail style
-          />
-          <button
-            type="button"
-            className="text-red-600 bg-[#fff] p-1 rounded-full text-[12px] absolute top-1 right-1"
-            onClick={() => removeImage(index)} // Use removeImage function
-          >
-            <FaTrashAlt />
-          </button>
-        </div>
-      ))}
-     </div>
+    <div className='flex flex-wrap gap-3 mt-3'>
+  {previewImages && previewImages.length > 0 ? (
+    previewImages.map((img, index) => (
+      <div key={index} className="flex justify-between items-center mb-2 relative w-28 h-28 rounded-md">
+        <img
+          src={img}
+          alt={`Uploaded preview ${index}`}
+          className="w-28 h-28 object-cover mr-2 rounded-md" // Thumbnail style
+        />
+        <button
+          type="button"
+          className="text-red-600 bg-[#fff] p-1 rounded-full text-[12px] absolute top-1 right-1"
+          onClick={() => removeImage(index)} // Use removeImage function
+        >
+          <FaTrashAlt />
+        </button>
+      </div>
+    ))
+  ) : (
+    images.map((img, index) => (
+      <div key={index} className="flex justify-between items-center mb-2 relative w-28 h-28 rounded-md">
+        <img
+          src={img.url}
+          alt={`Uploaded image ${index}`}
+          className="w-28 h-28 object-cover mr-2 rounded-md" // Thumbnail style
+        />
+        <button
+          type="button"
+          className="text-red-600 bg-[#fff] p-1 rounded-full text-[12px] absolute top-1 right-1"
+          onClick={() => removeImage(index)} // Use removeImage function
+        >
+          <FaTrashAlt />
+        </button>
+      </div>
+    ))
+  )}
+</div>
+
     </div>
 
       <button type="submit" className="btn btn-sm bg-black text-white mt-4 w-full">Submit Project</button>
