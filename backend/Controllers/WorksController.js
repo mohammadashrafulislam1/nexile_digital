@@ -104,12 +104,6 @@ if (req.files && req.files.techStackImage) {
   }
 };
 
-
-// Function to update an existing showcase in a work
-import fs from 'fs';
-import { cloudinary } from '../utils/cloudinary.js';
-import { WorksModel } from '../Model/WorksModel.js';
-
 export const updateWork = async (req, res) => {
   const { id } = req.params; // Assuming the ID is passed in the URL parameters
   try {
@@ -235,17 +229,14 @@ export const getAllShowcases = async (req, res) => {
   // Function to get a single showcase by ID
   export const getShowcaseById = async (req, res) => {
     try {
-      const { id, showcaseId } = req.params;
+      const { id } = req.params;
   
       // Find the work document by ID
       const work = await WorksModel.findById(id);
       if (!work) return res.status(404).json({ success: false, message: 'Work not found' });
   
-      // Find the showcase by its ID
-      const showcase = work.showcases.id(showcaseId);
-      if (!showcase) return res.status(404).json({ success: false, message: 'Showcase not found' });
   
-      res.status(200).json({ success: true, showcase });
+      res.status(200).json({ success: true, work });
     } catch (error) {
       res.status(500).json({ success: false, message: error.message });
     }

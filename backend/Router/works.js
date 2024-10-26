@@ -1,5 +1,5 @@
 import express from "express";
-import { addWork, deleteShowcase, getAllShowcases, getShowcaseById, getShowcaseByTitle, updateShowcase } from "../Controllers/WorksController.js";
+import { addWork, deleteShowcase, getAllShowcases, getShowcaseById, getShowcaseByTitle, updateWork } from "../Controllers/WorksController.js";
 import { upload } from "../Middleware/multer.js";
 
 export const workRouter = express.Router();
@@ -21,17 +21,17 @@ workRouter.post(
       { name: 'images', maxCount: 10 }, // Max 10 new general project images
       { name: 'techStackImage', maxCount: 10 }, // Max 10 new tech stack images
     ]),
-    updateShowcase
+    updateWork
   );
 
   // Route for getting all showcases
 workRouter.get('/', getAllShowcases);
 
 // Route for getting a specific showcase
-workRouter.get('/:id/:showcaseId', getShowcaseById);
+workRouter.get('/:id', getShowcaseById);
 
 // Route for deleting a specific showcase
-workRouter.delete('/:id/:showcaseId', deleteShowcase);
+workRouter.delete('/:id', deleteShowcase);
 
 // get showcase by title
 workRouter.get("/:title", getShowcaseByTitle);
