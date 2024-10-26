@@ -9,7 +9,7 @@ workRouter.post(
     '/',
     upload.fields([
       { name: 'images', maxCount: 10 }, // Max 10 general project images
-      { name: 'techStackImages', maxCount: 10 }, // Max 10 tech stack images
+      { name: 'techStackImage', maxCount: 10 }, // Max 10 tech stack images
     ]),
     addWork
   );
@@ -19,7 +19,7 @@ workRouter.post(
     '/:id/:showcaseId',
     upload.fields([
       { name: 'images', maxCount: 10 }, // Max 10 new general project images
-      { name: 'techStackImages', maxCount: 10 }, // Max 10 new tech stack images
+      { name: 'techStackImage', maxCount: 10 }, // Max 10 new tech stack images
     ]),
     updateShowcase
   );

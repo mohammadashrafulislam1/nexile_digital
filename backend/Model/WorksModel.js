@@ -1,9 +1,10 @@
 import mongoose from "mongoose";
 
-const showcaseSchema = new mongoose.Schema({
+const worksSchema = new mongoose.Schema({
   category: { type: String}, // Category of the showcase (e.g., Web Development, Video Editing)
   title: { type: String}, // Title of the project
   projectUrl: { type: String}, // URL for the live project or case study
+  githubUrl: { type: String}, // URL for the live project or case study
   images: [{
     publicId: { type: String, required: true }, // Public ID for image (for use with Cloudinary or similar services)
     url: { type: String, required: true } // URL of the image
@@ -35,11 +36,6 @@ const showcaseSchema = new mongoose.Schema({
    metaKeywords: [{ type: String }], // SEO meta keywords for the project
   created_at: { type: Date,
     default: Date.now} 
-});
-const worksSchema = new mongoose.Schema({
-  sectionTitle: { type: String}, // Title for the works section
-  description: { type: String}, // Description for the works section
-  showcases: [showcaseSchema] // Array of showcases
 });
 
 export const WorksModel = mongoose.model('Works', worksSchema);
