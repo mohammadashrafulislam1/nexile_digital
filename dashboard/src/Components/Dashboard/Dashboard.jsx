@@ -64,7 +64,7 @@ const Dashboard = () => {
           onClick={handlePropertiesSubMenuToggle}
         >
           <LuTableProperties />
-          <span className="sidebar-text">Properties</span>
+          <span className="sidebar-text">Works</span>
           <span className="ml-auto">
             {isPropertiesSubMenuOpen ? (
               <span className="text-[5px]">▲</span>
@@ -77,20 +77,20 @@ const Dashboard = () => {
           <ul>
             <li>
               <Link
-                to={"/add"}
+                to={"/work"}
                 className="p-3 bg-[#7e7e7e1a] rounded flex items-center gap-2 side-li mt-2 "
               >
                 <MdOutlineLibraryAdd />
-                <span className="sidebar-text">Add Property</span>
+                <span className="sidebar-text">Add Work</span>
               </Link>
             </li>
             <li>
               <Link
-                to={"/properties"}
+                to={"/manageworks"}
                 className="p-3 bg-[#7e7e7e1a] rounded flex items-center gap-2 side-li mt-2"
               >
                 <LuTableProperties />
-                <span className="sidebar-text">Manage Properties</span>
+                <span className="sidebar-text">Manage Works</span>
               </Link>
             </li>
             <li>

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { FaTrashAlt } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import { endPoint } from '../Components/ForAll/ForAll';
 
 const Work = () => {
   const [formData, setFormData] = useState({
@@ -12,7 +13,7 @@ const Work = () => {
     client: '',
     shortDescription: '',
     problemGoal: '',
-    servicesProvided: ['Default Service 1'], // Default service
+    servicesProvided: [], // Default service
     projectTimeline: '',
     customSolutions: '',
     metricsData: {
@@ -33,6 +34,8 @@ const Work = () => {
   });
 
   const [images, setImages] = useState([]);
+  const [techStackImage, setTechStackImage] = useState([]);
+  const [previewImages, setPreviewImages] = useState([]);
   const [techStackItem, setTechStackItem] = useState({ title: '', description: '', image: '' });
   const [service, setService] = useState('');
   const [tag, setTag] = useState('');
@@ -45,11 +48,24 @@ const Work = () => {
   const handleImageChange = (e) => {
     setTechStackItem({ ...techStackItem, image: e.target.files[0] });
   };
+
   const handleImageUpload = (event) => {
-    const files = Array.from(event.target.files); // Convert FileList to an array
-    const newImages = files.map((file) => URL.createObjectURL(file)); // Create URLs for previews
-    setImages((prevImages) => prevImages.concat(newImages)); // Concatenate new images with the existing ones
-  };
+    const files = Array.from(event.target.files);
+    setImages((prevImages) => {
+        console.log('Previous images:', prevImages);
+        console.log('Type of previous images:', typeof prevImages);
+        const currentImages = Array.isArray(prevImages) ? prevImages : [];
+        return [...currentImages, ...files];
+    });
+
+    const newImagePreviews = files.map((file) => URL.createObjectURL(file));
+    setPreviewImages((prevPreviews) => [...prevPreviews, ...newImagePreviews]);
+};
+
+
+
+
+
 
   const removeImage = (index) => {
     setImages(images.filter((_, i) => i !== index)); // Remove the selected image
@@ -82,21 +98,66 @@ const Work = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const completeData = { ...formData, images };
-    try {
-      const response = await axios.post('/api/works', completeData);
-      console.log('Project added successfully:', response.data);
-    } catch (error) {
-      console.error('Error adding project:', error);
+
+    // Create a FormData object to send files and data
+    const formDataToSend = new FormData();
+
+    // Append other form data fields
+    for (const key in formData) {
+        if (Array.isArray(formData[key])) {
+            formData[key].forEach((item) => {
+                formDataToSend.append(key, item);
+            });
+        } else {
+            formDataToSend.append(key, formData[key]);
+        }
     }
-  };
+
+    // Check if images is an array before using forEach
+    console.log('Current images state:', images);
+    console.log('Is images an array?', Array.isArray(images)); // Check if images is an array
+    
+    if (Array.isArray(images)) {
+        images.forEach((image) => {
+            formDataToSend.append('images', image);
+        });
+    } else {
+        console.error('Images is not an array:', images);
+    }
+
+    // Append techStack data including images
+    formData.techStack.forEach((item, index) => {
+        formDataToSend.append(`techStack[${index}][title]`, item.title);
+        formDataToSend.append(`techStack[${index}][description]`, item.description);
+        // Ensure only one image for tech stack if needed
+        if (index === 0 && item.image) {
+            formDataToSend.append('techStackImage', item.image); 
+        }
+    });
+
+    // Log for debugging
+    for (let [key, value] of formDataToSend.entries()) {
+        console.log(key + ':', value);
+    }
+
+    try {
+        const response = await axios.post(`${endPoint}/works`, formDataToSend, {
+            headers: { 'Content-Type': 'multipart/form-data' },
+        });
+        console.log('Project added successfully:', response.data);
+    } catch (error) {
+        console.error('Error adding project:', error);
+    }
+};
+
+
 
   const removeItem = (section, index) => {
     const updatedItems = [...formData[section]];
     updatedItems.splice(index, 1);
     setFormData({ ...formData, [section]: updatedItems });
   };
-console.log(formData.techStack)
+console.log(techStackImage)
   return (
    <div>
      <div className="breadcrumbs text-sm lg:w-1/2 md:w-[80%] w-[96%] mx-auto">
@@ -160,7 +221,7 @@ console.log(formData.techStack)
 
       <div>
         <input 
-          type="url" 
+          type="text" 
           name="projectUrl" 
           placeholder="Project URL" 
           onChange={handleChange} 
@@ -168,7 +229,7 @@ console.log(formData.techStack)
           className="input input-bordered w-full mb-2" 
         />
         <input 
-          type="url" 
+          type="text" 
           name="githubUrl" 
           placeholder="GitHub URL" 
           onChange={handleChange} 
@@ -219,86 +280,84 @@ console.log(formData.techStack)
 
       {/* Tech Stack Section */}
       <div className="mb-4">
-        <h3 className="text-lg font-bold capitalize mb-2">Tech Stack</h3>
-        {formData.techStack.map((item, index) => (
-          <div key={index} className="mb-2 border p-4 rounded-md">
-            <div className="mb-2">
-              <label className="block text-gray-700 mb-1">Title</label>
-              <input
-                type="text"
-                className="input input-bordered w-full mb-2"
-                value={item.title}
-                onChange={(e) => {
-                  const updatedTechStack = [...formData.techStack];
-                  updatedTechStack[index].title = e.target.value;
-                  setFormData({ ...formData, techStack: updatedTechStack });
-                }}
-                required
-              />
-              <label className="block text-gray-700 mb-1">Description</label>
-              <textarea
-                className="textarea textarea-bordered w-full mb-2"
-                value={item.description}
-                onChange={(e) => {
-                  const updatedTechStack = [...formData.techStack];
-                  updatedTechStack[index].description = e.target.value;
-                  setFormData({ ...formData, techStack: updatedTechStack });
-                }}
-                required
-                rows="2"
-              />{item.image ? (
-                // Check if item.image is a URL
-                item.image instanceof File ? (
-                  // If it's a File object, create a URL for it
-                  <img
-                    src={URL.createObjectURL(item.image)}
-                    alt={item.title}
-                    className="w-32 h-32 rounded-md object-cover my-3" // Adjust styles as needed
-                  />
-                ) : (
-                  // If it's a URL string, use it directly
-                  <img
-                    src={item.image} // This is the URL
-                    alt={item.title}
-                    className="w-32 h-32 rounded-md object-cover my-3" // Adjust styles as needed
-                  />
-                )
+      <h3 className="text-lg font-bold capitalize mb-2">Tech Stack</h3>
+      {formData.techStack.map((item, index) => (
+        <div key={index} className="mb-2 border p-4 rounded-md">
+          <div className="mb-2">
+            <label className="block text-gray-700 mb-1">Title</label>
+            <input
+              type="text"
+              className="input input-bordered w-full mb-2"
+              value={item.title}
+              onChange={(e) => {
+                const updatedTechStack = [...formData.techStack];
+                updatedTechStack[index].title = e.target.value;
+                setFormData({ ...formData, techStack: updatedTechStack });
+              }}
+              required
+            />
+            <label className="block text-gray-700 mb-1">Description</label>
+            <textarea
+              className="textarea textarea-bordered w-full mb-2"
+              value={item.description}
+              onChange={(e) => {
+                const updatedTechStack = [...formData.techStack];
+                updatedTechStack[index].description = e.target.value;
+                setFormData({ ...formData, techStack: updatedTechStack });
+              }}
+              required
+              rows="2"
+            />
+            {item.image ? (
+              typeof item.image === 'object' ? (
+                <img
+                  src={URL.createObjectURL(item.image)}
+                  alt={item.title}
+                  className="w-32 h-32 rounded-md object-cover my-3"
+                />
               ) : (
-                <p>No image uploaded.</p> // Optional: message when no image is present
-              )}
-            </div>
-            <button type="button" className="w-full text-2xl text-red-600 flex justify-end" onClick={() => removeItem('techStack', index)}>
-              <FaTrashAlt />
-            </button>
+                <img
+                  src={item.image}
+                  alt={item.title}
+                  className="w-32 h-32 rounded-md object-cover my-3"
+                />
+              )
+            ) : (
+              <p>No image uploaded.</p>
+            )}
           </div>
-        ))}
-        <input
-          type="text"
-          placeholder="Tech Title"
-          name="title"
-          value={techStackItem.title}
-          onChange={handleTechStackChange}
-          className="input input-bordered w-full mb-2"
-        />
-        <textarea
-          placeholder="Tech Description"
-          name="description"
-          value={techStackItem.description}
-          onChange={handleTechStackChange}
-          className="textarea textarea-bordered w-full mb-2"
-          rows="2"
-        />
-        <label className="block text-gray-700 mb-1">Upload Image</label>
-          <input
-            type="file"
-            accept="image/*"
-            className="file-input file-input-bordered w-full mb-2"
-            onChange={handleImageChange}
-          />
-        <button type="button" className="btn btn-primary" onClick={addTechStackItem}>
-          Add Tech Stack Item
-        </button>
-      </div>
+          <button type="button" className="w-full text-2xl text-red-600 flex justify-end" onClick={() => removeItem('techStack', index)}>
+            <FaTrashAlt />
+          </button>
+        </div>
+      ))}
+      <input
+        type="text"
+        placeholder="Tech Title"
+        name="title"
+        value={techStackItem.title}
+        onChange={handleTechStackChange}
+        className="input input-bordered w-full mb-2"
+      />
+      <textarea
+        placeholder="Tech Description"
+        name="description"
+        value={techStackItem.description}
+        onChange={handleTechStackChange}
+        className="textarea textarea-bordered w-full mb-2"
+        rows="2"
+      />
+      <label className="block text-gray-700 mb-1">Upload Image</label>
+      <input
+        type="file"
+        accept="image/*"
+        className="file-input file-input-bordered w-full mb-2"
+        onChange={handleImageChange}
+      />
+      <button type="button" className="btn btn-primary" onClick={addTechStackItem}>
+        Add Tech Stack Item
+      </button>
+    </div>
 
       {/* Tags Section */}
       <div className="mb-4">
@@ -453,25 +512,27 @@ console.log(formData.techStack)
         accept="image/*"
         multiple // Allow multiple uploads
       />
-      {images.map((img, index) => (
-        <div key={index} className="flex justify-between items-center mb-2">
+     <div className='flex flex-wrap gap-3 mt-3'>
+     {previewImages.map((img, index) => (
+        <div key={index} className="flex justify-between items-center mb-2 relative w-28 h-28 rounded-md">
           <img
             src={img}
             alt={`Uploaded preview ${index}`}
-            className="w-16 h-16 object-cover mr-2" // Thumbnail style
+            className="w-28 h-28 object-cover mr-2 rounded-md" // Thumbnail style
           />
           <button
             type="button"
-            className="text-red-600"
+            className="text-red-600 bg-[#fff] p-1 rounded-full text-[12px] absolute top-1 right-1"
             onClick={() => removeImage(index)} // Use removeImage function
           >
             <FaTrashAlt />
           </button>
         </div>
       ))}
+     </div>
     </div>
 
-      <button type="submit" className="btn btn-primary mt-4">Submit Project</button>
+      <button type="submit" className="btn btn-sm bg-black text-white mt-4 w-full">Submit Project</button>
     </form>
   </div>
 );
