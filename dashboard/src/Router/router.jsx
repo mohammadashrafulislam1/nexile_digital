@@ -6,6 +6,7 @@ import About from "../Pages/About";
 import HowWeWork from "../Pages/HowWeWork";
 import Founder from "../Pages/Founder";
 import Team from "../Pages/Team";
+import Work from "../Pages/Work";
 
 export const router = createBrowserRouter([
     {
@@ -40,6 +41,10 @@ export const router = createBrowserRouter([
             {
                 path:'team',
                 element:<Team/>
+            },
+            {
+                path:'work',
+                element:<Work/>
             },
         ],
     }
