@@ -25,6 +25,7 @@ export const addWork = async (req, res) => {
     } = req.body;
 
     console.log("req.body", req.body);
+    console.log("req.files", req.files);
     console.log("Tags:", tags);
     console.log("techStack:", techStack);
     console.log("Services Provided:", servicesProvided);
@@ -132,6 +133,9 @@ export const updateWork = async (req, res) => {
       metaKeywords,
       techStack,
     } = req.body;
+
+    console.log("req.body", req.body)
+    console.log("req.files", req.files)
 
     // Log the incoming data for debugging
     console.log("Updating Work:", { id, category, title, tags, techStack });
@@ -268,40 +272,39 @@ export const getShowcaseByTitle = async (req, res) => {
 };
 
 // Function to delete a showcase
-export const deleteShowcase = async (req, res) => {
-    try {
-      const { id, showcaseId } = req.params;
-  
-      // Find the work document by ID
-      const work = await WorksModel.findById(id);
-      if (!work) return res.status(404).json({ success: false, message: 'Work not found' });
-  
-      // Find the showcase by its ID
-      const showcase = work.showcases.id(showcaseId);
-      if (!showcase) return res.status(404).json({ success: false, message: 'Showcase not found' });
-  
-      // Remove the images from Cloudinary
-      for (const img of showcase.images) {
-        await cloudinary.uploader.destroy(img.publicId);
+export const deleteWork = async (req, res) => {
+  try {
+    const { id } = req.params; // Get the ID from request parameters
+
+    // Find the work entry by ID
+    const workToDelete = await WorksModel.findById(id);
+    if (!workToDelete) {
+      return res.status(404).json({ success: false, message: 'Work not found' });
+    }
+
+    // Delete images from Cloudinary
+    if (workToDelete.images && workToDelete.images.length > 0) {
+      for (const image of workToDelete.images) {
+        await cloudinary.uploader.destroy(image.publicId); // Destroy the image by public ID
       }
-  
-      // Remove tech stack images from Cloudinary
-      for (const techItem of showcase.techStack) {
-        if (techItem.publicId) {
-          await cloudinary.uploader.destroy(techItem.publicId);
+    }
+
+    // Delete tech stack images from Cloudinary
+    if (workToDelete.techStack && workToDelete.techStack.length > 0) {
+      for (const tech of workToDelete.techStack) {
+        if (tech.publicId) {
+          await cloudinary.uploader.destroy(tech.publicId); // Destroy tech stack image by public ID
         }
       }
-  
-      // Remove the showcase from the work document
-      showcase.remove();
-      
-      // Save the updated work document
-      await work.save();
-  
-      res.status(200).json({ success: true, message: 'Showcase and all associated images deleted successfully' });
-    } catch (error) {
-      res.status(500).json({ success: false, message: error.message });
     }
-  };
+
+    // Remove the work entry from the database
+    await WorksModel.findByIdAndDelete(id);
+    res.status(200).json({ success: true, message: 'Work deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting work:', error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
   
   

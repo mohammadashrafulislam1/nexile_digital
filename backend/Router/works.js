@@ -1,5 +1,5 @@
 import express from "express";
-import { addWork, deleteShowcase, getAllShowcases, getShowcaseById, getShowcaseByTitle, updateWork } from "../Controllers/WorksController.js";
+import { addWork, deleteWork, getAllShowcases, getShowcaseById, getShowcaseByTitle, updateWork } from "../Controllers/WorksController.js";
 import { upload } from "../Middleware/multer.js";
 
 export const workRouter = express.Router();
@@ -31,7 +31,7 @@ workRouter.get('/', getAllShowcases);
 workRouter.get('/:id', getShowcaseById);
 
 // Route for deleting a specific showcase
-workRouter.delete('/:id', deleteShowcase);
+workRouter.delete('/:id', deleteWork);
 
 // get showcase by title
 workRouter.get("/:title", getShowcaseByTitle);
