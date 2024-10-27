@@ -34,7 +34,6 @@ const Work = () => {
   });
   const { state } = useLocation();
   const [images, setImages] = useState([]);
-  const [techStackImage, setTechStackImage] = useState([]);
   const [previewImages, setPreviewImages] = useState([]);
   const [techStackItem, setTechStackItem] = useState({ title: '', description: '', image: '' });
   const [service, setService] = useState('');
@@ -70,7 +69,6 @@ const Work = () => {
   const handleImageChange = (e) => {
     setTechStackItem({ ...techStackItem, image: e.target.files[0] });
   };
-
   const handleImageUpload = (event) => {
     const files = Array.from(event.target.files);
     setImages((prevImages) => {
@@ -79,15 +77,9 @@ const Work = () => {
         const currentImages = Array.isArray(prevImages) ? prevImages : [];
         return [...currentImages, ...files];
     });
-
     const newImagePreviews = files.map((file) => URL.createObjectURL(file));
     setPreviewImages((prevPreviews) => [...prevPreviews, ...newImagePreviews]);
-};
-
-
-
-
-
+   };
 
   const removeImage = (index) => {
     setImages(images.filter((_, i) => i !== index)); // Remove the selected image
@@ -124,7 +116,6 @@ const Work = () => {
 
     // Create a FormData object to send files and data
     const formDataToSend = new FormData();
-
     // Append other form data fields
     for (const key in formData) {
         if (Array.isArray(formData[key])) {
@@ -147,16 +138,22 @@ const Work = () => {
     } else {
         console.error('Images is not an array:', images);
     }
+   
+    
+      // Append techStacks data
+if (Array.isArray(formData.techStack) && formData.techStack.length > 0) {
+  formData.techStack.forEach((tech, index) => {
 
-    // Append techStack data including images
-    formData.techStack.forEach((item, index) => {
-        formDataToSend.append(`techStack[${index}][title]`, item.title);
-        formDataToSend.append(`techStack[${index}][description]`, item.description);
-        // Ensure only one image for tech stack if needed
-        if (index === 0 && item.image) {
-            formDataToSend.append('techStackImage', item.image); 
-        }
-    });
+      // Append non-file fields as individual fields
+      formDataToSend.append(`techStack[${index}][title]`, tech.title || "");
+      formDataToSend.append(`techStack[${index}][description]`, tech.description || "");
+
+      // Append image file for the plan (without index in the field name)
+      if (tech.image) {
+          formDataToSend.append("techStackImage", tech.image); // Now using "techStacks" without index
+      }
+  });
+}
 
     // Log for debugging
     for (let [key, value] of formDataToSend.entries()) {
@@ -164,17 +161,19 @@ const Work = () => {
     }
 
     try {
-        const response = await axios.post(`${endPoint}/works`, formDataToSend, {
+      console.log("workToEdit", workToEdit._id)
+        const response = workToEdit._id ? await axios.put(`${endPoint}/works/${workToEdit?._id}`, formDataToSend, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+      }) :
+        await axios.post(`${endPoint}/works`, formDataToSend, {
             headers: { 'Content-Type': 'multipart/form-data' },
-        });
+        }) 
         console.log('Project added successfully:', response.data);
         setLoading(false)
     } catch (error) {
         console.error('Error adding project:', error);
     }
 };
-
-
 
   const removeItem = (section, index) => {
     const updatedItems = [...formData[section]];
@@ -189,7 +188,7 @@ const Work = () => {
     );
   }
   return (
-   <div>
+   <div className='mb-10'>
      <div className="breadcrumbs text-sm lg:w-1/2 md:w-[80%] w-[96%] mx-auto">
       <ul className="my-6">
         <li>
@@ -551,43 +550,48 @@ const Work = () => {
         accept="image/*"
         multiple // Allow multiple uploads
       />
-    <div className='flex flex-wrap gap-3 mt-3'>
+
+<div className="flex flex-wrap gap-3 mt-3">
   {previewImages && previewImages.length > 0 ? (
     previewImages.map((img, index) => (
-      <div key={index} className="flex justify-between items-center mb-2 relative w-28 h-28 rounded-md">
+      <div key={`preview-${index}`} className="flex justify-between items-center mb-2 relative w-28 h-28 rounded-md">
         <img
           src={img}
           alt={`Uploaded preview ${index}`}
-          className="w-28 h-28 object-cover mr-2 rounded-md" // Thumbnail style
+          className="w-28 h-28 object-cover mr-2 rounded-md"
         />
         <button
           type="button"
           className="text-red-600 bg-[#fff] p-1 rounded-full text-[12px] absolute top-1 right-1"
-          onClick={() => removeImage(index)} // Use removeImage function
+          onClick={() => removeImage(index)}
         >
           <FaTrashAlt />
         </button>
       </div>
     ))
-  ) : (
-    images.map((img, index) => (
-      <div key={index} className="flex justify-between items-center mb-2 relative w-28 h-28 rounded-md">
+  ) : null}
+  
+  {images && images.length > 0 ? (
+      images
+        .filter(img => img.url)?.map((img, index) => (
+      <div key={`image-${index}`} className="flex justify-between items-center mb-2 relative w-28 h-28 rounded-md">
         <img
-          src={img.url}
+          src={img?.url}
           alt={`Uploaded image ${index}`}
-          className="w-28 h-28 object-cover mr-2 rounded-md" // Thumbnail style
+          className="w-28 h-28 object-cover mr-2 rounded-md"
         />
         <button
           type="button"
           className="text-red-600 bg-[#fff] p-1 rounded-full text-[12px] absolute top-1 right-1"
-          onClick={() => removeImage(index)} // Use removeImage function
+          onClick={() => removeImage(index)}
         >
           <FaTrashAlt />
-        </button>
+        </button> 
       </div>
     ))
-  )}
+  ) : null}
 </div>
+
 
     </div>
 

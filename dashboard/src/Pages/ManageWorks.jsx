@@ -4,6 +4,7 @@ import { endPoint } from "../Components/ForAll/ForAll";
 import { BsPencilSquare } from "react-icons/bs";
 import { FaTrashAlt } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const ManageWorks = () => {
     const [works, setWorks] = useState([]);
@@ -12,20 +13,19 @@ const ManageWorks = () => {
     const navigate = useNavigate()
 
     useEffect(() => {
-        const fetchWork = async () => {
-            try {
-                setLoading(true)
-                const response = await axios.get(`${endPoint}/works`);
-                console.log(response.data.works); // Log the response data
-                setWorks(response.data.works); // Update the state with fetched works
-                setLoading(false)
-            } catch (error) {
-                console.error("Error fetching works:", error); // Handle error
-            }
-        };
-
-        fetchWork();
-    }, [endPoint]);
+        fetchWorks();
+    }, []);
+    const fetchWorks = async () => {
+        try {
+            setLoading(true)
+            const response = await axios.get(`${endPoint}/works`);
+            console.log(response.data.works); // Log the response data
+            setWorks(response.data.works); // Update the state with fetched works
+            setLoading(false)
+        } catch (error) {
+            console.error("Error fetching works:", error); // Handle error
+        }
+    };
 
     const handleEditWork = (work) => {
         // Handle edit work functionality
@@ -33,9 +33,37 @@ const ManageWorks = () => {
     navigate("/work", { state: { work } });
     };
 
-    const handleDeleteWork = (work) => {
-        // Handle delete work functionality
-        console.log("Deleting work:", work);
+    const handleDeleteWork = async (work) => {
+        const confirmDelete = await Swal.fire({
+            title: "Are you sure?",
+            text: "This action cannot be undone.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Yes, delete it!",
+        });
+
+        if (confirmDelete.isConfirmed) {
+            try {
+                await axios.delete(`${endPoint}/works/${work._id}`);
+                Swal.fire({
+                    position: "top-end",
+                    icon: "success",
+                    title: "Work deleted successfully!",
+                    showConfirmButton: false,
+                    timer: 1500,
+                });
+                fetchWorks(); // Refresh the works list
+            } catch (error) {
+                console.error("Error deleting work:", error);
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "Something went wrong while deleting the work!",
+                });
+            }
+        }
     };
 
     // Filter works based on the search term
