@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { endPoint } from "../Components/ForAll/ForAll";
 import { BsPencilSquare } from "react-icons/bs";
 import { FaTrashAlt } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const ManageWorks = () => {
     const [works, setWorks] = useState([]);
@@ -50,9 +50,9 @@ const ManageWorks = () => {
         );
       }
     return (
-        <div className="p-4">
+        <div className="p-4 overflow-hidden">
             <h1 className="md:text-3xl text-xl font-semibold mb-4 text-center">Manage Works</h1>
-
+            <Link to="/work"><button className="btn btn-sm mb-2 flex justify-center items-center mx-auto bg-black text-white">Add Work</button></Link>
             {/* Search Input */}
             <div className="flex justify-center items-center"><input
                 type="text"
@@ -62,35 +62,71 @@ const ManageWorks = () => {
                 onChange={(e) => setSearchTerm(e.target.value)}
             /></div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 justify-center items-center lg:grid-cols-4 gap-6 my-5">
-                {filteredWorks?.map((work) => (
-                    <div
-                        key={work._id}
-                        className="max-w-sm rounded-lg overflow-hidden shadow-lg bg-white transition-transform transform hover:scale-105 hover:shadow-2xl"
-                    >
-                        <img className="w-full h-48 object-cover rounded-t-lg" src={work.images[0]?.url} alt={work.title} />
-                        <div className="px-6 py-3">
-                            <div className="font-bold text-xl mb-2 text-gray-800">{work.title}</div>
-                            <p className="text-gray-600 mt-2"><strong>Category:</strong> {work.category}</p>
-                            <p className="text-gray-600"><strong>Client:</strong> {work.client}</p>
-                            <p className="text-gray-600"><strong>Completion Date:</strong> {new Date(work.completionDate).toLocaleDateString()}</p>
-                           <p className="text-gray-600"><strong>Tags:</strong> {work.tags.join(", ")}</p>
-                            </div>
-                        <div className="px-6 pt-2 pb-5 flex justify-between">
-                            <button className="text-2xl text-blue-600 hover:text-blue-800" onClick={() => handleEditWork(work)}>
+<div className="overflow-x-auto mr-3 !rounded-[15px]">
+    <table className="min-w-full bg-white  border-gray-200 !rounded-[15px]">
+        <thead>
+            <tr className="bg-black text-white">
+                <th className="py-3 px-6 text-left text-xs font-semibold uppercase tracking-wider">Image</th>
+                <th className="py-3 px-6 text-left text-xs font-semibold uppercase tracking-wider">Title</th>
+                <th className="py-3 px-6 text-left text-xs font-semibold uppercase tracking-wider">Category</th>
+                <th className="py-3 px-6 text-left text-xs font-semibold uppercase tracking-wider">Client</th>
+                <th className="py-3 px-6 text-left text-xs font-semibold uppercase tracking-wider">Completion Date</th>
+                <th className="py-3 px-6 text-left text-xs font-semibold uppercase tracking-wider">Tags</th>
+                <th className="py-3 px-6 text-left text-xs font-semibold uppercase tracking-wider">Actions</th>
+            </tr>
+        </thead>
+        <tbody className="!rounded-xl">
+            {filteredWorks?.map((work) => (
+                <tr key={work._id} className="border-t border-gray-200 hover:bg-gray-900 hover:text-white">
+                    <td className="py-3 px-6">
+                        <img
+                            className="w-20 h-20 object-cover rounded"
+                            src={work.images[0]?.url}
+                            alt={work.title || "Project Image"}
+                        />
+                    </td>
+                    <td className="py-3 px-2 text-xl font-medium">{work.title}</td>
+                    <td className="py-3 px-2 text-sm ">{work.category}</td>
+                    <td className="py-3 px-2 text-sm ">{work.client}</td>
+                    <td className="py-3 px-2 text-sm ">{new Date(work.completionDate).toLocaleDateString()}</td>
+                    <td className="py-3 px-2">
+                        <div className="flex flex-wrap gap-1">
+                            {work.tags.map((tag, index) => (
+                                <span
+                                    key={index}
+                                    className="bg-gray-300 rounded-full px-2 py-0.5 text-xs text-gray-800"
+                                >
+                                    {tag}
+                                </span>
+                            ))}
+                        </div>
+                    </td>
+                    <td className="py-3 px-6 text-center">
+                        <div className="flex gap-2 justify-center">
+                            <button
+                                aria-label="Edit work"
+                                className="text-blue-600 hover:text-blue-800 text-lg p-2 rounded-full bg-white border border-gray-200"
+                                onClick={() => handleEditWork(work)}
+                            >
                                 <BsPencilSquare />
                             </button>
                             <button
+                                aria-label="Delete work"
                                 type="button"
-                                className="text-2xl text-red-600 hover:text-red-800"
+                                className="text-red-600 hover:text-red-800 text-lg p-2 rounded-full bg-white border border-gray-200"
                                 onClick={() => handleDeleteWork(work)}
                             >
                                 <FaTrashAlt />
                             </button>
                         </div>
-                    </div>
-                ))}
-            </div>
+                    </td>
+                </tr>
+            ))}
+        </tbody>
+    </table>
+</div>
+
+
         </div>
     );
 };

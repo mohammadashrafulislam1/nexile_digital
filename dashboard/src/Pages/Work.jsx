@@ -225,6 +225,10 @@ const Work = () => {
         </li>
       </ul>
     </div>
+    <Link to="/manageworks">
+      <button className="btn btn-sm flex justify-center items-center mx-auto bg-black text-white">Manage Works</button></Link>
+     {workToUpdate ? <h3 className="lg:w-1/2 md:w-[80%] w-[96%] mx-auto text-center my-8 font-bold text-xl">Update Work</h3>: <h3 className="lg:w-1/2 md:w-[80%] w-[96%] mx-auto text-center my-8 font-bold text-xl">Add Work</h3> } 
+     
     <form onSubmit={handleSubmit} className="p-6 bg-white rounded-lg shadow-md lg:w-1/2 md:w-[80%] w-[96%] mx-auto">
       <h2 className="text-2xl font-semibold mb-4">Add New Work</h2>
 
