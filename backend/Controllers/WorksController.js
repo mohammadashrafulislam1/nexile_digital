@@ -6,6 +6,7 @@ export const addWork = async (req, res) => {
   try {
     const {
       category,
+      metaTitle,
       title,
       githubUrl,
       projectUrl,
@@ -92,6 +93,7 @@ if (req.files && req.files.techStackImage) {
       isFeatured,
       completionDate,
       metaDescription,
+      metaTitle,
       metaKeywords,
     });
 
@@ -106,9 +108,8 @@ if (req.files && req.files.techStackImage) {
 };
 
 export const updateWork = async (req, res) => {
-  const { id } = req.params; // Assuming the ID is passed in the URL parameters
+  const { id } = req.params;
   try {
-    // Find the existing work by ID
     const existingWork = await WorksModel.findById(id);
     if (!existingWork) {
       return res.status(404).json({ success: false, message: 'Work not found' });
@@ -116,6 +117,7 @@ export const updateWork = async (req, res) => {
 
     const {
       category,
+      metaTitle,
       title,
       githubUrl,
       projectUrl,
@@ -134,91 +136,89 @@ export const updateWork = async (req, res) => {
       techStack,
     } = req.body;
 
-    console.log("req.body", req.body)
-    console.log("req.files", req.files)
+    console.log("req.body", req.body);
+    console.log("req.files", req.files);
 
-    // Log the incoming data for debugging
-    console.log("Updating Work:", { id, category, title, tags, techStack });
+    let images = existingWork.images.slice();
 
-    // Start with existing images
-    let images = existingWork.images.slice(); // Clone existing images
-
-    // Add new images if provided
     if (req.files && req.files.images) {
       for (const file of req.files.images) {
         const result = await cloudinary.uploader.upload(file.path, {
           folder: 'nexile_digital/showcase_images',
         });
         images.push({ publicId: result.public_id, url: result.secure_url });
-        fs.unlinkSync(file.path); // Delete local file after upload
+        fs.unlinkSync(file.path);
       }
     }
+// Handle techStacks if new ones are uploaded
+let techStackData;
+if (typeof techStack === 'string') {
+  try {
+    techStackData = JSON.parse(techStack);
+  } catch (error) {
+    console.error("Error parsing TechStack:", error);
+    techStackData = [];
+  }
+} else {
+  techStackData = techStack || [];
+}
 
-    // Update tech stack images
-    let techStackWithImages = [];
-    if (req.files && req.files.techStackImage) {
-      let techStackArray = typeof techStack === 'string' ? JSON.parse(techStack) : techStack;
-
-      for (let i = 0; i < techStackArray.length; i++) {
-        const stackItem = techStackArray[i];
-        const title = stackItem.title || 'Default Title';
-        const description = stackItem.description || 'Default Description';
-        let image = null;
-        let publicId = null;
-
-        if (req.files.techStackImage[i]) {
-          const techStackImageResult = await cloudinary.uploader.upload(req.files.techStackImage[i].path, {
-            folder: 'nexile_digital/tech_stack_images',
-          });
-          fs.unlinkSync(req.files.techStackImage[i].path);
-          image = techStackImageResult.secure_url;
-          publicId = techStackImageResult.public_id;
-        }
-
-        techStackWithImages.push({
-          title,
-          description,
-          image: image || 'defaultImageUrl.jpg',
-          publicId: publicId || 'defaultPublicId',
-        });
-      }
-    } else {
-      // If no new tech stack images are provided, keep existing ones
-      techStackWithImages = existingWork.techStack;
+let techStackWithImages = existingWork.techStack ? existingWork.techStack.slice() : [];
+if (techStackData.length > 0 && req.files && req.files['techStackImage']) {
+  const techStackUploadPromises = req.files['techStackImage'].map(async (file, index) => {
+    try {
+      const result = await cloudinary.uploader.upload(file.path);
+      fs.unlinkSync(file.path);
+      return {
+        title: techStackData[index]?.title || "",
+        image: result.secure_url,
+        publicId: result.public_id,
+        description: techStackData[index]?.description || "",
+      };
+    } catch (uploadError) {
+      console.error("Error uploading techStack file:", uploadError);
+      return null;
     }
+  });
+  const techStackResults = await Promise.all(techStackUploadPromises);
+  techStackWithImages.push(...techStackResults.filter(techStack => techStack !== null));
+}
+   
 
-    // Update the existing work entry
-    existingWork.set({
-      category,
-      title,
-      projectUrl,
-      githubUrl,
-      images,
-      client,
-      shortDescription,
-      problemGoal,
-      servicesProvided,
-      projectTimeline,
-      customSolutions,
-      metricsData,
-      techStack: techStackWithImages,
-      tags,
-      isFeatured,
-      completionDate,
-      metaDescription,
-      metaKeywords,
-    });
+    const updatedWork = await WorksModel.findByIdAndUpdate(
+      id,
+      {
+        category: category || existingWork.category,
+        title: title || existingWork.title,
+        projectUrl: projectUrl || existingWork.projectUrl,
+        githubUrl: githubUrl || existingWork.githubUrl,
+        images,
+        client: client || existingWork.client,
+        shortDescription: shortDescription || existingWork.shortDescription,
+        problemGoal: problemGoal || existingWork.problemGoal,
+        servicesProvided: servicesProvided || existingWork.servicesProvided,
+        projectTimeline: projectTimeline || existingWork.projectTimeline,
+        customSolutions: customSolutions || existingWork.customSolutions,
+        metricsData: metricsData || existingWork.metricsData,
+        techStack: techStackWithImages,
+        tags: tags || existingWork.tags,
+        isFeatured: isFeatured || existingWork.isFeatured,
+        completionDate: completionDate || existingWork.completionDate,
+        metaDescription: metaDescription || existingWork.metaDescription,
+        metaTitle: metaTitle || existingWork.metaTitle,
+        metaKeywords: metaKeywords || existingWork.metaKeywords,
+      },
+      { new: true }
+    );
 
-    await existingWork.save(); // Save the updated work
-    console.log("Updated Work:", existingWork);
+    console.log("Updated Work:", updatedWork);
 
-    res.status(200).json({ success: true, message: 'Work updated successfully', updatedWork: existingWork });
+    res.status(200).json({ success: true, message: 'Work updated successfully', updatedWork });
   } catch (error) {
     console.error("Error updating work:", error);
     res.status(500).json({ success: false, message: error.message });
   }
 };
-
 
 // Function to get all showcases
 export const getAllShowcases = async (req, res) => {
@@ -231,7 +231,7 @@ export const getAllShowcases = async (req, res) => {
   };
   
   // Function to get a single showcase by ID
-  export const getShowcaseById = async (req, res) => {
+export const getShowcaseById = async (req, res) => {
     try {
       const { id } = req.params;
   
@@ -244,7 +244,7 @@ export const getAllShowcases = async (req, res) => {
     } catch (error) {
       res.status(500).json({ success: false, message: error.message });
     }
-  };
+};
   
   // Function to get a showcase by title
 export const getShowcaseByTitle = async (req, res) => {
@@ -303,6 +303,71 @@ export const deleteWork = async (req, res) => {
     res.status(200).json({ success: true, message: 'Work deleted successfully' });
   } catch (error) {
     console.error('Error deleting work:', error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export const deleteTechStack = async (req, res) => {
+  try {
+    const { id, techId } = req.params; // Get work ID and tech ID from the request parameters
+    const { publicId } = req.body; // Get the publicId from the request body
+
+    // Find the work entry by ID
+    const findWork = await WorksModel.findById(id);
+    if (!findWork) {
+      return res.status(404).json({ success: false, message: 'Work not found' });
+    }
+
+    // Find the tech stack entry to be deleted
+    const techStackEntry = findWork.techStack.find(entry => entry._id.toString() === techId);
+    if (!techStackEntry) {
+      return res.status(404).json({ success: false, message: 'Tech stack entry not found' });
+    }
+
+    // Delete the image from Cloudinary if you want to remove it
+   if(publicId){
+    await cloudinary.v2.uploader.destroy(publicId); 
+   }
+    // Filter out the tech stack entry
+    const updatedTechStack = findWork.techStack.filter(entry => entry._id.toString() !== techId);
+
+    // Update the work entry with the new tech stack
+    findWork.techStack = updatedTechStack;
+    await findWork.save();
+
+    res.status(200).json({ success: true, message: 'Tech stack entry deleted successfully', updatedTechStack });
+  } catch (error) {
+    console.error('Error deleting tech stack:', error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+export const deleteImage = async (req, res) => {
+  try {
+    const { id } = req.params; // Get the work ID from the request parameters
+    const { publicId } = req.body; // Get the publicId from the request body
+
+    // Check if both ID and publicId are provided
+    if (!id || !publicId) {
+      return res.status(400).json({ success: false, message: 'Work ID and publicId are required' });
+    }
+
+    // Find the work entry by ID
+    const workEntry = await WorksModel.findById(id);
+    if (!workEntry) {
+      return res.status(404).json({ success: false, message: 'Work not found' });
+    }
+
+    // Delete the image from Cloudinary
+    await cloudinary.uploader.destroy(publicId);
+
+    // Optionally, remove the image reference from the database if it exists
+    workEntry.images = workEntry.images.filter(image => image.publicId !== publicId);
+    await workEntry.save(); // Save the updated work entry
+
+    return res.status(200).json({ success: true, message: 'Image deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting image:', error);
     res.status(500).json({ success: false, message: error.message });
   }
 };

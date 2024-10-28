@@ -32,7 +32,8 @@ const worksSchema = new mongoose.Schema({
    tags: [{ type: String }], // Array of tags/keywords for easier categorization and search
    isFeatured: { type: Boolean, default: false }, // Mark whether this showcase is featured
    completionDate: { type: Date }, // Date when the project was completed
-   metaDescription: { type: String, required: false }, // SEO meta description for the project
+   metaDescription: { type: String, required: false }, 
+   metaTitle: { type: String, required: false }, 
    metaKeywords: [{ type: String }], // SEO meta keywords for the project
   created_at: { type: Date,
     default: Date.now} 
