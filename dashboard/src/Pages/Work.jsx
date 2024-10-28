@@ -3,6 +3,8 @@ import axios from 'axios';
 import { FaTrashAlt } from 'react-icons/fa';
 import { Link, useLocation } from 'react-router-dom';
 import { endPoint } from '../Components/ForAll/ForAll';
+import Swal from 'sweetalert2';
+import { toast, ToastContainer } from 'react-toastify';
 
 const Work = () => {
   const [formData, setFormData] = useState({
@@ -30,6 +32,7 @@ const Work = () => {
     isFeatured: false,
     completionDate: '',
     metaDescription: '',
+    metaTitile: '',
     metaKeywords: [],
   });
   const { state } = useLocation();
@@ -81,9 +84,32 @@ const Work = () => {
     setPreviewImages((prevPreviews) => [...prevPreviews, ...newImagePreviews]);
    };
 
-  const removeImage = (index) => {
-    setImages(images.filter((_, i) => i !== index)); // Remove the selected image
+   const removeImage = async (index, img) => {
+    // Check if workToEdit._id is available
+    if (workToEdit?._id) {
+      const publicId = img.publicId; // Get the public ID of the image to be deleted
+  
+      try {
+        // Make an API call to delete the image from the server
+        await axios.delete(`${endPoint}/works/${workToEdit._id}/image`, {
+          data: { publicId } // Send publicId in the request body
+        });
+  
+        // If the deletion is successful, remove the image from local state
+        setImages(images.filter((_, i) => i !== index)); // Remove the selected image
+        toast.success(`Image deleted successfully`);
+      } catch (error) {
+        // Handle any errors that occur during the deletion
+        console.error("Error deleting image:", error);
+        toast.error("Error deleting image");
+      }
+    } else {
+      // If workToEdit._id is not available, just remove the image locally
+      setImages(images.filter((_, i) => i !== index)); // Remove the selected image
+      toast.success(`Image removed from local data successfully`);
+    }
   };
+  
 
   const handleTechStackChange = (e) => {
     const { name, value } = e.target;
@@ -168,10 +194,28 @@ if (Array.isArray(formData.techStack) && formData.techStack.length > 0) {
         await axios.post(`${endPoint}/works`, formDataToSend, {
             headers: { 'Content-Type': 'multipart/form-data' },
         }) 
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: `${workToEdit._id ?"Work updated successfully!" : "Work added successfully!"}`,
+          showConfirmButton: false,
+          timer: 1500,
+      });
         console.log('Project added successfully:', response.data);
         setLoading(false)
     } catch (error) {
+      setLoading(false)
+      Swal.fire({
+        position: "top-end",
+        icon: "error",
+        title: `${workToEdit._id ? "Error To Work Update!" : "Error To Work Add!"}`,
+        showConfirmButton: false,
+        timer: 1500,
+    });
         console.error('Error adding project:', error);
+    }
+    finally{
+      setLoading(false)
     }
 };
 
@@ -180,6 +224,52 @@ if (Array.isArray(formData.techStack) && formData.techStack.length > 0) {
     updatedItems.splice(index, 1);
     setFormData({ ...formData, [section]: updatedItems });
   };
+  
+  const removeTechStack = async (section, index, item) => {
+    const updatedItems = [...formData[section]];
+    
+    // First, show the confirmation dialog
+    const result = await Swal.fire({
+      title: 'Are you sure?',
+      text: `You are about to delete the service: ${item?.title || 'this service'}`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, delete it!',
+    });
+    console.log(item)
+    // If the user confirms, proceed with the deletion
+    if (result.isConfirmed) {
+      // Check if workToEdit is available
+      if (workToEdit?._id) {
+        try {
+          // Make the delete request to your API
+          await axios.delete(`${endPoint}/works/${workToEdit._id}/${item?._id}`, {
+            params: { publicId: item.publicId }
+          });          
+          
+          // Remove the item from the local state after successful deletion
+          updatedItems.splice(index, 1);
+          setFormData({ ...formData, [section]: updatedItems });
+  
+          // Show success message
+          toast.success(`Service: ${item.title} deleted successfully`);
+        } catch (error) {
+          // Handle error and show an error message
+          toast.error("Error deleting service");
+        }
+      } else {
+        // If workToEdit is not available, just update the local state
+        updatedItems.splice(index, 1);
+        setFormData({ ...formData, [section]: updatedItems });
+  
+        // Show a message indicating that the item has been removed from local state
+        toast.success(`Service: ${item.title} deleted from local data successfully`);
+      }
+    }
+  };
+  
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -224,6 +314,7 @@ if (Array.isArray(formData.techStack) && formData.techStack.length > 0) {
         </li>
       </ul>
     </div>
+    <ToastContainer />
     <Link to="/manageworks">
       <button className="btn btn-sm flex justify-center items-center mx-auto bg-black text-white">Manage Works</button></Link>
      {workToUpdate ? <h3 className="lg:w-1/2 md:w-[80%] w-[96%] mx-auto text-center my-8 font-bold text-xl">Update Work</h3>: <h3 className="lg:w-1/2 md:w-[80%] w-[96%] mx-auto text-center my-8 font-bold text-xl">Add Work</h3> } 
@@ -359,7 +450,7 @@ if (Array.isArray(formData.techStack) && formData.techStack.length > 0) {
               <p>No image uploaded.</p>
             )}
           </div>
-          <button type="button" className="w-full text-2xl text-red-600 flex justify-end" onClick={() => removeItem('techStack', index)}>
+          <button type="button" className="w-full text-2xl text-red-600 flex justify-end" onClick={() => removeTechStack('techStack', index, item)}>
             <FaTrashAlt />
           </button>
         </div>
@@ -530,6 +621,13 @@ if (Array.isArray(formData.techStack) && formData.techStack.length > 0) {
         value={formData.completionDate} 
         className="input input-bordered w-full mb-2" 
       />
+      <input 
+        name="text" 
+        placeholder="Meta Title" 
+        onChange={handleChange} 
+        value={formData.metaTitile} 
+        className="input input-bordered w-full mb-2" 
+      />
 
       <textarea 
         name="metaDescription" 
@@ -563,7 +661,7 @@ if (Array.isArray(formData.techStack) && formData.techStack.length > 0) {
         <button
           type="button"
           className="text-red-600 bg-[#fff] p-1 rounded-full text-[12px] absolute top-1 right-1"
-          onClick={() => removeImage(index)}
+          onClick={() => removeImage(index, img)}
         >
           <FaTrashAlt />
         </button>
@@ -583,7 +681,7 @@ if (Array.isArray(formData.techStack) && formData.techStack.length > 0) {
         <button
           type="button"
           className="text-red-600 bg-[#fff] p-1 rounded-full text-[12px] absolute top-1 right-1"
-          onClick={() => removeImage(index)}
+          onClick={() => removeImage(index, img)}
         >
           <FaTrashAlt />
         </button> 
