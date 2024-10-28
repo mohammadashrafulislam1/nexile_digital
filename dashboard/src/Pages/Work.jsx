@@ -85,24 +85,25 @@ const Work = () => {
    };
 
    const removeImage = async (index, img) => {
+    console.log(index)
     // Check if workToEdit._id is available
     if (workToEdit?._id) {
-      const publicId = img.publicId; // Get the public ID of the image to be deleted
+      const publicId = img?.publicId; 
+        try {
+          // Make an API call to delete the image from the server
+          await axios.delete(`${endPoint}/works/${workToEdit._id}/image`, {
+            data: { publicId } // Send publicId in the request body
+          });
   
-      try {
-        // Make an API call to delete the image from the server
-        await axios.delete(`${endPoint}/works/${workToEdit._id}/image`, {
-          data: { publicId } // Send publicId in the request body
-        });
-  
-        // If the deletion is successful, remove the image from local state
-        setImages(images.filter((_, i) => i !== index)); // Remove the selected image
-        toast.success(`Image deleted successfully`);
-      } catch (error) {
-        // Handle any errors that occur during the deletion
-        console.error("Error deleting image:", error);
-        toast.error("Error deleting image");
-      }
+          // If the deletion is successful, remove the image from local state
+          setImages(images.filter((_, i) => i !== index)); // Remove the selected image
+          toast.success(`Image deleted successfully`);
+        } catch (error) {
+          // Handle any errors that occur during the deletion
+          console.error("Error deleting image:", error);
+          toast.error("Error deleting image");
+        }
+      
     } else {
       // If workToEdit._id is not available, just remove the image locally
       setImages(images.filter((_, i) => i !== index)); // Remove the selected image
@@ -110,6 +111,13 @@ const Work = () => {
     }
   };
   
+  const removePreviewImage = async (index, imgUrl) => {
+    console.log(index);
+    
+    // Assuming previewImages is a separate state
+    setPreviewImages(prev => prev.filter((_, i) => i !== index)); 
+    toast.success(`Preview image removed successfully`);
+  };
 
   const handleTechStackChange = (e) => {
     const { name, value } = e.target;
@@ -187,8 +195,8 @@ if (Array.isArray(formData.techStack) && formData.techStack.length > 0) {
     }
 
     try {
-      console.log("workToEdit", workToEdit._id)
-        const response = workToEdit._id ? await axios.put(`${endPoint}/works/${workToEdit?._id}`, formDataToSend, {
+      console.log("workToEdit", workToEdit?._id)
+        const response = workToEdit ? await axios.put(`${endPoint}/works/${workToEdit?._id}`, formDataToSend, {
           headers: { 'Content-Type': 'multipart/form-data' },
       }) :
         await axios.post(`${endPoint}/works`, formDataToSend, {
@@ -197,7 +205,7 @@ if (Array.isArray(formData.techStack) && formData.techStack.length > 0) {
         Swal.fire({
           position: "top-end",
           icon: "success",
-          title: `${workToEdit._id ?"Work updated successfully!" : "Work added successfully!"}`,
+          title: `${workToEdit ?"Work updated successfully!" : "Work added successfully!"}`,
           showConfirmButton: false,
           timer: 1500,
       });
@@ -208,7 +216,7 @@ if (Array.isArray(formData.techStack) && formData.techStack.length > 0) {
       Swal.fire({
         position: "top-end",
         icon: "error",
-        title: `${workToEdit._id ? "Error To Work Update!" : "Error To Work Add!"}`,
+        title: `${workToEdit ? "Error To Work Update!" : "Error To Work Add!"}`,
         showConfirmButton: false,
         timer: 1500,
     });
@@ -243,21 +251,32 @@ if (Array.isArray(formData.techStack) && formData.techStack.length > 0) {
     if (result.isConfirmed) {
       // Check if workToEdit is available
       if (workToEdit?._id) {
-        try {
-          // Make the delete request to your API
-          await axios.delete(`${endPoint}/works/${workToEdit._id}/${item?._id}`, {
-            params: { publicId: item.publicId }
-          });          
-          
-          // Remove the item from the local state after successful deletion
-          updatedItems.splice(index, 1);
-          setFormData({ ...formData, [section]: updatedItems });
-  
-          // Show success message
-          toast.success(`Service: ${item.title} deleted successfully`);
-        } catch (error) {
-          // Handle error and show an error message
-          toast.error("Error deleting service");
+        if(item.publicId){
+          try {
+            // Make the delete request to your API
+            await axios.delete(`${endPoint}/works/${workToEdit._id}/${item?._id}`, {
+              params: { publicId: item.publicId }
+            });          
+            
+            // Remove the item from the local state after successful deletion
+            updatedItems.splice(index, 1);
+            setFormData({ ...formData, [section]: updatedItems });
+    
+            // Show success message
+            toast.success(`Service: ${item.title} deleted successfully`);
+          } catch (error) {
+            // Handle error and show an error message
+            toast.error("Error deleting service");
+          }
+        }
+        else{
+
+            // Remove the item from the local state after successful deletion
+            updatedItems.splice(index, 1);
+            setFormData({ ...formData, [section]: updatedItems });
+    
+            // Show success message
+            toast.success(`Service: ${item.title} deleted successfully`);
         }
       } else {
         // If workToEdit is not available, just update the local state
@@ -277,6 +296,9 @@ if (Array.isArray(formData.techStack) && formData.techStack.length > 0) {
       </div>
     );
   }
+  console.log(formData.completionDate)
+ 
+
   return (
    <div className='mb-10'>
      <div className="breadcrumbs text-sm lg:w-1/2 md:w-[80%] w-[96%] mx-auto">
@@ -661,7 +683,7 @@ if (Array.isArray(formData.techStack) && formData.techStack.length > 0) {
         <button
           type="button"
           className="text-red-600 bg-[#fff] p-1 rounded-full text-[12px] absolute top-1 right-1"
-          onClick={() => removeImage(index, img)}
+          onClick={() => removePreviewImage(index, img)}
         >
           <FaTrashAlt />
         </button>
@@ -693,7 +715,7 @@ if (Array.isArray(formData.techStack) && formData.techStack.length > 0) {
 
     </div>
 
-      <button type="submit" className="btn btn-sm bg-black text-white mt-4 w-full">Submit Project</button>
+      <button type="submit" className="btn btn-sm bg-black text-white mt-4 w-full">{workToEdit ? "Update Work" : "Add Work"}</button>
     </form>
   </div>
 );
