@@ -35,8 +35,7 @@ const worksSchema = new mongoose.Schema({
    metaDescription: { type: String, required: false }, 
    metaTitle: { type: String, required: false }, 
    metaKeywords: [{ type: String }], // SEO meta keywords for the project
-  created_at: { type: Date,
-    default: Date.now} 
+   completionDate: { type: Date} 
 });
 
 export const WorksModel = mongoose.model('Works', worksSchema);

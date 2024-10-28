@@ -41,39 +41,38 @@ export const addWork = async (req, res) => {
         fs.unlinkSync(file.path);
       }
     }
-
-    let techStackWithImages = [];
-if (req.files && req.files.techStackImage) {
-  let techStackArray = typeof techStack === 'string' ? JSON.parse(techStack) : techStack;
-
-  for (let i = 0; i < techStackArray.length; i++) {
-    const stackItem = techStackArray[i];
-
-    // Ensure the current stackItem has required properties
-    const title = stackItem.title || 'Default Title';
-    const description = stackItem.description || 'Default Description';
-    let image = null;
-    let publicId = null;
-
-    if (req.files.techStackImage[i]) {
-      const techStackImageResult = await cloudinary.uploader.upload(req.files.techStackImage[i].path, {
-        folder: 'nexile_digital/tech_stack_images'
-      });
-      fs.unlinkSync(req.files.techStackImage[i].path);
-      image = techStackImageResult.secure_url;
-      publicId = techStackImageResult.public_id;
+    let techStackData;
+    if (typeof techStack === 'string') {
+      try {
+        techStackData = JSON.parse(techStack);
+      } catch (error) {
+        console.error("Error parsing TechStack:", error);
+        techStackData = [];
+      }
+    } else {
+      techStackData = techStack || [];
     }
-
-    // Add the item to techStackWithImages
-    techStackWithImages.push({
-      title,
-      description,
-      image: image || 'defaultImageUrl.jpg', // Use a default image URL if none provided
-      publicId: publicId || 'defaultPublicId', // Handle missing publicId
-    });
-  }
-}
-
+    
+    let techStackWithImages = [];
+    if (techStackData.length > 0 && req.files && req.files['techStackImage']) {
+      const techStackUploadPromises = req.files['techStackImage'].map(async (file, index) => {
+        try {
+          const result = await cloudinary.uploader.upload(file.path);
+          fs.unlinkSync(file.path);
+          return {
+            title: techStackData[index]?.title || "",
+            image: result.secure_url,
+            publicId: result.public_id,
+            description: techStackData[index]?.description || "",
+          };
+        } catch (uploadError) {
+          console.error("Error uploading techStack file:", uploadError);
+          return null;
+        }
+      });
+      const techStackResults = await Promise.all(techStackUploadPromises);
+      techStackWithImages.push(...techStackResults.filter(techStack => techStack !== null));
+    }
 
     const newShowcase = new WorksModel({
       category,
@@ -137,7 +136,6 @@ export const updateWork = async (req, res) => {
     } = req.body;
 
     console.log("req.body", req.body);
-    console.log("req.files", req.files);
 
     let images = existingWork.images.slice();
 
@@ -150,39 +148,45 @@ export const updateWork = async (req, res) => {
         fs.unlinkSync(file.path);
       }
     }
-// Handle techStacks if new ones are uploaded
+// Add this code where you handle the techStack
+
 let techStackData;
-if (typeof techStack === 'string') {
+if (typeof req.body.techStack === 'string') {
   try {
-    techStackData = JSON.parse(techStack);
+    techStackData = JSON.parse(req.body.techStack);
   } catch (error) {
-    console.error("Error parsing TechStack:", error);
+    console.error("Error parsing techStack:", error);
     techStackData = [];
   }
 } else {
-  techStackData = techStack || [];
+  techStackData = req.body.techStack || [];
 }
-
 let techStackWithImages = existingWork.techStack ? existingWork.techStack.slice() : [];
-if (techStackData.length > 0 && req.files && req.files['techStackImage']) {
+
+// Handle techStack images
+if (techStackData.length > 0 && req.files['techStackImage']) {
   const techStackUploadPromises = req.files['techStackImage'].map(async (file, index) => {
+    const realIndex = index + existingWork.techStack.length;
+    console.log(realIndex)
     try {
       const result = await cloudinary.uploader.upload(file.path);
-      fs.unlinkSync(file.path);
       return {
-        title: techStackData[index]?.title || "",
+        title: techStackData[realIndex]?.title || "",
         image: result.secure_url,
         publicId: result.public_id,
-        description: techStackData[index]?.description || "",
+        description: techStackData[realIndex]?.description || "",
       };
     } catch (uploadError) {
       console.error("Error uploading techStack file:", uploadError);
       return null;
     }
   });
+
   const techStackResults = await Promise.all(techStackUploadPromises);
-  techStackWithImages.push(...techStackResults.filter(techStack => techStack !== null));
+  techStackWithImages.push(...techStackResults.filter(techStack => techStack !== null)); 
+  
 }
+
    
 
     const updatedWork = await WorksModel.findByIdAndUpdate(
