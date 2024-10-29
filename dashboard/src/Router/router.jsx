@@ -8,6 +8,8 @@ import Founder from "../Pages/Founder";
 import Team from "../Pages/Team";
 import Work from "../Pages/Work";
 import ManageWorks from "../Pages/ManageWorks";
+import Testimonials from "../Pages/Testimonials";
+import AddTestimonial from "../Pages/AddTestimonial";
 
 export const router = createBrowserRouter([
     {
@@ -50,6 +52,14 @@ export const router = createBrowserRouter([
             {
                 path:'manageworks',
                 element:<ManageWorks/>
+            },
+            {
+                path:'testimonials',
+                element:<Testimonials/>
+            },
+            {
+                path:'addTestimonial',
+                element:<AddTestimonial/>
             },
         ],
     }

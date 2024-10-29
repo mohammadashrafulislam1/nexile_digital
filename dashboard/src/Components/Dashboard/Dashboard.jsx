@@ -11,13 +11,14 @@ import { RiBloggerLine, RiContactsLine, RiErrorWarningLine, RiGridLine, RiQuesti
 import { IoAddCircleOutline } from "react-icons/io5";
 import { BiCategory } from "react-icons/bi";
 import { TbLayoutBottombar, TbLayoutNavbar } from "react-icons/tb";
-import { FaPeopleGroup } from "react-icons/fa6";
+import { FaPeopleGroup, FaStarHalfStroke } from "react-icons/fa6";
 // import { AuthContext } from "../../AuthContext/AuthContext";
 
 const Dashboard = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isPropertiesSubMenuOpen, setIsPropertiesSubMenuOpen] = useState(false);
   const [isBlogsSubMenuOpen, setIsBlogsSubMenuOpen] = useState(false);
+  const [isTestimonialsSubMenuOpen, setIsTestimonialsSubMenuOpen] = useState(false);
   const [isHomeSubMenuOpen, setIsHomeSubMenuOpen] = useState(false);
 //   const { logout } = useContext(AuthContext);
 
@@ -28,16 +29,25 @@ const Dashboard = () => {
   const handlePropertiesSubMenuToggle = () => {
     setIsPropertiesSubMenuOpen(!isPropertiesSubMenuOpen);
     if (isBlogsSubMenuOpen) setIsBlogsSubMenuOpen(false);
+    if (isTestimonialsSubMenuOpen) setIsTestimonialsSubMenuOpen(false);
     if (isHomeSubMenuOpen) setIsHomeSubMenuOpen(false);
   };
 
   const handleBlogsSubMenuToggle = () => {
     setIsBlogsSubMenuOpen(!isBlogsSubMenuOpen);
     if (isHomeSubMenuOpen) setIsHomeSubMenuOpen(false);
+    if (isTestimonialsSubMenuOpen) setIsTestimonialsSubMenuOpen(false);
+    if (isPropertiesSubMenuOpen) setIsPropertiesSubMenuOpen(false);
+  };
+  const handleTestimonialsSubMenuToggle = () => {
+    setIsTestimonialsSubMenuOpen(!isTestimonialsSubMenuOpen);
+    if (isHomeSubMenuOpen) setIsHomeSubMenuOpen(false);
+    if (isBlogsSubMenuOpen) setIsBlogsSubMenuOpen(false);
     if (isPropertiesSubMenuOpen) setIsPropertiesSubMenuOpen(false);
   };
   const handleHomeSubMenuToggle = () => {
     setIsHomeSubMenuOpen(!isHomeSubMenuOpen);
+    if (isTestimonialsSubMenuOpen) setIsTestimonialsSubMenuOpen(false);
     if (isPropertiesSubMenuOpen) setIsPropertiesSubMenuOpen(false);if (isBlogsSubMenuOpen) setIsBlogsSubMenuOpen(false);
   };
 
@@ -218,15 +228,6 @@ const Dashboard = () => {
             </li>
             <li>
               <Link
-                to={"/testimonials"}
-                className="p-3 bg-[#7e7e7e1a] rounded flex items-center gap-2 side-li mt-2 "
-              >
-                <MdReviews />
-                <span className="sidebar-text">Testimonials</span>
-              </Link>
-            </li>
-            <li>
-              <Link
                 to={"/founder"}
                 className="p-3 bg-[#7e7e7e1a] rounded flex items-center gap-2 side-li mt-2 "
               >
@@ -274,6 +275,48 @@ const Dashboard = () => {
           </ul>
         )}
       </li>
+
+      <li>
+        <a
+          className="p-3 bg-[#7e7e7e1a] rounded flex items-center gap-2 side-li cursor-pointer justify-center"
+          onClick={handleTestimonialsSubMenuToggle}
+        >
+          <FaStarHalfStroke />
+          <span className="sidebar-text">Testimonials</span>
+          <span className="ml-auto">
+            {isTestimonialsSubMenuOpen ? (
+              <span className="text-[5px]">▲</span>
+            ) : (
+              <span className="text-[5px]">▼</span>
+            )}
+          </span>
+        </a>
+        {isTestimonialsSubMenuOpen && (
+          <ul>
+          <li>
+            <Link
+              to={"/addTestimonial"}
+              className="p-3 bg-[#7e7e7e1a] rounded flex items-center gap-2 side-li mt-2 "
+            >
+              <MdReviews />
+              <span className="sidebar-text">Add Testimonial</span>
+            </Link>
+          </li>
+            <li>
+              <Link
+                to={"/testimonials"}
+                className="p-3 bg-[#7e7e7e1a] rounded flex items-center gap-2 side-li mt-2"
+              >
+                <RiGridLine />
+                <span className="sidebar-text">Manage Testimonials</span>
+              </Link>
+            </li>
+            
+          </ul>
+        )}
+      </li>
+
+
       <li>
         <Link
           to={"/about"}
