@@ -11,7 +11,7 @@ const clientTestimonialSchema = new mongoose.Schema({
   testimonialText: { type: String, required: true }, // The text of the testimonial
   clientName: { type: String, required: true }, // Name of the client
   clientImage: { type: String, required: true }, // URL of the client's image
-  publicId: { type: String, required: true }, // Public ID for the image (for deletion)
+  publicId: { type: String}, 
   clientDescription: { type: String }, // Additional description about the client
   rating: { type: Number, min: 1, max: 5 }, // Rating given by the client (1 to 5)
   socialLinks: [socialLinkSchema], // Array of social links

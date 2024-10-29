@@ -18,7 +18,7 @@ const uploadImage = async (filePath) => {
 // Controller to add a new client
 export const addClient = async (req, res) => {
     try {
-        const { sectionTitle, sectionDescription, name, description, email, phone } = req.body;
+        const { name, description, email, phone } = req.body;
         let image = null;
         let publicId = null;
 
@@ -30,47 +30,36 @@ export const addClient = async (req, res) => {
         }
 
         // Create new client details
-        const newClient = {
+        const newClient = new ClientModel({
             image,
             publicId,
             name,
             description,
             email,
             phone,
-        };
+        })
 
-        // Add the client to the section
-        const clientSection = new ClientModel({
-            sectionTitle,
-            sectionDescription,
-            clients: [newClient]
-        });
 
         // Save the new client section to the database
-        await clientSection.save();
-        res.status(201).json({ success: true, data: clientSection });
+        await newClient.save();
+        console.log(newClient)
+        res.status(201).json({ success: true, data: newClient });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }
 };
 
-// Controller to update an existing client
 export const updateClient = async (req, res) => {
     try {
-        const { id } = req.params; // Client section ID
-        const { clientId, name, description, email, phone } = req.body; // Client details
+        const { id } = req.params; // Client ID
+        const { name, description, email, phone } = req.body; // Client details
         let updatedImage = null;
         let updatedPublicId = null;
-
-        // Find the section by ID
-        const clientSection = await ClientModel.findById(id);
-        if (!clientSection) {
-            return res.status(404).json({ success: false, message: 'Client section not found' });
-        }
-
-        // Find the client within the section
-        const client = clientSection.clients.id(clientId);
+       console.log(req.body)
+        // Find the client by ID
+        const client = await ClientModel.findById(id);
         if (!client) {
+            console.log("Client not found");
             return res.status(404).json({ success: false, message: 'Client not found' });
         }
 
@@ -95,14 +84,18 @@ export const updateClient = async (req, res) => {
         client.image = updatedImage || client.image;
         client.publicId = updatedPublicId || client.publicId;
 
-        // Save the updated section
-        await clientSection.save();
+        // Save the updated client
+        await client.save(); // Corrected from newClient.save()
 
-        res.status(200).json({ success: true, data: clientSection });
+        console.log(client);
+        
+        res.status(200).json({ success: true, data: client });
     } catch (error) {
+        console.error("Error updating client:", error); // Log the error for better debugging
         res.status(500).json({ success: false, message: error.message });
     }
 };
+
 
 // Get all Team Members
 export const getAllClients = async (req, res) => {
@@ -119,33 +112,25 @@ export const getAllClients = async (req, res) => {
 // Controller to delete a client
 export const deleteClient = async (req, res) => {
     try {
-        const { id, clientId } = req.params; // Section ID and Client ID
+        const { id } = req.params; // Client ID
 
-        // Find the client section by ID
+        // Find the client by ID
         const clientSection = await ClientModel.findById(id);
         if (!clientSection) {
             return res.status(404).json({ success: false, message: 'Client section not found' });
         }
 
-        // Find the client within the section by clientId
-        const client = clientSection.clients.id(clientId);
-        if (!client) {
-            return res.status(404).json({ success: false, message: 'Client not found' });
-        }
-
         // If the client has an image, delete it from Cloudinary
-        if (client.publicId) {
-            await cloudinary.uploader.destroy(client.publicId);
+        if (clientSection.publicId) {
+            await cloudinary.uploader.destroy(clientSection.publicId);
         }
 
-        // Remove the client from the array
-        client.remove();
-
-        // Save the updated section after removal
-        await clientSection.save();
+        // Delete the client record
+        await clientSection.deleteOne();
 
         res.status(200).json({ success: true, message: 'Client deleted successfully' });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }
 };
+
