@@ -35,7 +35,7 @@ export const addWork = async (req, res) => {
     if (req.files && req.files.images) {
       for (const file of req.files.images) {
         const result = await cloudinary.uploader.upload(file.path, {
-          folder: 'nexile_digital/showcase_images'
+          folder: 'nexile digital/showcase_images'
         });
         images.push({ publicId: result.public_id, url: result.secure_url });
         fs.unlinkSync(file.path);
@@ -142,7 +142,7 @@ export const updateWork = async (req, res) => {
     if (req.files && req.files.images) {
       for (const file of req.files.images) {
         const result = await cloudinary.uploader.upload(file.path, {
-          folder: 'nexile_digital/showcase_images',
+          folder: 'nexile digital/showcase_images',
         });
         images.push({ publicId: result.public_id, url: result.secure_url });
         fs.unlinkSync(file.path);
@@ -167,9 +167,11 @@ let techStackWithImages = existingWork.techStack ? existingWork.techStack.slice(
 if (techStackData.length > 0 && req.files['techStackImage']) {
   const techStackUploadPromises = req.files['techStackImage'].map(async (file, index) => {
     const realIndex = index + existingWork.techStack.length;
-    console.log(realIndex)
+    console.log(index, existingWork.techStack.length, realIndex)
     try {
-      const result = await cloudinary.uploader.upload(file.path);
+      const result = await cloudinary.uploader.upload(file.path, {
+        folder: 'nexile digital/showcase_images'
+      });
       return {
         title: techStackData[realIndex]?.title || "",
         image: result.secure_url,

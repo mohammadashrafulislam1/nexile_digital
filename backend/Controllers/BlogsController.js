@@ -6,7 +6,7 @@ import { BlogsModel } from '../Model/BlogsModel.js';
 const uploadImage = async (filePath) => {
     try {
         const result = await cloudinary.uploader.upload(filePath, {
-            folder: 'nexile_digital/blogs' // Upload images to the 'blogs' folder
+            folder: 'nexile digital/blogs' // Upload images to the 'blogs' folder
         });
         fs.unlinkSync(filePath); // Delete the temp file after upload
         return { url: result.secure_url, public_id: result.public_id };

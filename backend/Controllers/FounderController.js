@@ -14,7 +14,7 @@ export const addFounder = async (req, res) => {
 
         // Upload image to Cloudinary with folder specification
         const result = await cloudinary.uploader.upload(req.file.path, {
-            folder: 'nexile_digital/founders' // Specify folder for founder images
+            folder: 'nexile digital/founders' // Specify folder for founder images
         });
         
         // Create a new founder entry
@@ -73,7 +73,7 @@ export const updateFounder = async (req, res) => {
 
             // Upload the new image to Cloudinary with folder specification
             const result = await cloudinary.uploader.upload(req.file.path, {
-                folder: 'nexile_digital/founders' // Specify folder for founder images
+                folder: 'nexile digital/founders' // Specify folder for founder images
             });
             updatedData.founderImage = result.secure_url; // Update image URL
             updatedData.publicId = result.public_id; // Update public ID

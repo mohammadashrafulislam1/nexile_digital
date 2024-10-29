@@ -6,7 +6,7 @@ import { FooterModel } from '../Model/FooterModel.js';
 const uploadImage = async (filePath) => {
     try {
         const result = await cloudinary.uploader.upload(filePath, {
-            folder: 'nexile_digital/footer' // Upload images to the 'footer' folder
+            folder: 'nexile digital/footer' // Upload images to the 'footer' folder
         });
         fs.unlinkSync(filePath); // Delete temp file
         return { url: result.secure_url, public_id: result.public_id };

@@ -6,7 +6,7 @@ import { ClientModel } from '../Model/ClientModel.js';
 const uploadImage = async (filePath) => {
     try {
         const result = await cloudinary.uploader.upload(filePath, {
-            folder: 'nexile_digital/clients'
+            folder: 'nexile digital/clients'
         });
         fs.unlinkSync(filePath); // Delete the temp file after upload
         return { url: result.secure_url, public_id: result.public_id };

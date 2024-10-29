@@ -6,7 +6,7 @@ import { ClientTestimonialModel } from '../Model/ClientTestimonialModel.js';
 const uploadImage = async (filePath) => {
     try {
         const result = await cloudinary.uploader.upload(filePath, {
-            folder: 'nexile_digital/clientTestimonial'
+            folder: 'nexile digital/clientTestimonial'
         });
         fs.unlinkSync(filePath); // Delete temp file
         return { url: result.secure_url, public_id: result.public_id };
