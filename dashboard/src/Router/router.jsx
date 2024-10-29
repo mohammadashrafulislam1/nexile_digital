@@ -10,6 +10,7 @@ import Work from "../Pages/Work";
 import ManageWorks from "../Pages/ManageWorks";
 import Testimonials from "../Pages/Testimonials";
 import AddTestimonial from "../Pages/AddTestimonial";
+import Clients from "../Pages/Clients";
 
 export const router = createBrowserRouter([
     {
@@ -60,6 +61,10 @@ export const router = createBrowserRouter([
             {
                 path:'addTestimonial',
                 element:<AddTestimonial/>
+            },
+            {
+                path:'clients',
+                element:<Clients/>
             },
         ],
     }
