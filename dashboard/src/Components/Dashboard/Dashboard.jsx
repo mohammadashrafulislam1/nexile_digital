@@ -4,7 +4,7 @@ import { CiMenuFries } from "react-icons/ci";
 import { RxAvatar, RxCross1 } from "react-icons/rx";
 import { FaBell, FaCity, FaDashcube, FaDev, FaHome, FaLocationArrow, FaUserCircle } from "react-icons/fa";
 import { Link, Outlet } from "react-router-dom";
-import { MdMiscellaneousServices, MdOutlineHandshake, MdOutlineLibraryAdd, MdOutlineRealEstateAgent, MdReviews } from "react-icons/md";
+import { MdFormatQuote, MdMiscellaneousServices, MdOutlineHandshake, MdOutlineLibraryAdd, MdOutlineRealEstateAgent, MdReviews } from "react-icons/md";
 import { LuTableProperties } from "react-icons/lu";
 import { GiConvergenceTarget } from "react-icons/gi";
 import { RiBloggerLine, RiContactsLine, RiErrorWarningLine, RiGridLine, RiQuestionLine } from "react-icons/ri";
@@ -246,11 +246,11 @@ const Dashboard = () => {
             </li>
             <li>
               <Link
-                to={"/partners"}
+                to={"/faq"}
                 className="p-3 bg-[#7e7e7e1a] rounded flex items-center gap-2 side-li mt-2"
               >
-                <MdOutlineHandshake />
-                <span className="sidebar-text">Partners</span>
+                <MdFormatQuote />
+                <span className="sidebar-text">Faq</span>
               </Link>
             </li>
             <li>
