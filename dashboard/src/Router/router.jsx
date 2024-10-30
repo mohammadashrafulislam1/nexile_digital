@@ -12,6 +12,8 @@ import Testimonials from "../Pages/Testimonials";
 import AddTestimonial from "../Pages/AddTestimonial";
 import Clients from "../Pages/Clients";
 import Faq from "../Pages/Faq";
+import AddBlog from "../Pages/AddBlog";
+import Blogs from "../Pages/Blogs";
 
 export const router = createBrowserRouter([
     {
@@ -70,6 +72,14 @@ export const router = createBrowserRouter([
             {
                 path:'faq',
                 element:<Faq/>
+            },
+            {
+                path:'addBlog',
+                element:<AddBlog/>
+            },
+            {
+                path:'blogs',
+                element:<Blogs/>
             },
         ],
     }
