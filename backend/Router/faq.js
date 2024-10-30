@@ -7,10 +7,10 @@ export const faqRouter = express.Router();
 faqRouter.post('/', addFaq)
 
 // update faq:
-faqRouter.put('/:id/:faqId', updateFaq)
+faqRouter.put('/:id', updateFaq)
 
 // get all faq:
 faqRouter.get('/', getAllFaq)
 
 // delete faq:
-faqRouter.delete('/:id', deleteFaq)
+faqRouter.delete('/:id/:faqId', deleteFaq)
