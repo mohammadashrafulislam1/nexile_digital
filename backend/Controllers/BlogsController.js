@@ -147,7 +147,7 @@ export const deleteBlog = async (req, res) => {
         }
 
         // Delete the blog post from the database
-        await blogPost.remove();
+        await BlogsModel.findByIdAndDelete(id);
 
         res.status(200).json({ success: true, message: 'Blog post deleted successfully' });
     } catch (error) {
