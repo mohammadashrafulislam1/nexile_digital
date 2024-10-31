@@ -44,6 +44,44 @@ export const addTechStack = async (req, res) => {
     }
 };
 
+
+// Controller function for updating a tech stack
+export const updateTechStack = async (req, res) => {
+    try {
+        const { id } = req.params; // Get the ID from the request parameters
+
+        // Find the existing tech stack entry
+        const techStack = await TechStackModel.findById(id);
+        if (!techStack) {
+            return res.status(404).json({ message: "Tech stack not found." });
+        }
+
+        // Check if a new file is uploaded
+        if (req.file) {
+            // Upload the new image to Cloudinary
+            const { url, public_id } = await uploadImage(req.file.path);
+
+            // Delete the old image from Cloudinary
+            await cloudinary.uploader.destroy(techStack.publicId);
+
+            // Update tech stack with new image data
+            techStack.image = url;
+            techStack.publicId = public_id;
+        }
+
+        // Update the other fields
+        techStack.title = req.body.title || techStack.title; // Keep existing value if not provided
+        techStack.description = req.body.description || techStack.description; // Keep existing value if not provided
+
+        // Save updated tech stack to the database
+        await techStack.save();
+        return res.status(200).json({ message: "Tech stack updated successfully!", techStack });
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+};
+
+
 // get tech stacks:
 export const getTechStack = async (req, res) => {
     try{
