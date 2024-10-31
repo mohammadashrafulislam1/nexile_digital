@@ -92,3 +92,25 @@ export const getTechStack = async (req, res) => {
         return res.status(500).json({ message: error.message });
     }
 }
+
+// Controller function for deleting a tech stack
+export const deleteTechStack = async (req, res) => {
+    try {
+        const { id } = req.params; // Get the ID from the request parameters
+
+        // Find the tech stack entry to delete
+        const techStack = await TechStackModel.findById(id);
+        if (!techStack) {
+            return res.status(404).json({ message: "Tech stack not found." });
+        }
+
+        // Delete the image from Cloudinary
+        await cloudinary.uploader.destroy(techStack.publicId);
+
+        // Delete the tech stack entry from the database
+        await TechStackModel.findByIdAndDelete(id);
+        return res.status(200).json({ message: "Tech stack deleted successfully!" });
+    } catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+};
