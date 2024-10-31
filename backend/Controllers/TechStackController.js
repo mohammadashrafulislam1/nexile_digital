@@ -1,6 +1,6 @@
 import fs from 'fs';
-import { TechStackModel } from "../Model/TechStackModel";
-import { cloudinary } from "../utils/cloudinary";
+import { TechStackModel } from "../Model/TechStackModel.js";
+import { cloudinary } from "../utils/cloudinary.js";
 
 // Helper function for uploading images to Cloudinary
 const uploadImage = async (filePath) => {
@@ -22,6 +22,7 @@ export const addTechStack = async (req, res) => {
         if (!req.file) {
             return res.status(400).json({ message: "No file uploaded." });
         }
+        console.log(req.body, req.file)
 
         // Upload image to Cloudinary
         const { url, public_id } = await uploadImage(req.file.path);
