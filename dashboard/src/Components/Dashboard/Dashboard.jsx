@@ -114,11 +114,11 @@ const Dashboard = () => {
             </li>
             <li>
               <Link
-                to={"/type"}
+                to={"/techStack"}
                 className="p-3 bg-[#7e7e7e1a] rounded flex items-center gap-2 side-li mt-2 "
               >
                 <GiConvergenceTarget />
-                <span className="sidebar-text">Property Type</span>
+                <span className="sidebar-text">Tech Stacks</span>
               </Link>
             </li>
             <li>

@@ -15,6 +15,7 @@ import Faq from "../Pages/Faq";
 import AddBlog from "../Pages/AddBlog";
 import Blogs from "../Pages/Blogs";
 import Footer from "../Pages/Footer";
+import TechStack from "../Pages/TechStack";
 
 export const router = createBrowserRouter([
     {
@@ -77,6 +78,11 @@ export const router = createBrowserRouter([
             {
                 path:'addBlog',
                 element:<AddBlog/>
+            },
+            
+            {
+                path:'techStack',
+                element:<TechStack/>
             },
             {
                 path:'blogs',
