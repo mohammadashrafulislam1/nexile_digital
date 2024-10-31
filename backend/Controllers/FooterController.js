@@ -18,43 +18,54 @@ const uploadImage = async (filePath) => {
 // Controller to add a new footer entry
 export const addFooter = async (req, res) => {
     try {
+        const { footerData } = req.body;
+
+        // Parse footerData if it is a JSON string
+        const parsedFooterData = typeof footerData === 'string' ? JSON.parse(footerData) : footerData;
+
         const {
-            aboutUs,
-            team,
-            careers,
+            company,
             services,
             resources,
             followUs,
             contactMessage,
-            company
-        } = req.body;
+            copyright
+        } = parsedFooterData;
 
         let logo = null;
         let public_id = null;
-        console.log(req.body, req.file)
+
+        console.log("Parsed Footer Data:", parsedFooterData);
+        console.log("Uploaded File:", req.file);
 
         // Check if a logo file is uploaded
         if (req.file) {
             const uploadResult = await uploadImage(req.file.path);
             logo = uploadResult.url;
             public_id = uploadResult.public_id;
+
+            console.log("Upload Result:", uploadResult); // Log upload result
         }
 
         // Create a new footer entry
         const newFooter = new FooterModel({
             company,
-            logo,
+            logo,        // Save the uploaded logo URL
+            public_id,    // Save the uploaded logo public ID
             services,
             resources,
             followUs,
-            contactMessage
+            contactMessage,
+            copyright
         });
 
         // Save the footer entry to the database
         await newFooter.save();
+        console.log(newFooter)
 
         res.status(201).json({ success: true, data: newFooter });
     } catch (error) {
+        console.error("Error in addFooter:", error);
         res.status(500).json({ success: false, message: error.message });
     }
 };
@@ -63,21 +74,27 @@ export const addFooter = async (req, res) => {
 export const updateFooter = async (req, res) => {
     try {
         const { id } = req.params; // Footer entry ID
+        const { footerData } = req.body; // Get footerData from the request body
+        console.log("Incoming request body:", req.body);
+
+        // Parse footerData if it is a JSON string
+        const parsedFooterData = typeof footerData === 'string' ? JSON.parse(footerData) : footerData;
+
         const {
-            aboutUs,
-            team,
-            careers,
+            company,
             services,
             resources,
             followUs,
-            contactMessage
-        } = req.body;
+            contactMessage,
+            copyright
+        } = parsedFooterData;
 
         // Find the footer entry by ID
         const footerEntry = await FooterModel.findById(id);
         if (!footerEntry) {
             return res.status(404).json({ success: false, message: 'Footer entry not found' });
         }
+        console.log("footerEntry", footerEntry);
 
         let updatedLogo = footerEntry.logo; // Keep the existing logo if no new image is uploaded
 
@@ -91,26 +108,30 @@ export const updateFooter = async (req, res) => {
             // Upload the new logo
             const uploadResult = await uploadImage(req.file.path);
             updatedLogo = uploadResult.url; // Update the logo URL
+            footerEntry.public_id = uploadResult.public_id; // Update the public ID
         }
 
         // Update footer entry fields with new or existing data
-        footerEntry.company.aboutUs = aboutUs || footerEntry.company.aboutUs;
-        footerEntry.company.team = team || footerEntry.company.team;
-        footerEntry.company.careers = careers || footerEntry.company.careers;
+        footerEntry.company = company ?? footerEntry.company;
+        footerEntry.services = services ?? footerEntry.services;
+        footerEntry.resources = resources ?? footerEntry.resources;
+        footerEntry.followUs = followUs ?? footerEntry.followUs;
+        footerEntry.contactMessage = contactMessage ?? footerEntry.contactMessage;
+        footerEntry.copyright = copyright ?? footerEntry.copyright;
         footerEntry.logo = updatedLogo; // Update logo
-        footerEntry.services = services || footerEntry.services;
-        footerEntry.resources = resources || footerEntry.resources;
-        footerEntry.followUs = followUs || footerEntry.followUs;
-        footerEntry.contactMessage = contactMessage || footerEntry.contactMessage;
 
         // Save the updated footer entry
         await footerEntry.save();
+        console.log(footerEntry);
 
         res.status(200).json({ success: true, data: footerEntry });
     } catch (error) {
+        console.error("Error in updateFooter:", error);
         res.status(500).json({ success: false, message: error.message });
     }
 };
+
+
 // get all footer: 
 export const getFooter = async (req, res) => {
     try{

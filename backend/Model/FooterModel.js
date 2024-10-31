@@ -23,7 +23,7 @@ const companySchema = new mongoose.Schema({
 });
 
 const footerSchema = new mongoose.Schema({
-    company: companySchema,
+    company: [companySchema],
     logo: { type:String },
     services: [serviceSchema],   // Array of services
     resources: [resourceSchema], // Array of resources
