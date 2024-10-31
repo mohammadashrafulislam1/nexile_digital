@@ -4,6 +4,7 @@ import { endPoint } from '../Components/ForAll/ForAll'; // Adjust the import pat
 import Swal from 'sweetalert2';
 import { toast, ToastContainer } from 'react-toastify';
 import { FaTrashAlt } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
     const [footerData, setFooterData] = useState({
@@ -32,9 +33,9 @@ const Footer = () => {
         try {
             setLoading(true);
             const response = await axios.get(`${endPoint}/footer`);
-            console.log(response)
-            if (response.data.length > 0) {
-                const existingFooter = response.data[0];
+            console.log(response.data.footer[0])
+            if (response.data.footer.length > 0) {
+                const existingFooter = response.data.footer[0];
                 setFooterData(existingFooter);
                 setFooterId(existingFooter._id);
                 setIsUpdating(true);
@@ -163,6 +164,8 @@ for (const [key, value] of formData.entries()) {
             const response = isUpdating
                 ? await axios.put(`${endPoint}/footer/${footerId}`, formData)
                 : await axios.post(`${endPoint}/footer`, formData);
+                
+                window.location.reload();// Refresh the footer list
             
             Swal.fire({
                 position: 'top-end',
@@ -179,7 +182,39 @@ for (const [key, value] of formData.entries()) {
             setLoading(false);
         }
     };
-    
+    const handleDelete = async(id)=>{
+        console.log(id)
+        const confirmDelete = await Swal.fire({
+            title: "Are you sure?",
+            text: "This action cannot be undone.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Yes, delete it!",
+        });
+
+        if (confirmDelete.isConfirmed) {
+            try {
+                await axios.delete(`${endPoint}/footer/${id}`);
+                Swal.fire({
+                    position: "top-end",
+                    icon: "success",
+                    title: "Footer deleted successfully!",
+                    showConfirmButton: false,
+                    timer: 1500,
+                });
+                window.location.reload();// Refresh the footer list
+            } catch (error) {
+                console.error("Error deleting Footer:", error);
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "Something went wrong while deleting the Footer!",
+                });
+            }
+        }
+    }
 
     if (loading) {
         return (
@@ -191,10 +226,50 @@ for (const [key, value] of formData.entries()) {
 
     return (
         <div className='my-10'>
+             <div className="breadcrumbs text-sm lg:w-1/2 md:w-[80%] w-[90%] mx-auto">
+                <ul className="my-6">
+                    <li>
+                        <Link to="/" className="inline-flex items-center gap-2">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                className="h-4 w-4 stroke-current">
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+                            </svg>
+                            Home
+                        </Link>
+                    </li>
+                    <li>
+                        <span className="inline-flex items-center gap-2">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                className="h-4 w-4 stroke-current">
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                           Footer
+                        </span>
+                    </li>
+                </ul>
+                <ToastContainer />
+            </div>
             <ToastContainer />
+            {
+                footerId && 
+            <button className='btn btn-sm bg-red-500 mx-auto text-white flex justify-center mb-5' onClick={()=>handleDelete(footerId && footerId)}>delete</button>
+            }
             <form onSubmit={handleSubmit} className="p-6 lg:w-1/2 md:w-[80%] w-[90%] mx-auto bg-white rounded-lg shadow-lg">
                 <h2 className="text-2xl font-bold mb-4 text-center">{isUpdating ? 'Update' : 'Add'} Footer</h2>
-
             <div>
             <h3 className="text-lg font-semibold mb-2">Company:</h3>
             {footerData?.company?.map((comp, index) => (
@@ -218,24 +293,35 @@ for (const [key, value] of formData.entries()) {
                     <button onClick={() => deleteCompanyField(index)} className='w-[15%] text-2xl text-red-600'><FaTrashAlt /></button>
                 </div>
             ))}
-            <button onClick={() => addCompanyField('company')} className="text-5xl text-black mb-2">+</button>
+            <button type='button' onClick={addCompanyField} className="text-5xl text-black mb-2">+</button>
             </div>
 
-                <div className="mb-4">
-                    <label className="label">
-                        <span className="label-text">Logo:</span>
-                    </label>
-                    <input
-                        type="file"
-                        name="logo"
-                        onChange={handleLogoChange}
-                        className="file-input file-input-bordered w-full"
+            <div className="mb-4">
+            <label className="label">
+                <span className="label-text">Logo:</span>
+            </label>
+            <input
+                type="file"
+                name="logo"
+                onChange={handleLogoChange}
+                className="file-input file-input-bordered w-full"
+            />
+           {logoFile ? (
+                <img
+                    src={URL.createObjectURL(logoFile)}
+                    alt="Logo Preview"
+                    className="mt-2 h-32 w-32 rounded-xl object-cover"
+                />
+            ) : (
+                footerData?.logo && (
+                    <img
+                        src={footerData.logo}
+                        alt="Logo Preview"
+                        className="mt-2 h-32 w-32 rounded-xl"
                     />
-                   {logoFile && (
-                        <img src={URL.createObjectURL(logoFile)} alt="Logo Preview" className="mt-2 h-32 w-32 rounded-xl" />
-                    )}
-                </div>
-
+                )
+            )}
+        </div>
                 <div>
                     <h3 className="text-lg font-semibold mb-2">Services:</h3>
                     {footerData.services.map((service, index) => (
