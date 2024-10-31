@@ -1,6 +1,6 @@
 import express from "express";
 import { upload } from "../Middleware/multer.js";
-import { addTechStack, deleteTechStack, getTechStack, updateTechStack, updateTechStack } from "../Controllers/TechStackController.js";
+import { addTechStack, deleteTechStack, getTechStack, updateTechStack } from "../Controllers/TechStackController.js";
 
 export const techStackRouter = express.Router();
 
