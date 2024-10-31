@@ -23,12 +23,7 @@ const worksSchema = new mongoose.Schema({
     videoEngagement: { type: String} // Video engagement metrics
   },
   clientTestimonial: { type: mongoose.Schema.Types.ObjectId, ref: 'ClientTestimonial' }, // Reference to ClientTestimonial model
-  techStack: [{ 
-    title: {type: String, required: true},
-    description: {type: String, required: true},
-    image: {type: String, required: true},   
-    publicId: { type: String, required: true },
-   }], // Technologies and tools used
+  techStack: [{type: mongoose.Schema.Types.ObjectId, ref: 'techStack' }], // TechnologiesId and tools used
    tags: [{ type: String }], // Array of tags/keywords for easier categorization and search
    isFeatured: { type: Boolean, default: false }, // Mark whether this showcase is featured
    completionDate: { type: Date }, // Date when the project was completed
