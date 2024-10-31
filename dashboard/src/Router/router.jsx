@@ -14,6 +14,7 @@ import Clients from "../Pages/Clients";
 import Faq from "../Pages/Faq";
 import AddBlog from "../Pages/AddBlog";
 import Blogs from "../Pages/Blogs";
+import Footer from "../Pages/Footer";
 
 export const router = createBrowserRouter([
     {
@@ -80,6 +81,11 @@ export const router = createBrowserRouter([
             {
                 path:'blogs',
                 element:<Blogs/>
+            },
+            
+            {
+                path:'footer',
+                element:<Footer/>
             },
         ],
     }
