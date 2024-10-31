@@ -3,20 +3,25 @@ import axios from 'axios';
 import { endPoint } from '../Components/ForAll/ForAll'; // Adjust the import path as necessary
 import Swal from 'sweetalert2';
 import { toast, ToastContainer } from 'react-toastify';
-import { Link } from 'react-router-dom';
 import { FaTrashAlt } from 'react-icons/fa';
 
 const Footer = () => {
     const [footerData, setFooterData] = useState({
+        company:[ { name: '', link: '' }],
         logo: '',
-        services: [{ name: '' }],
+        services: [{ name: '', link: '' }],
         resources: [{ name: '', link: '' }],
         followUs: [{ platform: '', url: '' }],
         contactMessage: '',
+        copyright: {
+            message: 'All rights reserved',
+            company: 'Nexile Digital',
+        },
     });
     const [loading, setLoading] = useState(false);
     const [isUpdating, setIsUpdating] = useState(false);
     const [footerId, setFooterId] = useState(null);
+    const [logoFile, setLogoFile] = useState(null);
 
     // Fetch existing footer data if needed for edit mode
     useEffect(() => {
@@ -40,18 +45,40 @@ const Footer = () => {
         }
     };
 
+    const handleCompanyChange = (index, e) => {
+        const { name, value } = e.target;
+        const updatedCompany = footerData.company.map((comp, i) =>
+            i === index ? { ...comp, [name]: value } : comp
+        );
+        setFooterData((prevData) => ({ ...prevData, company: updatedCompany }));
+    };
+
+    const addCompanyField = () => {
+        setFooterData((prevData) => ({
+            ...prevData,
+            company: [...prevData.company, { name: '', link: '' }],
+        }));
+    };
+
+    const deleteCompanyField = (index) => {
+        setFooterData((prevData) => ({
+            ...prevData,
+            company: prevData.company.filter((_, i) => i !== index),
+        }));
+    };
+
     const handleFooterChange = (e) => {
         const { name, value } = e.target;
         setFooterData((prevData) => ({
             ...prevData,
-            [name]: value,
+            company: { ...prevData.company, [name]: value }, // Handle company name and link
         }));
     };
 
     const handleServiceChange = (index, e) => {
-        const { value } = e.target;
+        const { name, value } = e.target;
         const updatedServices = footerData.services.map((service, i) =>
-            i === index ? { name: value } : service
+            i === index ? { ...service, [name]: value } : service
         );
         setFooterData((prevData) => ({ ...prevData, services: updatedServices }));
     };
@@ -75,7 +102,7 @@ const Footer = () => {
     const addServiceField = () => {
         setFooterData((prevData) => ({
             ...prevData,
-            services: [...prevData.services, { name: '' }],
+            services: [...prevData.services, { name: '', link: '' }],
         }));
     };
 
@@ -113,16 +140,24 @@ const Footer = () => {
             followUs: prevData.followUs.filter((_, i) => i !== index),
         }));
     };
+    const handleLogoChange = (e) => {
+        setLogoFile(e.target.files[0]);
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
+        const formData = new FormData();
+        
+        // Append text fields
+        formData.append('footerData', JSON.stringify(footerData));
+        if (logoFile) formData.append('logo', logoFile); // Add logo file if present
+    
         try {
-            if (isUpdating) {
-                await axios.put(`${endPoint}/footer/${footerId}`, footerData);
-            } else {
-                await axios.post(`${endPoint}/footer`, footerData);
-            }
+            const response = isUpdating
+                ? await axios.put(`${endPoint}/footer/${footerId}`, formData)
+                : await axios.post(`${endPoint}/footer`, formData);
+            
             Swal.fire({
                 position: 'top-end',
                 icon: 'success',
@@ -130,6 +165,7 @@ const Footer = () => {
                 showConfirmButton: false,
                 timer: 1500,
             });
+            toast.success(response.data.message);
             setLoading(false);
         } catch (error) {
             console.error('Error saving footer data:', error);
@@ -137,6 +173,7 @@ const Footer = () => {
             setLoading(false);
         }
     };
+    
 
     if (loading) {
         return (
@@ -152,18 +189,46 @@ const Footer = () => {
             <form onSubmit={handleSubmit} className="p-6 lg:w-1/2 md:w-[80%] w-[90%] mx-auto bg-white rounded-lg shadow-lg">
                 <h2 className="text-2xl font-bold mb-4 text-center">{isUpdating ? 'Update' : 'Add'} Footer</h2>
 
-                <div className="mb-4">
-                    <label className="label">
-                        <span className="label-text">Logo URL:</span>
-                    </label>
+            <div>
+            <h3 className="text-lg font-semibold mb-2">Company:</h3>
+            {footerData?.company?.map((comp, index) => (
+                <div key={index} className="dynamic-field">
                     <input
                         type="text"
+                        name="name"
+                        placeholder="Company Name"
+                        className="input input-bordered w-full mb-2"
+                        value={comp.name}
+                        onChange={(e) => handleChange('company', index, e)}
+                    />
+                    <input
+                        type="text"
+                        name="link"
+                        placeholder="Company Link"
+                        className="input input-bordered w-full mb-2"
+                        value={comp.link}
+                        onChange={(e) => handleChange('company', index, e)}
+                    />
+                    <button onClick={() => deleteField('company', index)}><FaTrashAlt /></button>
+                </div>
+            ))}
+            </div>
+            <button onClick={() => addField('company')}>Add Company</button>
+
+                <div className="mb-4">
+                    <label className="label">
+                        <span className="label-text">Logo:</span>
+                    </label>
+                    <input
+                        type="file"
                         name="logo"
-                        value={footerData.logo}
-                        onChange={handleFooterChange}
-                        className="input input-bordered w-full"
+                        onChange={handleLogoChange}
+                        className="file-input file-input-bordered w-full"
                         required
                     />
+                   {logoFile && (
+                        <img src={URL.createObjectURL(logoFile)} alt="Logo Preview" className="mt-2 h-32 w-32 rounded-xl" />
+                    )}
                 </div>
 
                 <div>
@@ -172,11 +237,20 @@ const Footer = () => {
                         <div key={index} className="flex items-center gap-2 mb-2">
                             <input
                                 type="text"
+                                name="name"
                                 value={service.name}
                                 onChange={(e) => handleServiceChange(index, e)}
                                 className="input input-bordered w-full mb-2"
                                 placeholder="Service Name"
                                 required
+                            />
+                            <input
+                                type="text"
+                                name="link"
+                                value={service.link}
+                                onChange={(e) => handleServiceChange(index, e)}
+                                className="input input-bordered w-full mb-2"
+                                placeholder="Service Link"
                             />
                             <button
                                 type="button"
@@ -234,7 +308,7 @@ const Footer = () => {
                                 value={social.platform}
                                 onChange={(e) => handleFollowUsChange(index, e)}
                                 className="input input-bordered w-full mb-2"
-                                placeholder="Social Media Platform"
+                                placeholder="Platform Name"
                                 required
                             />
                             <input
@@ -243,7 +317,7 @@ const Footer = () => {
                                 value={social.url}
                                 onChange={(e) => handleFollowUsChange(index, e)}
                                 className="input input-bordered w-full mb-2"
-                                placeholder="Social Media URL"
+                                placeholder="Platform URL"
                                 required
                             />
                             <button
@@ -265,14 +339,42 @@ const Footer = () => {
                     <textarea
                         name="contactMessage"
                         value={footerData.contactMessage}
-                        onChange={handleFooterChange}
+                        onChange={(e) => setFooterData({ ...footerData, contactMessage: e.target.value })}
                         className="textarea textarea-bordered w-full"
-                        placeholder="Contact Message"
-                        required
-                    ></textarea>
+                        rows="1"
+                    />
                 </div>
 
-                <button type="submit" className="btn btn-primary w-full mt-4">{isUpdating ? 'Update Footer' : 'Add Footer'}</button>
+                <div className="mb-4">
+                    <label className="label">
+                        <span className="label-text">Copyright Message:</span>
+                    </label>
+                    <input
+                        type="text"
+                        name="message"
+                        value={footerData.copyright.message}
+                        onChange={(e) => setFooterData({ ...footerData, copyright: { ...footerData.copyright, message: e.target.value } })}
+                        className="input input-bordered w-full"
+                    />
+                </div>
+
+                <div className="mb-4">
+                    <label className="label">
+                        <span className="label-text">Copyright Company:</span>
+                    </label>
+                    <input
+                        type="text"
+                        name="company"
+                        value={footerData.copyright.company}
+                        onChange={(e) => setFooterData({ ...footerData, copyright: { ...footerData.copyright, company: e.target.value } })}
+                        className="input input-bordered w-full"
+                    />
+                </div>
+
+                <button type="submit" className="btn btn-sm bg-black text-white w-full mt-4" disabled={loading}>
+    {loading ? 'Saving...' : isUpdating ? 'Update Footer' : 'Add Footer'}
+</button>
+
             </form>
         </div>
     );
