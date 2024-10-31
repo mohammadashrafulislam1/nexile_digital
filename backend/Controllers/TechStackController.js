@@ -43,3 +43,14 @@ export const addTechStack = async (req, res) => {
         return res.status(500).json({ message: error.message });
     }
 };
+
+// get tech stacks:
+export const getTechStack = async (req, res) => {
+    try{
+        const techStack = await TechStackModel.find();
+        res.status(200).json({ success: true, techStack });
+
+    }catch (error) {
+        return res.status(500).json({ message: error.message });
+    }
+}
