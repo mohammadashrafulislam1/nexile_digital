@@ -1,10 +1,5 @@
 import mongoose from 'mongoose';
 
-// Schema for links with a name and a URL
-const linkSchema = new mongoose.Schema({
-    name: { type: String },  // The display name for the link (e.g., "About Us")
-    link: { type: String }   // The URL for the link (e.g., "/about-us")
-});
 
 const socialMediaSchema = new mongoose.Schema({
     platform: { type: String }, // Social media platform name (e.g., "Instagram")

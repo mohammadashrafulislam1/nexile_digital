@@ -25,11 +25,13 @@ export const addFooter = async (req, res) => {
             services,
             resources,
             followUs,
-            contactMessage
+            contactMessage,
+            company
         } = req.body;
 
         let logo = null;
         let public_id = null;
+        console.log(req.body, req.file)
 
         // Check if a logo file is uploaded
         if (req.file) {
@@ -109,6 +111,15 @@ export const updateFooter = async (req, res) => {
         res.status(500).json({ success: false, message: error.message });
     }
 };
+// get all footer: 
+export const getFooter = async (req, res) => {
+    try{
+     const footer = await FooterModel.find()
+     res.status(200).json({ success: true, footer});
+    }catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+}
 
 // Controller to get an existing footer entry by ID
 export const getFooterById = async (req, res) => {
