@@ -23,9 +23,8 @@ const resourceSchema = new mongoose.Schema({
 
 // Company schema with name and link fields for each section
 const companySchema = new mongoose.Schema({
-    aboutUs: linkSchema,    // Name and link for "About Us"
-    team: linkSchema,       // Name and link for "Team"
-    careers: linkSchema     // Name and link for "Careers"
+    name: { type: String }, // Resource name (e.g., "Blog")
+    link: { type: String }  // URL to the resource page
 });
 
 const footerSchema = new mongoose.Schema({

@@ -40,11 +40,7 @@ export const addFooter = async (req, res) => {
 
         // Create a new footer entry
         const newFooter = new FooterModel({
-            company: {
-                aboutUs,
-                team,
-                careers
-            },
+            company,
             logo,
             services,
             resources,
