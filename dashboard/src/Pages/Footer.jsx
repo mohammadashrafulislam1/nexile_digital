@@ -32,6 +32,7 @@ const Footer = () => {
         try {
             setLoading(true);
             const response = await axios.get(`${endPoint}/footer`);
+            console.log(response)
             if (response.data.length > 0) {
                 const existingFooter = response.data[0];
                 setFooterData(existingFooter);
@@ -152,6 +153,11 @@ const Footer = () => {
         // Append text fields
         formData.append('footerData', JSON.stringify(footerData));
         if (logoFile) formData.append('logo', logoFile); // Add logo file if present
+
+        // Log formData contents
+for (const [key, value] of formData.entries()) {
+    console.log(`${key}:`, value);
+}
     
         try {
             const response = isUpdating
@@ -192,14 +198,14 @@ const Footer = () => {
             <div>
             <h3 className="text-lg font-semibold mb-2">Company:</h3>
             {footerData?.company?.map((comp, index) => (
-                <div key={index} className="dynamic-field">
+                <div key={index} className="dynamic-field flex justify-betweeen gap-5">
                     <input
                         type="text"
                         name="name"
                         placeholder="Company Name"
                         className="input input-bordered w-full mb-2"
                         value={comp.name}
-                        onChange={(e) => handleChange('company', index, e)}
+                        onChange={(e) => handleCompanyChange(index, e)}
                     />
                     <input
                         type="text"
@@ -207,13 +213,13 @@ const Footer = () => {
                         placeholder="Company Link"
                         className="input input-bordered w-full mb-2"
                         value={comp.link}
-                        onChange={(e) => handleChange('company', index, e)}
+                        onChange={(e) => handleCompanyChange(index, e)}
                     />
-                    <button onClick={() => deleteField('company', index)}><FaTrashAlt /></button>
+                    <button onClick={() => deleteCompanyField(index)} className='w-[15%] text-2xl text-red-600'><FaTrashAlt /></button>
                 </div>
             ))}
+            <button onClick={() => addCompanyField('company')} className="text-5xl text-black mb-2">+</button>
             </div>
-            <button onClick={() => addField('company')}>Add Company</button>
 
                 <div className="mb-4">
                     <label className="label">
@@ -224,7 +230,6 @@ const Footer = () => {
                         name="logo"
                         onChange={handleLogoChange}
                         className="file-input file-input-bordered w-full"
-                        required
                     />
                    {logoFile && (
                         <img src={URL.createObjectURL(logoFile)} alt="Logo Preview" className="mt-2 h-32 w-32 rounded-xl" />
@@ -261,7 +266,7 @@ const Footer = () => {
                             </button>
                         </div>
                     ))}
-                    <button type="button" onClick={addServiceField} className="text-4xl text-black mt-2">+</button>
+                    <button type="button" onClick={addServiceField} className="text-5xl text-black mb-2">+</button>
                 </div>
 
                 <div>
@@ -295,7 +300,7 @@ const Footer = () => {
                             </button>
                         </div>
                     ))}
-                    <button type="button" onClick={addResourceField} className="text-4xl text-black mt-2">+</button>
+                    <button type="button" onClick={addResourceField} className="text-5xl text-black mb-2">+</button>
                 </div>
 
                 <div>
@@ -329,7 +334,7 @@ const Footer = () => {
                             </button>
                         </div>
                     ))}
-                    <button type="button" onClick={addFollowUsField} className="text-4xl text-black mt-2">+</button>
+                    <button type="button" onClick={addFollowUsField} className="text-5xl text-black mb-4">+</button>
                 </div>
 
                 <div className="mb-4">
