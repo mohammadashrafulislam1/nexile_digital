@@ -1,5 +1,5 @@
 import express from 'express';
-import { addTechCategory, deleteTechCategory, getTechCategories, updateTechCategory } from '../Controllers/TechCategory';
+import { addTechCategory, deleteTechCategory, getTechCategories, updateTechCategory } from '../Controllers/TechCategory.js';
 
 export const techCategoryRouter = express.Router();
 // add api
