@@ -27,9 +27,6 @@ export const addWork = async (req, res) => {
     } = req.body;
 
     console.log("req.body", req.body);
-    console.log("req.files", req.files);
-    console.log("Tags:", tags);
-    console.log("Tech Stack IDs:", techStack);
     console.log("metricData:", metricsData);
 
     // Handle images upload
@@ -111,6 +108,8 @@ export const updateWork = async (req, res) => {
 
     console.log("req.body", req.body);
 
+    console.log("metricsUpdate", JSON.stringify(metricsData))
+
     // Update images if new ones are uploaded
     let images = existingWork.images.slice();
     if (req.files && req.files.images) {
@@ -123,8 +122,7 @@ export const updateWork = async (req, res) => {
       }
     }
 
-    // Parse metrics data if provided as JSON string
-    const parsedMetricsData = metricsData ? JSON.parse(metricsData) : {};
+
 
     // Update the techStack by IDs
     const techStackWithImages = techStack || existingWork.techStack;
@@ -144,13 +142,7 @@ export const updateWork = async (req, res) => {
         servicesProvided: servicesProvided || existingWork.servicesProvided,
         projectTimeline: projectTimeline || existingWork.projectTimeline,
         customSolutions: customSolutions || existingWork.customSolutions,
-        metricsData: {
-          trafficIncrease: parsedMetricsData.trafficIncrease || existingWork.metricsData?.trafficIncrease || "",
-          conversionRateImprovement: parsedMetricsData.conversionRateImprovement || existingWork.metricsData?.conversionRateImprovement || "",
-          pageSpeedImprovement: parsedMetricsData.pageSpeedImprovement || existingWork.metricsData?.pageSpeedImprovement || "",
-          seoImprovements: parsedMetricsData.seoImprovements || existingWork.metricsData?.seoImprovements || "",
-          videoEngagement: parsedMetricsData.videoEngagement || existingWork.metricsData?.videoEngagement || "",
-        },
+        metricsData: metricsData || existingWork.metricsData,
         clientTestimonial: clientTestimonial || existingWork.clientTestimonial,
         techStack: techStackWithImages,
         tags: tags || existingWork.tags,

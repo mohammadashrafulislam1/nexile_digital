@@ -16,6 +16,7 @@ import { blogsRouter } from "./Router/blogs.js";
 import { footerRouter } from "./Router/footer.js";
 import { techStackRouter } from "./Router/techStack.js";
 import { techCategoryRouter } from "./Router/techCategory.js";
+import { blogCategoryRouter } from "./Router/blogCategory.js";
 
 // Load environment variables
 configDotenv();
@@ -44,6 +45,7 @@ app.use('/api/blog', blogsRouter)
 app.use('/api/footer', footerRouter)
 app.use('/api/techStack', techStackRouter)
 app.use('/api/techCategory', techCategoryRouter)
+app.use('/api/blogCategory', blogCategoryRouter)
 
 // Check if the required environment variables are available
 if (!process.env.MnongoDB_User || !process.env.MnongoDB_Pass) {
