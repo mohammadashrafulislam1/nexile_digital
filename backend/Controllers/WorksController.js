@@ -30,7 +30,7 @@ export const addWork = async (req, res) => {
     console.log("req.files", req.files);
     console.log("Tags:", tags);
     console.log("Tech Stack IDs:", techStack);
-    console.log("Services Provided:", servicesProvided);
+    console.log("metricData:", metricsData);
 
     // Handle images upload
     let images = [];
@@ -45,7 +45,6 @@ export const addWork = async (req, res) => {
     }
 
     // Parse metrics data if provided
-    const parsedMetricsData = metricsData ? JSON.parse(metricsData) : {};
 
     const newShowcase = new WorksModel({
       category,
@@ -59,13 +58,7 @@ export const addWork = async (req, res) => {
       servicesProvided,
       projectTimeline,
       customSolutions,
-      metricsData: {
-        trafficIncrease: parsedMetricsData.trafficIncrease || "",
-        conversionRateImprovement: parsedMetricsData.conversionRateImprovement || "",
-        pageSpeedImprovement: parsedMetricsData.pageSpeedImprovement || "",
-        seoImprovements: parsedMetricsData.seoImprovements || "",
-        videoEngagement: parsedMetricsData.videoEngagement || "",
-      },
+      metricsData,
       clientTestimonial,
       techStack,  // Referencing by ID
       tags,
