@@ -321,7 +321,7 @@ const Hero = () => {
             <img
               src={logoPreview}
               alt="Logo Preview"
-              className="mt-4 h-20 object-contain"
+              className="mt-4 h-16 object-contain border bg-black w-36 rounded-xl p-2"
             />
           )}
         </div>

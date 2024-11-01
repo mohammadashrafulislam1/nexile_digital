@@ -19,11 +19,11 @@ const Work = () => {
     projectTimeline: '',
     customSolutions: '',
     metricsData: {
-      trafficIncrease: '',
-      conversionRateImprovement: '',
-      pageSpeedImprovement: '',
-      seoImprovements: '',
-      videoEngagement: '',
+      trafficIncrease: '0',
+      conversionRateImprovement: '0',
+      pageSpeedImprovement: '0',
+      seoImprovements: '0',
+      videoEngagement: '0',
     },
     clientTestimonial: '',
     techStack: [],// TechStack Ids
@@ -50,13 +50,21 @@ const Work = () => {
   
   console.log(formData)
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toISOString().split('T')[0]; // Extracts YYYY-MM-DD part
+  };
 
   useEffect(() => {
     const fetchWorkData = async () => {
         try {
             const response = await axios.get(`${endPoint}/works/${workToEdit?._id}`);
             setWorkToUpdate(response?.data?.work);
-            setFormData(response?.data?.work); // Populate formData with fetched work data
+            setFormData(response?.data?.work);
+            setFormData((prevData) => ({
+              ...prevData,
+              completionDate: formatDate(workToEdit.completionDate), // Format the initial date
+          }));
         setImages(response?.data?.work.images || []); // Set existing images if available
             console.log(response?.data?.work);
         } catch (error) {
@@ -161,16 +169,22 @@ const Work = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true)
+    setLoading(true);
 
     // Create a FormData object to send files and data
     const formDataToSend = new FormData();
+
     // Append other form data fields
     for (const key in formData) {
         if (Array.isArray(formData[key])) {
             formData[key].forEach((item) => {
                 formDataToSend.append(key, item);
             });
+        } else if (typeof formData[key] === 'object' && formData[key] !== null) {
+            // If the value is an object, handle it separately
+            for (const subKey in formData[key]) {
+                formDataToSend.append(`${key}[${subKey}]`, formData[key][subKey]);
+            }
         } else {
             formDataToSend.append(key, formData[key]);
         }
@@ -179,7 +193,7 @@ const Work = () => {
     // Check if images is an array before using forEach
     console.log('Current images state:', images);
     console.log('Is images an array?', Array.isArray(images)); // Check if images is an array
-    
+
     if (Array.isArray(images)) {
         images.forEach((image) => {
             formDataToSend.append('images', image);
@@ -187,8 +201,6 @@ const Work = () => {
     } else {
         console.error('Images is not an array:', images);
     }
-   
-
 
     // Log for debugging
     for (let [key, value] of formDataToSend.entries()) {
@@ -196,37 +208,37 @@ const Work = () => {
     }
 
     try {
-      console.log("workToEdit", workToEdit?._id)
-        const response = workToEdit ? await axios.put(`${endPoint}/works/${workToEdit?._id}`, formDataToSend, {
-          headers: { 'Content-Type': 'multipart/form-data' },
-      }) :
-        await axios.post(`${endPoint}/works`, formDataToSend, {
-            headers: { 'Content-Type': 'multipart/form-data' },
-        }) 
+        console.log("workToEdit", workToEdit?._id);
+        const response = workToEdit
+            ? await axios.put(`${endPoint}/works/${workToEdit?._id}`, formDataToSend, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+              })
+            : await axios.post(`${endPoint}/works`, formDataToSend, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+              });
+
         Swal.fire({
-          position: "top-end",
-          icon: "success",
-          title: `${workToEdit ?"Work updated successfully!" : "Work added successfully!"}`,
-          showConfirmButton: false,
-          timer: 1500,
-      });
+            position: "top-end",
+            icon: "success",
+            title: `${workToEdit ? "Work updated successfully!" : "Work added successfully!"}`,
+            showConfirmButton: false,
+            timer: 1500,
+        });
         console.log('Project added successfully:', response.data);
-        setLoading(false)
     } catch (error) {
-      setLoading(false)
-      Swal.fire({
-        position: "top-end",
-        icon: "error",
-        title: `${workToEdit ? "Error To Work Update!" : "Error To Work Add!"}`,
-        showConfirmButton: false,
-        timer: 1500,
-    });
         console.error('Error adding project:', error);
-    }
-    finally{
-      setLoading(false)
+        Swal.fire({
+            position: "top-end",
+            icon: "error",
+            title: `${workToEdit ? "Error To Work Update!" : "Error To Work Add!"}`,
+            showConfirmButton: false,
+            timer: 1500,
+        });
+    } finally {
+        setLoading(false);
     }
 };
+
 
   const removeItem = (section, index) => {
     const updatedItems = [...formData[section]];
@@ -544,26 +556,28 @@ const Work = () => {
       {/* Metrics Data Section */}
       <div className="mb-4">
   <h3 className="text-lg font-bold capitalize mb-2">Metrics Data</h3>
-  {formData.metricsData && typeof formData.metricsData === 'object' ? (
-    Object.keys(formData.metricsData).map((key) => (
-      <div key={key}>
-        <input
-          type="text"
-          placeholder={key.replace(/([A-Z])/g, ' $1').toLowerCase()}
-          name={key}
-          value={formData.metricsData[key]}
-          onChange={(e) => setFormData({
-            ...formData,
-            metricsData: { ...formData.metricsData, [key]: e.target.value },
-          })}
-          className="input input-bordered w-full mb-2"
-        />
-      </div>
-    ))
-  ) : (
-    <p>No metrics data available</p> // Optional: message when there's no data
+  {/* Check if metricsData exists and is an object; if not, initialize with all default keys */}
+  {formData.metricsData && typeof formData.metricsData === 'object'
+    && Object.keys(formData.metricsData).map((key) => (
+        <div key={key}>
+          <input
+            type="text"
+            placeholder={key.replace(/([A-Z])/g, ' $1').toLowerCase()}
+            name={key}
+            value={formData.metricsData[key] || ''}
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                metricsData: { ...formData.metricsData, [key]: e.target.value },
+              })
+            }
+            className="input input-bordered w-full mb-2"
+          />
+        </div>
+      )
   )}
 </div>
+
 
 
 <select 
@@ -593,7 +607,7 @@ const Work = () => {
         />
         Featured Project
       </label>
-
+{ console.log("formData.completionDate", formData.completionDate)}
       <input 
         type="date" 
         name="completionDate" 

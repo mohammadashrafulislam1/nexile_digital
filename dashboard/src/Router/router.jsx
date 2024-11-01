@@ -17,6 +17,7 @@ import Blogs from "../Pages/Blogs";
 import Footer from "../Pages/Footer";
 import TechStack from "../Pages/TechStack";
 import TechCategories from "../Pages/TechCategories";
+import BlogCategories from "../Pages/BlogCategories";
 
 export const router = createBrowserRouter([
     {
@@ -94,10 +95,13 @@ export const router = createBrowserRouter([
                 path:'footer',
                 element:<Footer/>
             },
-            
             {
                 path:'techCategory',
                 element:<TechCategories/>
+            },
+            {
+                path:'blogCategories',
+                element:<BlogCategories/>
             },
         ],
     }
