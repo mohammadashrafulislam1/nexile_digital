@@ -34,3 +34,17 @@ export const getTechCategories = async()=>{
         return res.status(500).json({ message: error.message });
     }
 }
+
+export const deleteTechCategory = async()=>{
+    try{
+      const {id} = req.params;
+      const techCategory = await TechCategoryModel.findById(id)
+      if(!techCategory){
+        res.status(404).json({ message: "This tech category does not exist!" });
+      }
+      await TechCategoryModel.findByIdAndDelete(id)
+    return res.status(200).json({ message: "Tech Category deleted successfully!"});
+    }catch (error) {
+          return res.status(500).json({ message: error.message });
+      }
+  }
