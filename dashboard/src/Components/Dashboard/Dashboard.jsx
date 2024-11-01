@@ -105,11 +105,11 @@ const Dashboard = () => {
             </li>
             <li>
               <Link
-                to={"/developer"}
+                to={"/techCategory"}
                 className="p-3 bg-[#7e7e7e1a] rounded flex items-center gap-2 side-li mt-2 "
               >
                 <FaDev />
-                <span className="sidebar-text">Developer</span>
+                <span className="sidebar-text">Tech Category</span>
               </Link>
             </li>
             <li>
