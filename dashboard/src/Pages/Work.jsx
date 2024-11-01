@@ -63,7 +63,6 @@ const Work = () => {
             console.error('Error fetching property data:', error);
         }
     };
-
     fetchWorkData();
 
     const fetchSubMenus = async () => {
@@ -75,6 +74,12 @@ const Work = () => {
           const responseStacks = await axios.get(`${endPoint}/techStack`);
           setTechStacks(responseStacks?.data?.techStack);
           console.log(responseStacks?.data?.techStack);
+          console.log(workToEdit?.techStack)
+    console.log(responseStacks?.data?.techStack)
+    if (workToEdit?.techStack) {
+      const selectedTechStacks = responseStacks?.data?.techStack.filter(item => workToEdit.techStack.includes(item._id));
+      setSelectedTechStacks(selectedTechStacks);
+    }
 
           const responseTestimonials = await axios.get(`${endPoint}/clientTestimonial`);
           setClientTestimonial(responseTestimonials?.data?.testimonials);
@@ -570,9 +575,10 @@ const Work = () => {
   <option disabled value="">Select Client Testimonial</option>
   {
     clientTestimonial && clientTestimonial.map((testimonial) => (
-      <option key={testimonial._id} value={testimonial._id}>{testimonial.
+      <option key={testimonial._id} value={testimonial._id} className='bg-gray-200 p-4 rounded-xl my-2 mx-2'>{testimonial.
         testimonialText
       }</option>
+      
     ))
   }
 </select>
