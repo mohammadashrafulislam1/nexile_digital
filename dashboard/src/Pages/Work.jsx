@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { FaTrashAlt } from 'react-icons/fa';
+import { FaTrash, FaTrashAlt } from 'react-icons/fa';
 import { Link, useLocation } from 'react-router-dom';
 import { endPoint } from '../Components/ForAll/ForAll';
 import Swal from 'sweetalert2';
@@ -8,7 +8,7 @@ import { toast, ToastContainer } from 'react-toastify';
 
 const Work = () => {
   const [formData, setFormData] = useState({
-    category: '',
+    category: '', // category Ids
     title: '',
     projectUrl: '',
     githubUrl: '',
@@ -26,27 +26,29 @@ const Work = () => {
       videoEngagement: '',
     },
     clientTestimonial: '',
-    techStack: [
-    ],
+    techStack: [],// TechStack Ids
     tags: [],
     isFeatured: false,
     completionDate: '',
     metaDescription: '',
-    metaTitile: '',
+    metaTitle: '',
     metaKeywords: [],
   });
   const { state } = useLocation();
   const [images, setImages] = useState([]);
   const [previewImages, setPreviewImages] = useState([]);
-  const [techStackItem, setTechStackItem] = useState({ title: '', description: '', image: '' });
   const [service, setService] = useState('');
   const [tag, setTag] = useState('');
   const [loading, setLoading] = useState(false);
   const [metaKeyword, setMetaKeyword] = useState('');
   const [workToUpdate, setWorkToUpdate] = useState();
+  const [techCategory, setTechCategory] = useState();
+  const [clientTestimonial, setClientTestimonial] = useState();
+  const [techStacks, setTechStacks] = useState();
+  const [selectedTechStacks, setSelectedTechStacks] = useState([]);
   const workToEdit = state?.work;
   
-  console.log(images)
+  console.log(formData)
 
 
   useEffect(() => {
@@ -63,15 +65,32 @@ const Work = () => {
     };
 
     fetchWorkData();
+
+    const fetchSubMenus = async () => {
+      try {
+          const responseCategory = await axios.get(`${endPoint}/techCategory`);
+          setTechCategory(responseCategory?.data?.techCategories);
+          console.log(responseCategory?.data?.techCategories);
+
+          const responseStacks = await axios.get(`${endPoint}/techStack`);
+          setTechStacks(responseStacks?.data?.techStack);
+          console.log(responseStacks?.data?.techStack);
+
+          const responseTestimonials = await axios.get(`${endPoint}/clientTestimonial`);
+          setClientTestimonial(responseTestimonials?.data?.testimonials);
+          console.log(responseTestimonials?.data?.testimonials);
+      } catch (error) {
+          console.error('Error fetching property data:', error);
+      }
+  };
+  fetchSubMenus()
 }, [workToEdit]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
-  const handleImageChange = (e) => {
-    setTechStackItem({ ...techStackItem, image: e.target.files[0] });
-  };
+  
   const handleImageUpload = (event) => {
     const files = Array.from(event.target.files);
     setImages((prevImages) => {
@@ -119,15 +138,6 @@ const Work = () => {
     toast.success(`Preview image removed successfully`);
   };
 
-  const handleTechStackChange = (e) => {
-    const { name, value } = e.target;
-    setTechStackItem({ ...techStackItem, [name]: value });
-  };
-
-  const addTechStackItem = () => {
-    setFormData({ ...formData, techStack: [...formData.techStack, techStackItem] });
-    setTechStackItem({ title: '', description: '', image: '' });
-  };
 
   const addService = () => {
     setFormData({ ...formData, servicesProvided: [...formData.servicesProvided, service] });
@@ -173,21 +183,7 @@ const Work = () => {
         console.error('Images is not an array:', images);
     }
    
-    
-      // Append techStacks data
-if (Array.isArray(formData.techStack) && formData.techStack.length > 0) {
-  formData.techStack.forEach((tech, index) => {
 
-      // Append non-file fields as individual fields
-      formDataToSend.append(`techStack[${index}][title]`, tech.title || "");
-      formDataToSend.append(`techStack[${index}][description]`, tech.description || "");
-
-      // Append image file for the plan (without index in the field name)
-      if (tech.image) {
-          formDataToSend.append("techStackImage", tech.image); // Now using "techStacks" without index
-      }
-  });
-}
 
     // Log for debugging
     for (let [key, value] of formDataToSend.entries()) {
@@ -232,61 +228,28 @@ if (Array.isArray(formData.techStack) && formData.techStack.length > 0) {
     updatedItems.splice(index, 1);
     setFormData({ ...formData, [section]: updatedItems });
   };
-  
-  const removeTechStack = async (section, index, item) => {
-    const updatedItems = [...formData[section]];
-    
-    // First, show the confirmation dialog
-    const result = await Swal.fire({
-      title: 'Are you sure?',
-      text: `You are about to delete the service: ${item?.title || 'this service'}`,
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Yes, delete it!',
-    });
-    console.log(item)
-    // If the user confirms, proceed with the deletion
-    if (result.isConfirmed) {
-      // Check if workToEdit is available
-      if (workToEdit?._id) {
-        if(item.publicId){
-          try {
-            // Make the delete request to your API
-            await axios.delete(`${endPoint}/works/${workToEdit._id}/${item?._id}`, {
-              params: { publicId: item.publicId }
-            });          
-            
-            // Remove the item from the local state after successful deletion
-            updatedItems.splice(index, 1);
-            setFormData({ ...formData, [section]: updatedItems });
-    
-            // Show success message
-            toast.success(`Service: ${item.title} deleted successfully`);
-          } catch (error) {
-            // Handle error and show an error message
-            toast.error("Error deleting service");
-          }
-        }
-        else{
 
-            // Remove the item from the local state after successful deletion
-            updatedItems.splice(index, 1);
-            setFormData({ ...formData, [section]: updatedItems });
-    
-            // Show success message
-            toast.success(`Service: ${item.title} deleted successfully`);
-        }
-      } else {
-        // If workToEdit is not available, just update the local state
-        updatedItems.splice(index, 1);
-        setFormData({ ...formData, [section]: updatedItems });
-  
-        // Show a message indicating that the item has been removed from local state
-        toast.success(`Service: ${item.title} deleted from local data successfully`);
-      }
+  const handleTechStackSelect = (stack) => {
+    if (!selectedTechStacks.find((a) => a._id === stack._id)) {
+      const updatedSelectedTechStacks = [...selectedTechStacks, stack];
+      setSelectedTechStacks(updatedSelectedTechStacks);
+      setFormData((prevState) => ({
+        ...prevState,
+        techStack: updatedSelectedTechStacks.map((a) => a._id), // Map to the IDs of the selected amenities
+      }));
+      toast.success("Amenity added successfuly!");
+    } else {
+      toast.error("Amenity already added!");
     }
+  };
+
+  const handleRemoveTechStack = (techStackId) => {
+    const updatedSelectedTechStacks = selectedTechStacks.filter((techStack) => techStack._id !== techStackId);
+    setSelectedTechStacks(updatedSelectedTechStacks);
+    setFormData((prevState) => ({
+      ...prevState,
+      techStack: updatedSelectedTechStacks.map((a) => a._id),
+    }));
   };
   
   if (loading) {
@@ -296,7 +259,7 @@ if (Array.isArray(formData.techStack) && formData.techStack.length > 0) {
       </div>
     );
   }
-  console.log(formData.completionDate)
+  console.log("selectedTechStacks", selectedTechStacks)
  
 
   return (
@@ -354,15 +317,20 @@ if (Array.isArray(formData.techStack) && formData.techStack.length > 0) {
           className="input input-bordered w-full mb-2" 
           required 
         />
-        <input 
-          type="text" 
-          name="category" 
-          placeholder="Category" 
-          onChange={handleChange} 
-          value={formData.category} 
-          className="input input-bordered w-full mb-2" 
-          required 
-        />
+        <select 
+  className="select select-bordered w-full my-3" 
+  value={formData.category} 
+  name="category"
+  onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+>
+  <option disabled value="">Select Category</option>
+  {
+    techCategory && techCategory.map((category) => (
+      <option key={category._id} value={category._id}>{category.name}</option>
+    ))
+  }
+</select>
+
       </div>
 
       <div>
@@ -425,85 +393,62 @@ if (Array.isArray(formData.techStack) && formData.techStack.length > 0) {
       </div>
 
       {/* Tech Stack Section */}
-      <div className="mb-4">
-      <h3 className="text-lg font-bold capitalize mb-2">Tech Stack</h3>
-      {formData.techStack.map((item, index) => (
-        <div key={index} className="mb-2 border p-4 rounded-md">
-          <div className="mb-2">
-            <label className="block text-gray-700 mb-1">Title</label>
-            <input
-              type="text"
-              className="input input-bordered w-full mb-2"
-              value={item.title}
-              onChange={(e) => {
-                const updatedTechStack = [...formData.techStack];
-                updatedTechStack[index].title = e.target.value;
-                setFormData({ ...formData, techStack: updatedTechStack });
-              }}
-              required
-            />
-            <label className="block text-gray-700 mb-1">Description</label>
-            <textarea
-              className="textarea textarea-bordered w-full mb-2"
-              value={item.description}
-              onChange={(e) => {
-                const updatedTechStack = [...formData.techStack];
-                updatedTechStack[index].description = e.target.value;
-                setFormData({ ...formData, techStack: updatedTechStack });
-              }}
-              required
-              rows="2"
-            />
-            {item.image ? (
-              typeof item.image === 'object' ? (
+      <div className="form-control">
+          <label className="label">
+            <span className="label-text">Tech Stacks</span>
+          </label>
+          <div className="grid lg:grid-cols-3 gap-5 sm:grid-cols-1 md:grid-cols-3">
+            {techStacks?.map((stack) => (
+              <div
+                key={stack._id}
+                className="flex items-center border p-2 rounded w-max gap-2"
+              >
                 <img
-                  src={URL.createObjectURL(item.image)}
-                  alt={item.title}
-                  className="w-32 h-32 rounded-md object-cover my-3"
+                  src={stack?.image}
+                  alt={stack.title}
+                  className="w-10 h-10 object-cover"
                 />
-              ) : (
-                <img
-                  src={item.image}
-                  alt={item.title}
-                  className="w-32 h-32 rounded-md object-cover my-3"
-                />
-              )
-            ) : (
-              <p>No image uploaded.</p>
-            )}
+                <span>{stack.title}</span>
+                <button
+                  type="button"
+                  onClick={() => handleTechStackSelect(stack)}
+                  className="btn btn-sm btn-outline"
+                >
+                  Add
+                </button>
+              </div>
+            ))}
           </div>
-          <button type="button" className="w-full text-2xl text-red-600 flex justify-end" onClick={() => removeTechStack('techStack', index, item)}>
-            <FaTrashAlt />
-          </button>
+          <div>
+            <h3 className="text-2xl mt-10">Selected Tech Stacks:</h3>
+            <div className="mt-2 flex flex-wrap gap-1">
+              {selectedTechStacks?.length === 0 ? (
+                <p>No techstack selected.</p>
+              ) : (
+                selectedTechStacks?.map((stack) => (
+                  <div
+                    key={stack?._id}
+                    className="flex items-center space-x-2 border p-2 rounded"
+                  >
+                    <img
+                      src={stack?.image}
+                      alt={stack?.title}
+                      className="w-10 h-10 object-cover"
+                    />
+                    <span>{stack?.title}</span>
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveTechStack(stack?._id)}
+                      className="ml-auto text-[#fc0000]"
+                    >
+                      <FaTrash />
+                    </button>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
         </div>
-      ))}
-      <input
-        type="text"
-        placeholder="Tech Title"
-        name="title"
-        value={techStackItem.title}
-        onChange={handleTechStackChange}
-        className="input input-bordered w-full mb-2"
-      />
-      <textarea
-        placeholder="Tech Description"
-        name="description"
-        value={techStackItem.description}
-        onChange={handleTechStackChange}
-        className="textarea textarea-bordered w-full mb-2"
-        rows="2"
-      />
-      <label className="block text-gray-700 mb-1">Upload Image</label>
-      <input
-        type="file"
-        accept="image/*"
-        className="file-input file-input-bordered w-full mb-2"
-        onChange={handleImageChange}
-      />
-      <button type="button" className="btn btn-primary" onClick={addTechStackItem}>
-        Add Tech Stack Item
-      </button>
-    </div>
 
       {/* Tags Section */}
       <div className="mb-4">
@@ -616,14 +561,21 @@ if (Array.isArray(formData.techStack) && formData.techStack.length > 0) {
 </div>
 
 
-      <textarea 
-        name="clientTestimonial" 
-        placeholder="Client Testimonial" 
-        onChange={handleChange} 
-        value={formData.clientTestimonial} 
-        className="textarea textarea-bordered w-full mb-2" 
-        rows="3" 
-      />
+<select 
+  className="select select-bordered w-full my-3" 
+  value={formData.clientTestimonial} 
+  name="category"
+  onChange={(e) => setFormData({ ...formData, clientTestimonial: e.target.value })}
+>
+  <option disabled value="">Select Client Testimonial</option>
+  {
+    clientTestimonial && clientTestimonial.map((testimonial) => (
+      <option key={testimonial._id} value={testimonial._id}>{testimonial.
+        testimonialText
+      }</option>
+    ))
+  }
+</select>
 
       <label className="flex items-center mb-2">
         <input 
@@ -644,10 +596,10 @@ if (Array.isArray(formData.techStack) && formData.techStack.length > 0) {
         className="input input-bordered w-full mb-2" 
       />
       <input 
-        name="text" 
+        name="metaTitle" 
         placeholder="Meta Title" 
         onChange={handleChange} 
-        value={formData.metaTitile} 
+        value={formData.metaTitle} 
         className="input input-bordered w-full mb-2" 
       />
 
