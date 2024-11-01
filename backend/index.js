@@ -48,13 +48,13 @@ app.use('/api/techCategory', techCategoryRouter)
 app.use('/api/blogCategory', blogCategoryRouter)
 
 // Check if the required environment variables are available
-if (!process.env.MnongoDB_User || !process.env.MnongoDB_Pass) {
+if (!process.env.MongoDB_User || !process.env.MongoDB_Pass) {
     console.error("MongoDB credentials not set in the environment variables");
     process.exit(1);
 }
 
 // MongoDB connection URI
-const mongoURI = `mongodb+srv://${process.env.MnongoDB_User}:${process.env.MnongoDB_Pass}@cluster0.yfvuq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+const mongoURI = `mongodb+srv://${process.env.MongoDB_User}:${process.env.MongoDB_Pass}@cluster0.yfvuq.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
 mongoose.connect(mongoURI)
     .then(() => console.log('MongoDB connected'))

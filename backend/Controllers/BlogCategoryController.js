@@ -1,8 +1,9 @@
-import { BlogCategoryModel } from "../Model/BlogCategoryModel";
+import { BlogCategoryModel } from "../Model/BlogCategoryModel.js";
 
 export const addBlogCategory = async (req, res) => {
   try {
     const { name } = req.body;
+    console.log(req.body)
     const BlogCategory = new BlogCategoryModel({ name });
     await BlogCategory.save();
     res.status(200).json({ message: "Blog Category added successfully!", BlogCategory });

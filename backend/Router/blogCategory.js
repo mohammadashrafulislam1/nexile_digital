@@ -1,5 +1,5 @@
 import express from 'express';
-import { addBlogCategory, deleteBlogCategory, getBlogCategories, updateBlogCategory } from '../Controllers/BlogCategoryController';
+import { addBlogCategory, deleteBlogCategory, getBlogCategories, updateBlogCategory } from '../Controllers/BlogCategoryController.js';
 
 export const blogCategoryRouter = express.Router();
 // add api
