@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const worksSchema = new mongoose.Schema({
-  category: { type: String}, // Category of the showcase (e.g., Web Development, Video Editing)
+  category: { type: mongoose.Schema.Types.ObjectId, ref: 'techCategory'}, // CategoryID of the showcase (e.g., Web Development, Video Editing)
   title: { type: String}, // Title of the project
   projectUrl: { type: String}, // URL for the live project or case study
   githubUrl: { type: String}, // URL for the live project or case study

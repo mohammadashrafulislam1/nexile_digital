@@ -5,7 +5,7 @@ import { WorksModel } from '../Model/WorksModel.js';
 export const addWork = async (req, res) => {
   try {
     const {
-      category,
+      category,  // CategoryID now
       metaTitle,
       title,
       githubUrl,
@@ -22,15 +22,17 @@ export const addWork = async (req, res) => {
       completionDate,
       metaDescription,
       metaKeywords,
-      techStack,
+      techStack,  // Now referencing by ID
+      clientTestimonial, // Optional reference
     } = req.body;
 
     console.log("req.body", req.body);
     console.log("req.files", req.files);
     console.log("Tags:", tags);
-    console.log("techStack:", techStack);
+    console.log("Tech Stack IDs:", techStack);
     console.log("Services Provided:", servicesProvided);
 
+    // Handle images upload
     let images = [];
     if (req.files && req.files.images) {
       for (const file of req.files.images) {
@@ -41,38 +43,9 @@ export const addWork = async (req, res) => {
         fs.unlinkSync(file.path);
       }
     }
-    let techStackData;
-    if (typeof techStack === 'string') {
-      try {
-        techStackData = JSON.parse(techStack);
-      } catch (error) {
-        console.error("Error parsing TechStack:", error);
-        techStackData = [];
-      }
-    } else {
-      techStackData = techStack || [];
-    }
-    
-    let techStackWithImages = [];
-    if (techStackData.length > 0 && req.files && req.files['techStackImage']) {
-      const techStackUploadPromises = req.files['techStackImage'].map(async (file, index) => {
-        try {
-          const result = await cloudinary.uploader.upload(file.path);
-          fs.unlinkSync(file.path);
-          return {
-            title: techStackData[index]?.title || "",
-            image: result.secure_url,
-            publicId: result.public_id,
-            description: techStackData[index]?.description || "",
-          };
-        } catch (uploadError) {
-          console.error("Error uploading techStack file:", uploadError);
-          return null;
-        }
-      });
-      const techStackResults = await Promise.all(techStackUploadPromises);
-      techStackWithImages.push(...techStackResults.filter(techStack => techStack !== null));
-    }
+
+    // Parse metrics data if provided
+    const parsedMetricsData = metricsData ? JSON.parse(metricsData) : {};
 
     const newShowcase = new WorksModel({
       category,
@@ -86,8 +59,15 @@ export const addWork = async (req, res) => {
       servicesProvided,
       projectTimeline,
       customSolutions,
-      metricsData,
-      techStack: techStackWithImages,
+      metricsData: {
+        trafficIncrease: parsedMetricsData.trafficIncrease || "",
+        conversionRateImprovement: parsedMetricsData.conversionRateImprovement || "",
+        pageSpeedImprovement: parsedMetricsData.pageSpeedImprovement || "",
+        seoImprovements: parsedMetricsData.seoImprovements || "",
+        videoEngagement: parsedMetricsData.videoEngagement || "",
+      },
+      clientTestimonial,
+      techStack,  // Referencing by ID
       tags,
       isFeatured,
       completionDate,
@@ -96,7 +76,7 @@ export const addWork = async (req, res) => {
       metaKeywords,
     });
 
-   await newShowcase.save();
+    await newShowcase.save();
     console.log("New Work Created:", newShowcase);
 
     res.status(201).json({ success: true, message: 'Work added successfully', newShowcase });
@@ -132,13 +112,14 @@ export const updateWork = async (req, res) => {
       completionDate,
       metaDescription,
       metaKeywords,
-      techStack,
+      techStack, // Reference by ID
+      clientTestimonial // Optional reference
     } = req.body;
 
     console.log("req.body", req.body);
 
+    // Update images if new ones are uploaded
     let images = existingWork.images.slice();
-
     if (req.files && req.files.images) {
       for (const file of req.files.images) {
         const result = await cloudinary.uploader.upload(file.path, {
@@ -148,49 +129,14 @@ export const updateWork = async (req, res) => {
         fs.unlinkSync(file.path);
       }
     }
-// Add this code where you handle the techStack
 
-let techStackData;
-if (typeof req.body.techStack === 'string') {
-  try {
-    techStackData = JSON.parse(req.body.techStack);
-  } catch (error) {
-    console.error("Error parsing techStack:", error);
-    techStackData = [];
-  }
-} else {
-  techStackData = req.body.techStack || [];
-}
-let techStackWithImages = existingWork.techStack ? existingWork.techStack.slice() : [];
+    // Parse metrics data if provided as JSON string
+    const parsedMetricsData = metricsData ? JSON.parse(metricsData) : {};
 
-// Handle techStack images
-if (techStackData.length > 0 && req.files['techStackImage']) {
-  const techStackUploadPromises = req.files['techStackImage'].map(async (file, index) => {
-    const realIndex = index + existingWork.techStack.length;
-    console.log(index, existingWork.techStack.length, realIndex)
-    try {
-      const result = await cloudinary.uploader.upload(file.path, {
-        folder: 'nexile digital/showcase_images'
-      });
-      return {
-        title: techStackData[realIndex]?.title || "",
-        image: result.secure_url,
-        publicId: result.public_id,
-        description: techStackData[realIndex]?.description || "",
-      };
-    } catch (uploadError) {
-      console.error("Error uploading techStack file:", uploadError);
-      return null;
-    }
-  });
+    // Update the techStack by IDs
+    const techStackWithImages = techStack || existingWork.techStack;
 
-  const techStackResults = await Promise.all(techStackUploadPromises);
-  techStackWithImages.push(...techStackResults.filter(techStack => techStack !== null)); 
-  
-}
-
-   
-
+    // Update the work with new data
     const updatedWork = await WorksModel.findByIdAndUpdate(
       id,
       {
@@ -205,7 +151,14 @@ if (techStackData.length > 0 && req.files['techStackImage']) {
         servicesProvided: servicesProvided || existingWork.servicesProvided,
         projectTimeline: projectTimeline || existingWork.projectTimeline,
         customSolutions: customSolutions || existingWork.customSolutions,
-        metricsData: metricsData || existingWork.metricsData,
+        metricsData: {
+          trafficIncrease: parsedMetricsData.trafficIncrease || existingWork.metricsData?.trafficIncrease || "",
+          conversionRateImprovement: parsedMetricsData.conversionRateImprovement || existingWork.metricsData?.conversionRateImprovement || "",
+          pageSpeedImprovement: parsedMetricsData.pageSpeedImprovement || existingWork.metricsData?.pageSpeedImprovement || "",
+          seoImprovements: parsedMetricsData.seoImprovements || existingWork.metricsData?.seoImprovements || "",
+          videoEngagement: parsedMetricsData.videoEngagement || existingWork.metricsData?.videoEngagement || "",
+        },
+        clientTestimonial: clientTestimonial || existingWork.clientTestimonial,
         techStack: techStackWithImages,
         tags: tags || existingWork.tags,
         isFeatured: isFeatured || existingWork.isFeatured,
@@ -225,6 +178,7 @@ if (techStackData.length > 0 && req.files['techStackImage']) {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
 
 // Function to get all showcases
 export const getAllShowcases = async (req, res) => {
