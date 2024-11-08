@@ -38,7 +38,7 @@ const Header = () => {
     );
 
     return (
-        <div className="bg-black navbar relative">
+        <div className="navbar relative">
             {loading ? (
                 <SkeletonLoader />
             ) : (

@@ -2,7 +2,8 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { endPoint } from "../../../Components/ForAll/ForAll";
 import Rating from "react-rating";
-import { FaRegStar, FaStar } from "react-icons/fa";
+import { FaHandshake, FaRegStar, FaStar } from "react-icons/fa";
+import { PiBriefcase } from "react-icons/pi";
 
 const Hero =()=>{
     const [header, setHeader] = useState();
@@ -24,32 +25,33 @@ const Hero =()=>{
     }, []);
     // Skeleton loader component
     const SkeletonLoader = () => (
-        <div className="animate-pulse flex gap-5 navbar justify-between">
-            <div className="h-12 bg-gray-300 w-[300px] rounded"></div>
-            <div className="flex gap-2 w-[40%] items-center justify-end lg:justify-center">
-            <div className="h-6 bg-white w-full rounded lg:block hidden"></div>
-            <div className="h-6 bg-white w-full rounded lg:block hidden"></div>
-            <div className="h-6 bg-white w-full rounded lg:block hidden"></div>
-            <div className="h-6 bg-white w-full rounded lg:block hidden"></div>
-            <div className="h-6 bg-white w-full rounded lg:block hidden"></div>
-            <div className="h-6 bg-white lg:w-full rounded w-10"></div>
+        <div className="animate-pulse pt-[160px]">
+            <div className="h-12 bg-gray-300 w-[60%] mx-auto h-[60px] pt-[160px] rounded"></div>
+            <div className="h-12 bg-gray-300 w-[50%] mx-auto h-[60px] mt-[10px] rounded"></div>
+            <div className="h-12 bg-gray-300 w-[30%] mx-auto h-[60px] mt-[10px] rounded"></div>
+            <div className="flex gap-2 w-[90%] mx-auto mt-10 items-center justify-center">
+            <div className="h-6 bg-white w-full p-[30px] rounded lg:block hidden"></div>
+            <div className="h-6 bg-white w-full p-[30px] rounded lg:block hidden"></div>
+            <div className="h-6 bg-white w-full p-[30px] rounded lg:block hidden"></div>
+            <div className="h-6 bg-white w-full p-[30px] rounded lg:block hidden"></div>
+            <div className="h-6 bg-white w-full p-[30px] rounded lg:block hidden"></div>
             </div>
         </div>
 );
 
     console.log(header)
     return(
-    <div className="bg-black">
+    <div className="h-[750px]">
          {loading ? (
             <SkeletonLoader />
         ) : ( 
-            <div className="pt-[160px] pb-14">
-             <h2 className="text-[130px] font-bold text-white text-center uppercase" style={{lineHeight:'130px', letterSpacing:'-5px'}}>{header[0]?.title}</h2>
+            <div className="pt-[160px] pb-14 z-10">
+             <h2 className="text-[130px] font-bold text-white text-center uppercase z-40" style={{lineHeight:'130px', letterSpacing:'-5px'}}>{header[0]?.title}</h2>
             <p className="text-[30px] text-white font-[100] text-center">{header[0]?.description}</p>
             <div className="flex justify-center mt-10"><button className="bg-white py-2 px-7 rounded-sm poppins-medium text-[25px]">Let’s Get Solution!</button></div>
            
 
-           <div>
+           <div className="flex justify-center gap-12 mt-20">
             {/* Google Review */}
             <div className="flex items-center gap-3">
                 <div>
@@ -86,6 +88,29 @@ const Hero =()=>{
                   <p className="text-white poppins-medium text-[16px] mt-[-5px]">Got {header[0]?.nexileReview} stars</p>
                 </div>
             </div>
+
+            {/* successful clients */}
+            <div className="flex items-center gap-3">
+                <div className="w-[35px] h-[35px] bg-[#00FF29] text-[30px] text-center flex justify-center items-center text-white rounded">
+                <FaHandshake /> 
+                </div>
+                <div className="flex flex-col gap-0">
+                <h6 className="poppins-regular text-white text-[18px]">successful clients</h6>
+                  <p className="text-white poppins-medium text-[16px] mt-[-5px]">{header[0]?.clients}+</p>
+                </div>
+            </div>
+
+             {/* experience */}
+             <div className="flex items-center gap-3">
+                <div className="w-[35px] h-[35px] bg-[#FF0000] text-[30px] text-center flex justify-center items-center text-white rounded">
+                <PiBriefcase />
+                </div>
+                <div className="flex flex-col gap-0">
+                <h6 className="poppins-regular text-white text-[18px]">experience</h6>
+                  <p className="text-white poppins-medium text-[16px] mt-[-5px]">{header[0]?.experience}+</p>
+                </div>
+            </div>
+
            </div>
            
             </div>
