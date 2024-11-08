@@ -1,5 +1,6 @@
 import { Helmet } from "react-helmet";
 import Header from "../../../Components/ForAll/Header";
+import Hero from "./Hero";
 
 const LandingPage = ()=>{
     return(
@@ -11,6 +12,7 @@ const LandingPage = ()=>{
 
     {/* Content */}
     <Header/>
+    <Hero/>
     </div>
     )
 }
