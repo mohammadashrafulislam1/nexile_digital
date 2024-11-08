@@ -17,11 +17,13 @@ const Hero =()=>{
                 setHeader(response.data);
             } catch (error) {
                 console.error("Error fetching header data:", error);
-            } finally {
-                setLoading(false); // Set to false after fetch attempt
-            }
+            } 
         };
         fetchHeader();
+        // Set a timeout for loader to hide after 3 seconds if data fetch is complete
+        const timer = setTimeout(() => setLoading(false), 2000);
+
+        return () => clearTimeout(timer); // Clear the timer on component unmount
     }, []);
     // Skeleton loader component
     const SkeletonLoader = () => (

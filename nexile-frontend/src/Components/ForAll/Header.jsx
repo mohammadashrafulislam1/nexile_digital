@@ -16,11 +16,15 @@ const Header = () => {
             } catch (error) {
                 console.error("Error fetching header data:", error);
             } finally {
-                setLoading(false); // Set to false after fetch attempt
+                // Set a timeout for loader to hide after 3 seconds if data fetch is complete
+        const timer = setTimeout(() => setLoading(false), 2000);
+
+        return () => clearTimeout(timer); // Clear the timer on component unmount
             }
         };
         fetchHeader();
     }, []);
+    
 
     // Skeleton loader component
     const SkeletonLoader = () => (
