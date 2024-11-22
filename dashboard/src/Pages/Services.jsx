@@ -2,12 +2,14 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { endPoint } from "../Components/ForAll/ForAll";
-import { FaTrashAlt } from "react-icons/fa";
+import { FaTrash, FaTrashAlt } from "react-icons/fa";
 import axios from "axios";
 import { BsPencilSquare } from "react-icons/bs";
 import Swal from "sweetalert2";
 
 const Services = () => {
+  const [techStacks, setTechStacks] = useState();
+  const [selectedTechStacks, setSelectedTechStacks] = useState([]);
   const [services, setServices] = useState([]);
   const [selectedService, setSelectedService] = useState({
     title: "",
@@ -16,7 +18,7 @@ const Services = () => {
     approach: [{ title: "", description: "", image: "" }],
     process: [{ title: "", description: "", image: "" }],
     why: [{ title: "", description: "", image: "" }],
-    tools: [{ title: "", description: "", image: "" }],
+    tools: selectedTechStacks,
   });
   const [loading, setLoading] = useState(false);
   const [mainServiceImage, setMainServiceImage] = useState(null);
@@ -25,14 +27,18 @@ const Services = () => {
     fetchAllServices();
   }, []);
 
+  console.log(selectedTechStacks, techStacks)
+
   const fetchAllServices = async () => {
     try {
       setLoading(true);
       const response = await axios.get(`${endPoint}/service`);
       setServices(response.data);
+      const responseStacks = await axios.get(`${endPoint}/techStack`);
+      setTechStacks(responseStacks?.data?.techStack);
+      console.log("responseStacks", responseStacks?.data?.techStack)
     } catch (error) {
       console.error("Error fetching services:", error);
-      toast.error("Error fetching services");
     } finally {
       setLoading(false);
     }
@@ -45,8 +51,10 @@ const Services = () => {
     formData.append("title", selectedService?.title || "");
     formData.append("subtitle", selectedService?.subtitle || "");
     formData.append("mainServiceImage", mainServiceImage);
+    console.log(selectedService?.tools)
+    formData.append("tools", [selectedService?.tools]);
 
-    ["approach", "process", "why", "tools"].forEach((section) => {
+    ["approach", "process", "why"].forEach((section) => {
       selectedService?.[section]?.forEach((item, index) => {
         formData.append(`${section}[${index}][title]`, item.title);
         formData.append(`${section}[${index}][description]`, item.description);
@@ -148,7 +156,6 @@ const Services = () => {
       approach: [{ title: "", description: "", image: "" }],
       process: [{ title: "", description: "", image: "" }],
       why: [{ title: "", description: "", image: "" }],
-      tools: [{ title: "", description: "", image: "" }],
     });
     setMainServiceImage(null);
   };
@@ -160,8 +167,39 @@ const Services = () => {
     setSelectedService(updatedService);
   };
 
+  const handleTechStackSelect = (stack) => {
+    if (!selectedTechStacks.find((a) => a._id === stack._id)) {
+      const updatedSelectedTechStacks = [...selectedTechStacks, stack];
+      setSelectedTechStacks(updatedSelectedTechStacks);
+      setSelectedService((prevState) => ({
+        ...prevState,
+        tools: updatedSelectedTechStacks.map((a) => a._id), // Update tools with IDs
+      }));
+      toast.success("Tech stack added successfully!");
+    } else {
+      toast.error("Tech stack already added!");
+    }
+  };
+  
+
+  const handleRemoveTechStack = (techStackId) => {
+    const updatedSelectedTechStacks = selectedTechStacks.filter((techStack) => techStack._id !== techStackId);
+    setSelectedTechStacks(updatedSelectedTechStacks);
+    setSelectedService((prevState) => ({
+      ...prevState,
+      tools: updatedSelectedTechStacks.map((a) => a._id), // Update tools with IDs
+    }));
+  };
+  
+  
+
   const handleEditService = (service) => {
     setSelectedService(service);
+    console.log(service)
+    const selectedTechStacks = techStacks.filter((stack) =>
+      service.tools.includes(stack._id.toString())
+    );
+   setSelectedTechStacks(selectedTechStacks)    
     setMainServiceImage(service.mainServiceImage);
   };
   const handleReload = () => {
@@ -253,7 +291,7 @@ const Services = () => {
         </div>
 
         {/* Dynamic Sections */}
-        {["approach", "process", "why", "tools"].map((section) => (
+        {["approach", "process", "why"].map((section) => (
           <div key={section} className="mb-4">
             <h3 className="text-lg font-bold capitalize mb-2">{section}</h3>
             {selectedService?.[section]?.map((item, index) => (
@@ -308,6 +346,64 @@ const Services = () => {
             </button>
           </div>
         ))}
+
+        {/* Tech Stack Section */}
+      <div className="form-control">
+          <label className="label">
+            <span className="label-text">Tech Stacks</span>
+          </label>
+          <div className="grid lg:grid-cols-3 gap-5 sm:grid-cols-1 md:grid-cols-3">
+            {techStacks?.map((stack) => (
+              <div
+                key={stack._id}
+                className="flex items-center border p-2 rounded w-max gap-2"
+              >
+                <img
+                  src={stack?.image}
+                  alt={stack.title}
+                  className="w-10 h-10 object-cover"
+                />
+                <span>{stack.title}</span>
+                <button
+                  type="button"
+                  onClick={() => handleTechStackSelect(stack)}
+                  className="btn btn-sm btn-outline"
+                >
+                  Add
+                </button>
+              </div>
+            ))}
+          </div>
+          <div className=" mb-10">
+            <h3 className="text-2xl mt-10">Selected Tech Stacks:</h3>
+            <div className="mt-2 flex flex-wrap gap-1">
+              {selectedTechStacks?.length === 0 ? (
+                <p>No techstack selected.</p>
+              ) : (
+                selectedTechStacks?.map((stack) => (
+                  <div
+                    key={stack?._id}
+                    className="flex items-center space-x-2 border p-2 rounded"
+                  >
+                    <img
+                      src={stack?.image}
+                      alt={stack?.title}
+                      className="w-10 h-10 object-cover"
+                    />
+                    <span>{stack?.title}</span>
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveTechStack(stack?._id)}
+                      className="ml-auto text-[#fc0000]"
+                    >
+                      <FaTrash />
+                    </button>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        </div>
 
         <button type="submit" className="btn btn-md bg-black text-white w-full text-center mt-4">
           {selectedService?._id ? "Update Service" : "Add Service"}
