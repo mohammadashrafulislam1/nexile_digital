@@ -1,20 +1,23 @@
 import fs from 'fs';
 import { cloudinary } from '../utils/cloudinary.js';
 import { ServicesModel } from '../Model/ServicesModel.js';
+import mongoose from 'mongoose';
 
 export const addService = async (req, res) => {
   try {
     // Extract fields from the request body
     const { title, subtitle, approach, process, why, tools } = req.body;
 
+    console.log("toolsArray:", toolsArray);
     console.log("Received request body:", req.body);
     console.log("Received files:", req.files);
+    // Parse tools into an array of ObjectIds
+    const toolsArray = tools ? tools.split(',').map(id => mongoose.Types.ObjectId(id.trim())) : [];
 
     // Initialize arrays for each section
     const approachItems = [];
     const processItems = [];
     const whyItems = [];
-    const toolsItems = [];
 
     // Function to handle uploads for each section
     const handleUploads = async (sectionItems, sectionName) => {
@@ -47,7 +50,6 @@ export const addService = async (req, res) => {
     approachItems.push(...await handleUploads(approach, 'approach'));
     processItems.push(...await handleUploads(process, 'process'));
     whyItems.push(...await handleUploads(why, 'why'));
-    toolsItems.push(...await handleUploads(tools, 'tools'));
 
     // Handle the main service image upload
     let mainServiceImageUrl = '';
@@ -71,7 +73,7 @@ export const addService = async (req, res) => {
       approach: approachItems,
       process: processItems,
       why: whyItems,
-      tools: toolsItems,
+      tools: toolsArray,
     });
 
     console.log(newService);
@@ -91,8 +93,12 @@ export const updateService = async (req, res) => {
   try {
     // Extract fields from the request body
     const { title, subtitle, approach, process, why, tools } = req.body;
+    
+    const toolsArray = tools ? tools.split(',').map(id => new mongoose.Types.ObjectId(id.trim())) : [];
 
-    console.log("Received request body:", req.body);
+
+
+    console.log("toolsArray:", toolsArray);
     console.log("Received files:", JSON.stringify(req.files, null, 2));
 
 
@@ -149,7 +155,6 @@ export const updateService = async (req, res) => {
     const updatedApproach = await handleUploads(service.approach, 'approach');
     const updatedProcess = await handleUploads(service.process, 'process');
     const updatedWhy = await handleUploads(service.why, 'why');
-    const updatedTools = await handleUploads(service.tools, 'tools');
 
     // Handle the main service image upload if a new one is provided
     let mainServiceImageUrl = service.mainServiceImage; // Keep the existing image by default
@@ -170,7 +175,7 @@ export const updateService = async (req, res) => {
     service.approach = updatedApproach;
     service.process = updatedProcess;
     service.why = updatedWhy;
-    service.tools = updatedTools;
+    service.tools  = toolsArray || service.tools;
     service.mainServiceImage = mainServiceImageUrl;
     service.mainServiceImagePublicId = mainServiceImagePublicId;
 

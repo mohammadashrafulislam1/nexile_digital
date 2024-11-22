@@ -17,7 +17,7 @@ const servicesSchema = new mongoose.Schema({
   approach: { type: [sectionSchema]},
   process: { type: [sectionSchema]}, 
   why: { type: [sectionSchema]},
-  tools: { type: [sectionSchema]}, 
+  tools: [{type: mongoose.Schema.Types.ObjectId, ref: 'techStack' }], 
 }, { timestamps: true });
 
 export const ServicesModel = mongoose.model('Service', servicesSchema);
