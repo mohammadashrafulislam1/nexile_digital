@@ -47,13 +47,15 @@ const Hero =()=>{
          {loading ? (
             <SkeletonLoader />
         ) : ( 
-            <div className="pt-[160px] pb-14 z-10">
-             <h2 className="text-[130px] font-bold text-white text-center uppercase z-40" style={{lineHeight:'130px', letterSpacing:'-5px'}}>{header[0]?.title}</h2>
-            <p className="text-[30px] text-white font-[100] text-center">{header[0]?.description}</p>
-            <div className="flex justify-center mt-10"><button className="bg-white py-2 px-7 rounded-sm poppins-medium text-[25px]">Let’s Get Solution!</button></div>
+            <div className="lg:pt-[160px] pt-[30px] pb-14 z-100">
+             <h2 className="lg:text-[130px] text-[60px] font-bold lg:leading-[130px] leading-[60px] text-white text-center uppercase z-40" 
+             style={{letterSpacing:'-5px'}}>{header[0]?.title}</h2>
+            <p className="lg:text-[30px] text-[20px] text-white font-[100] text-center">{header[0]?.description}</p>
+            <div className="flex justify-center mt-10">
+                <button className="bg-white lg:py-2 lg:px-7 px-4 py-2 text-[20px] rounded-sm poppins-medium lg:text-[25px]">Let’s Get Solution!</button></div>
            
 
-           <div className="flex justify-center gap-12 mt-20">
+           <div className="flex flex-wrap md:justify-center justify-start lt:gap-12 gap-4 lg:mt-20 mt-10 px-20">
             {/* Google Review */}
             <div className="flex items-center gap-3">
                 <div>
