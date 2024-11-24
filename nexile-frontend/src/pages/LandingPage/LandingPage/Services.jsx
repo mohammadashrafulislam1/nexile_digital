@@ -71,7 +71,7 @@ const SkeletonLoader = () => (
   }, []);
 
   return (
-    <div className="px-8 py-5">
+    <div className="px-8 py-5 relative">
         {loading ? (
             <SkeletonLoader />
         ) : (<div>
@@ -100,7 +100,17 @@ const SkeletonLoader = () => (
                 </Link>
               </div>
             </div>
-            <div className="py-10">
+            <div>
+              <img 
+              src="https://res.cloudinary.com/dnwmtd4p1/image/upload/v1732475684/nexile%20digital/asset/o4rlreyzvegw0z8ehkze.webp" 
+              alt="Nexile Digital - asset" 
+              className="absolute left-[-100px] top-8"/>
+              <img 
+              src="https://res.cloudinary.com/dnwmtd4p1/image/upload/v1732475683/nexile%20digital/asset/vqtxdooh458acymmbavx.webp" 
+              alt="Nexile Digital - asset" 
+              className="absolute right-[-500px] top-8"/>
+            </div>
+            <div className="pb-10">
               {loading ? (
                 <SkeletonLoader />
               ) : (
