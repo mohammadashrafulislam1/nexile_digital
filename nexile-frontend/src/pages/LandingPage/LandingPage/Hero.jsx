@@ -20,7 +20,7 @@ const Hero =()=>{
             } 
         };
         fetchHeader();
-        // Set a timeout for loader to hide after 3 seconds if data fetch is complete
+        // Set a timeout for loader to hide after 2 seconds if data fetch is complete
         const timer = setTimeout(() => setLoading(false), 2000);
 
         return () => clearTimeout(timer); // Clear the timer on component unmount
