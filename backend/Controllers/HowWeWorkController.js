@@ -8,7 +8,11 @@ export const addHowWeWork = async (req, res) => {
     let thumbnailUrl = '';
     let publicId = '';
 
-    // Upload the thumbnail image to Cloudinary
+    console.log("req.body", req.body)
+    console.log("req.file", req.file)
+    console.log("req.files", req.files)
+
+    // Upload the thumbnail image to Cloudinary thumbnail
     if (req.files && req.files.thumbnail && req.files.thumbnail[0]) {
       try {
         const result = await cloudinary.uploader.upload(req.files.thumbnail[0].path, {

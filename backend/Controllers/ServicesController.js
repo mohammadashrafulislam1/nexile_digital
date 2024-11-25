@@ -8,11 +8,12 @@ export const addService = async (req, res) => {
     // Extract fields from the request body
     const { title, subtitle, approach, process, why, tools } = req.body;
 
-    console.log("toolsArray:", toolsArray);
+    console.log("toolsArray:", tools);
     console.log("Received request body:", req.body);
     console.log("Received files:", req.files);
-    // Parse tools into an array of ObjectIds
-    const toolsArray = tools ? tools.split(',').map(id => mongoose.Types.ObjectId(id.trim())) : [];
+    // Parse tools into an array of ObjectIds    
+    const toolsArray = tools ? tools.split(',').map(id => new mongoose.Types.ObjectId(id.trim())) : [];
+
 
     // Initialize arrays for each section
     const approachItems = [];
@@ -73,7 +74,7 @@ export const addService = async (req, res) => {
       approach: approachItems,
       process: processItems,
       why: whyItems,
-      tools: toolsArray,
+      tools: toolsArray || [],
     });
 
     console.log(newService);
