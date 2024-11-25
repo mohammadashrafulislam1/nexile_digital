@@ -49,8 +49,6 @@ const HowWeWork = () => {
   // Handle thumbnail change
   const handleThumbnailChange = (e) => {
     setThumbnail(e.target.files[0]);
-    const previewUrl = URL.createObjectURL(e.target.files[0]);
-    setThumbnail(previewUrl);
   };
 
   // Submit form handler for add or update
@@ -64,6 +62,8 @@ const HowWeWork = () => {
     if (thumbnail) {
       formData.append('thumbnail', thumbnail);
     }
+
+    console.log(thumbnail)
 
     try {
         setLoading(true)

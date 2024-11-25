@@ -307,7 +307,6 @@ const Services = () => {
                       updatedService[section][index].title = e.target.value;
                       setSelectedService(updatedService);
                     }}
-                    required
                   /></div>
                 <button type="button" className="w-[10%] text-2xl text-red-600 flex justify-end" onClick={() => removeItem(section, index)}>
                   <FaTrashAlt />
@@ -414,7 +413,7 @@ const Services = () => {
       {
           services.length > 0 ? <h2 className="text-xl font-semibold mt-10 ">Explore Services</h2> : <p className="lg:w-1/2 md:w-[80%] w-[96%] mx-auto text-white p-4 bg-red-400 rounded-md mt-5">no services found</p>
         }
-      <div className="mt-6 flex flex-warp gap-4">
+      <div className="mt-6 grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4">
         {services?.map((service, index) => (
           <div key={index} className="p-4 border bg-white rounded-md mb-4">
             <div className="flex gap-3 items-center">
