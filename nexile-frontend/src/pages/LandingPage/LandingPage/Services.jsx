@@ -35,18 +35,18 @@ const SkeletonLoader = () => (
           className="group grid grid-cols-12 gap-3 h-[151px] justify-center items-center border-b-2 relative mb-5"
         >
           {/* Service Title Skeleton */}
-          <div className="col-span-4 h-[46px] bg-gray-300 rounded-md"></div>
+          <div className="md:col-span-4 h-[46px] bg-gray-300 rounded-md"></div>
   
           {/* Subtitle Skeleton */}
-          <div className="col-span-4 h-[20px] bg-gray-300 rounded-md"></div>
+          <div className="md:col-span-4 h-[20px] bg-gray-300 rounded-md"></div>
   
           {/* Main Service Image Skeleton */}
-          <div className="relative col-span-3">
+          <div className="relative md:col-span-3">
             <div className="w-[260px] h-[160px] bg-gray-300 rounded-xl"></div>
           </div>
   
           {/* Right Arrow Skeleton */}
-          <div className="col-span-1 w-16 h-16 bg-gray-300 rounded-full"></div>
+          <div className="md:col-span-1 w-16 h-16 bg-gray-300 rounded-full"></div>
         </div>
       ))}
     </div>
@@ -71,13 +71,13 @@ const SkeletonLoader = () => (
   }, []);
 
   return (
-    <div className="px-8 py-5 relative">
+    <div className="px-8 lg:py-5 relative overflow-x-hidden">
         {loading ? (
             <SkeletonLoader />
         ) : (<div>
             
-            <div className="flex justify-end items-center">
-              <h2 className="text-white py-20 text-[130px] uppercase font-bold underline leading-[140px]">
+            <div className="lg:flex justify-end items-center">
+              <h2 className="text-white lg:py-20 pb-6 lg:text-[130px] text-[40px] uppercase font-bold underline lg:leading-[140px] leading-[40px]">
                 services
                 <br />
                 NEXILE PROVIDES
@@ -94,7 +94,7 @@ const SkeletonLoader = () => (
                 <Link to="/">
                   <img
                     src="https://res.cloudinary.com/dnwmtd4p1/image/upload/v1732024726/nexile%20digital/assets/ejj6ajpv5ykj5qdgeqmi.png"
-                    className="w-[155px] ml-10"
+                    className="lg:w-[155px] w-[80px] ml-10"
                     alt=""
                   />
                 </Link>
@@ -108,7 +108,7 @@ const SkeletonLoader = () => (
               <img 
               src="https://res.cloudinary.com/dnwmtd4p1/image/upload/v1732475683/nexile%20digital/asset/vqtxdooh458acymmbavx.webp" 
               alt="Nexile Digital - asset" 
-              className="absolute right-[-500px] top-8"/>
+              className="absolute lg:right-[-500px] top-8"/>
             </div>
             <div className="pb-10">
               {loading ? (
@@ -117,33 +117,33 @@ const SkeletonLoader = () => (
                 services?.map((service) => (
                   <div
                     key={service._id}
-                    className="group grid grid-cols-12 gap-3 h-[151px] justify-center items-center border-b-2 relative"
+                    className="group grid md:grid-cols-12 h-10 hover:h-[550px] gap-3 md:h-[151px] h-[150px] justify-center items-center border-b-2 relative"
                   >
                     {/* Service Title */}
-                    <h3 className="text-[#A8A8A8] text-[46px] poppins-semibold col-span-4 group-hover:text-white relative">
+                    <h3 className="text-[#A8A8A8] lg:text-[46px] text-[20px] md:text-[30px] poppins-semibold md:col-span-4 group-hover:text-white relative">
                       {service.title}
                       {/* Square Dot */}
                       <span className="hidden group-hover:inline-block bg-[#00ECFB] w-2 h-2 ml-2 rounded-sm absolute bottom-2"></span>
                     </h3>
       
                     {/* Subtitle */}
-                    <p className="text-transparent text-[20px] poppins-light col-span-4 px-3 group-hover:text-white transition duration-300">
+                    <p className="text-transparent text-[20px] poppins-light md:col-span-4 px-3 group-hover:text-white transition duration-300">
                       {service?.subtitle}
                     </p>
       
                     {/* Main Service Image */}
-                    <div className="relative col-span-3 overflow-visible">
+                    <div className="relative md:col-span-3 overflow-visible">
                       <img
                         src={service?.mainServiceImage}
                         alt={`${service.title}, nexile digital`}
                         className="hidden group-hover:block w-[300px] h-[250px] object-cover 
-                          rounded-xl absolute group-hover:translate-y-[-10px] transition duration-300 z-10 top-[-120px]"
+                          rounded-xl md:absolute md:group-hover:translate-y-[-10px] transition duration-300 z-10 lg:top-[-120px]"
                       />
                     </div>
       
                     {/* Right Arrow */}
                     <div
-                      className="text-white border border-2px text-[40px] font-[400] py-3 px-2 rounded-full w-16 h-16 flex justify-center items-center col-span-1 
+                      className="text-white border border-2px md:text-[40px] text-[25px] font-[400] py-3 px-2 rounded-full md:w-16 md:h-16 w-8 h-8 flex justify-center items-center md:col-span-1 
                       group-hover:bg-white group-hover:text-black transition duration-300"
                     >
                       <BsArrowRight />
