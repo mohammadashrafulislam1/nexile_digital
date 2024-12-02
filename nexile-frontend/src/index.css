@@ -107,6 +107,15 @@
     font-weight: 900;
     font-style: italic;
   }
+  @media screen and (max-width: 800px) {
+    .sm-hidden {
+      display: none;
+    }
+    .sm-block:hover {
+      display: block;
+    }
+  }
+  
   
 
 @tailwind base;
