@@ -77,7 +77,7 @@ const SkeletonLoader = () => (
         ) : (<div>
             
             <div className="lg:flex justify-end items-center">
-              <h2 className="text-white lg:py-20 pb-6 lg:text-[130px] text-[40px] uppercase font-bold underline lg:leading-[140px] leading-[40px]">
+              <h2 className="text-white lg:py-20 pb-6 lg:text-[130px] text-[40px] uppercase font-bold underline lg:leading-[160px] leading-[40px]">
                 services
                 <br />
                 NEXILE PROVIDES
@@ -94,7 +94,7 @@ const SkeletonLoader = () => (
                 <Link to="/">
                   <img
                     src="https://res.cloudinary.com/dnwmtd4p1/image/upload/v1732024726/nexile%20digital/assets/ejj6ajpv5ykj5qdgeqmi.png"
-                    className="lg:w-[155px] w-[80px] ml-10"
+                    className="lg:w-[125px] w-[80px] ml-10 lg:mt-[-10]"
                     alt=""
                   />
                 </Link>
@@ -143,7 +143,7 @@ const SkeletonLoader = () => (
       
                     {/* Right Arrow */}
                     <div
-                      className="text-white border border-2px lg:text-[40px] mt-1 md:mt-0 md:text-[30px] text-[25px] font-[400] py-4 px-2 md:py-2 md:px-2 rounded-full md:w-16 md:h-16 w-8 h-8 flex justify-center items-center md:col-span-1 
+                      className="text-white border border-2px lg:text-[40px] mt-1 md:mt-0 md:text-[30px] text-[25px] font-[400] py-3 px-2 md:py-3 md:px-3 rounded-full md:w-16 md:h-16 w-8 h-8 flex justify-center items-center md:col-span-1 
                       group-hover:bg-white group-hover:text-black transition duration-300  md:block hidden "
                     >
                       <BsArrowRight />
