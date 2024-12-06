@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { endPoint } from "../../../Components/ForAll/ForAll";
 import axios from "axios";
-import { BsArrowLeft } from "react-icons/bs";
+import { BsArrowLeft, BsArrowRight } from "react-icons/bs";
 
 const About = ()=>{
   const [about, setAbout] = useState([]);
@@ -57,45 +57,62 @@ const About = ()=>{
 
             
             {/* option 1 */}
-            <div className="flex items-center gap-10 relative pl-10">
-                <div>
-                <div
-                      className=" border border-2px lg:text-[40px] mt-1 md:mt-0 md:text-[30px] text-[25px] font-[400] py-3 px-2 md:py-3 md:px-3 rounded-full md:w-16 md:h-16 w-8 h-8 flex justify-center items-center md:col-span-1 
-                      bg-white text-black transition duration-300  md:block hidden absolute top-[40%] left-0"
-                      style={{
-                        boxShadow: "0 0 10px 14px rgba(0, 236, 251, 0.4)", // Shadow in the middle with spread
-                      }}
-                    >
-                      <BsArrowLeft />
-                    </div>
-                    <img src={about?.ourStory?.image?.url} alt={about?.ourStory?.description} className="w-[350px] h-[350px] rounded-2xl"/>
-                </div>
+            <div className="flex items-center gap-10 relative pl-10 group">
+  <div>
+    <div
+      className="border-2 lg:text-[40px] mt-1 md:mt-0 md:text-[30px] text-[25px] font-[400] py-3 px-2 md:py-3 md:px-3 rounded-full md:w-16 md:h-16 w-8 h-8 flex justify-center items-center md:col-span-1 
+      bg-white text-black transition duration-300 md:block hidden absolute top-[40%] left-0 group-hover:shadow-[0_0_10px_15px_rgba(0,236,251,0.4)]"
+    >
+      <BsArrowLeft />
+    </div>
+    <img src={about?.ourStory?.image?.url} alt={about?.ourStory?.description} className="w-[300px] h-[300px]" />
+  </div>
 
-                <div className="text-white">
-                    <h3 className="text-[50px] uppercase font-bold">Our Story</h3>
-                    <p>{about?.ourStory?.description}</p>
-                </div>
-            </div>
+  <div className="text-white">
+    <h3 className="text-[40px] uppercase font-bold">Our Story</h3>
+    <p>{about?.ourStory?.description}</p>
+  </div>
+</div>
+
 
             {/* option 2 */}
-            <div>
-                <div><img src="" alt="" /></div>
+            <div className="flex items-center flex-row-reverse gap-10 relative pr-10 group mt-6">
+  <div>
+    <div
+      className="border-2 lg:text-[40px] mt-1 md:mt-0 md:text-[30px] text-[25px] font-[400] py-3 px-2 md:py-3 md:px-3 rounded-full md:w-16 md:h-16 w-8 h-8 flex justify-center items-center md:col-span-1 
+      bg-white text-black transition duration-300 md:block hidden absolute top-[40%] right-0 group-hover:shadow-[0_0_10px_15px_rgba(0,236,251,0.4)]"
+    >
+      <BsArrowRight />
+    </div>
+    <img src={about?.ourMission?.image?.url} alt={about?.ourMission?.description} className="w-[300px] h-[300px] object-fit" />
+  </div>
 
-                <div>
-                    <h3></h3>
-                    <p></p>
-                </div>
-            </div>
+  <div className="text-white">
+    <h3 className="text-[40px] uppercase font-bold">Our Mission</h3>
+    <p>{about?.ourMission?.description}</p>
+  </div>
+</div>
+
+
 
             {/* option 3 */}
-            <div>
-                <div><img src="" alt="" /></div>
+            <div className="flex items-center gap-10 relative pl-10 group mt-6">
+  <div>
+    <div
+      className="border-2 lg:text-[40px] mt-1 md:mt-0 md:text-[30px] text-[25px] font-[400] py-3 px-2 md:py-3 md:px-3 rounded-full md:w-16 md:h-16 w-8 h-8 flex justify-center items-center md:col-span-1 
+      bg-white text-black transition duration-300 md:block hidden absolute top-[40%] left-0 group-hover:shadow-[0_0_10px_15px_rgba(0,236,251,0.4)]"
+    >
+      <BsArrowLeft />
+    </div>
+    <img src={about?.ourVision?.image?.url} alt={about?.ourVision?.description} className="w-[300px] h-[300px] object-fit" />
+  </div>
 
-                <div>
-                    <h3></h3>
-                    <p></p>
-                </div>
-            </div>
+  <div className="text-white">
+    <h3 className="text-[40px] uppercase font-bold">Our Vision</h3>
+    <p>{about?.ourVision?.description}</p>
+  </div>
+</div>
+
             
         </div>
     )
