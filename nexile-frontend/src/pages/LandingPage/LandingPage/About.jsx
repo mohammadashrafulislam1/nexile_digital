@@ -47,7 +47,7 @@ const About = ()=>{
                 className="absolute top-10 left-0 z-[-10]" />
             </div>
 
-        <div className="lg:flex justify-end flex-row-reverse items-center">
+        <div className="lg:flex justify-end flex-row-reverse items-center mt-14 md:mt-0">
               <h2 className="text-white lg:py-6 pb-6 text-right lg:text-[130px] text-[40px] uppercase font-bold underline lg:leading-[160px] leading-[40px]">
               ABOUT
                 <br />
@@ -67,7 +67,7 @@ const About = ()=>{
 
             
      {/* Option 1 */}
-<div className="flex items-center gap-10 relative px-10 group mt-10">
+<div className="lg:flex items-center gap-10 relative lg:px-10 group mt-10">
   <div>
     <div
       className="border-2 lg:text-[40px] mt-1 md:mt-0 md:text-[30px] text-[25px] font-[400] py-3 px-2 md:py-3 md:px-3 rounded-full md:w-16 md:h-16 w-8 h-8 flex justify-center items-center md:col-span-1 
@@ -91,7 +91,7 @@ const About = ()=>{
 </div>
 
 {/* Option 2 */}
-<div className="flex items-center flex-row-reverse gap-10 relative px-10 group mt-10">
+<div className="lg:flex items-center flex-row-reverse gap-10 relative lg:px-10 group mt-10">
   <div>
     <div className="w-[300px] h-[300px] hidden group-hover:block transition duration-300 transform">
       <div
@@ -115,7 +115,7 @@ const About = ()=>{
 </div>
 
 {/* Option 3 */}
-<div className="flex items-center gap-10 relative px-10 group mt-10 mb-10">
+<div className="lg:flex items-center gap-10 relative lg:px-10 group mt-10 mb-10">
   <div>
     <div
       className="border-2 lg:text-[40px] mt-1 md:mt-0 md:text-[30px] text-[25px] font-[400] py-3 px-2 md:py-3 md:px-3 rounded-full md:w-16 md:h-16 w-8 h-8 flex justify-center items-center md:col-span-1 
