@@ -94,7 +94,7 @@ const SkeletonLoader = () => (
                 <Link to="/">
                   <img
                     src="https://res.cloudinary.com/dnwmtd4p1/image/upload/v1732024726/nexile%20digital/assets/ejj6ajpv5ykj5qdgeqmi.png"
-                    className="lg:w-[125px] w-[80px] ml-10 lg:mt-[-10]"
+                    className="lg:w-[125px] w-[80px] ml-19"
                     alt=""
                   />
                 </Link>
