@@ -3,6 +3,7 @@ import Header from "../../../Components/ForAll/Header";
 import Hero from "./Hero";
 import Service from "./Services";
 import About from "./About";
+import HowWeWork from "./HowWeWork";
 
 const LandingPage = ()=>{
     return(
@@ -55,6 +56,7 @@ const LandingPage = ()=>{
    </div>
   <Service className="!z-60"/>
   <About className="!z-60"/>
+  <HowWeWork className="!z-60"/>
 </div>
     </div>
     )
