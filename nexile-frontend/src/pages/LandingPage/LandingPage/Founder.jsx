@@ -52,8 +52,12 @@ const Founder = () =>{
 
             </div>
 
-            <div className="col-span-2">
-                <h4>{}</h4>
+            <div className="col-span-2 px-24 py-10">
+                <h4 className="text-white poppins-semibold text-[50px] underline">{founder[0]?.des}</h4>
+
+                <div className="mr-[-160px]">
+                    <img src={founder[0]?.founderImage} alt={founder[0]?.founderName} />
+                </div>
 
             </div>
           </div>
