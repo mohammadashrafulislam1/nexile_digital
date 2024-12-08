@@ -4,6 +4,7 @@ import Hero from "./Hero";
 import Service from "./Services";
 import About from "./About";
 import HowWeWork from "./HowWeWork";
+import Founder from "./Founder";
 
 const LandingPage = ()=>{
     return(
@@ -14,7 +15,7 @@ const LandingPage = ()=>{
     </Helmet>
 
     {/* Content */}
-   <div className="bg-black">
+   <div className="bg-black overflow-hidden">
    <div 
   className="relative z-0 bg-black" 
   >
@@ -57,6 +58,7 @@ const LandingPage = ()=>{
   <Service className="!z-60"/>
   <About className="!z-60"/>
   <HowWeWork className="!z-60"/>
+  <Founder className="!z-60"/>
 </div>
     </div>
     )

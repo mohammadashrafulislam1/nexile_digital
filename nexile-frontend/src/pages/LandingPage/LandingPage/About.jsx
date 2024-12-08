@@ -88,7 +88,7 @@ const About = ()=>{
 
     console.log(about)
     return(
-        <div className="px-8 pb-20 lg:py-5 relative overflow-hidden"
+        <div className="px-8 lg:py-5 relative overflow-hidden"
         style={{
             backgroundImage: 'url(https://res.cloudinary.com/dnwmtd4p1/image/upload/v1733497901/nexile%20digital/asset/emrwdlzc7rb2y5hn7tou.webp)',
             backgroundSize: 'cover',
@@ -96,9 +96,12 @@ const About = ()=>{
             position: 'relative', // Ensure background is a layer
             zIndex: 0, // Send background layer to the back
           }}>
+            <div
+    className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-black to-transparent z-10"
+  ></div>
       {
         loading ? (<SkeletonLoader />) : (
-        <div>
+        <div className="pb-20">
 
         <div>
         <img src="https://res.cloudinary.com/dnwmtd4p1/image/upload/v1733510248/nexile%20digital/asset/vduwhw1frlhz0szyueex.webp" 

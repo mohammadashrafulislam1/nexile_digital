@@ -114,6 +114,10 @@
     .sm-block:hover {
       display: block;
     }
+    
+    .hide{
+      display: none;
+    }
   }
   
   

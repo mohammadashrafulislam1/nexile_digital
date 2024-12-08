@@ -40,25 +40,26 @@ const closeModal = () => {
 };
 
     return(
-        <div className="px-8 lg:py-5 relative overflow-x-invisible"> <h2 className="text-white lg:py-20 pb-6 lg:text-[130px] text-[40px] uppercase font-bold underline lg:leading-[160px] leading-[40px]">
+        <div className="px-8 lg:pb-5 relative overflow-hidden"> <h2 className="text-white lg:py-20 pb-6 lg:text-[130px] text-[40px] uppercase font-bold underline lg:leading-[160px] leading-[40px]">
      HOW WE WORK
           </h2>
        
-        <div className="grid grid-cols-2 gap-18">
-            <div className="flex gap-2 group">
+        <div className="grid lg:grid-cols-2 gap-18 mt-8">
+            <div className="md:flex gap-2 group lg:mb-0 mb-5">
                 <div className="relative w-16 h-16">
                     <div className={`bg-[#${howWeWork[0]?.color}] w-16 h-16 rounded-full opacity-30`}></div>
                     <div className={`bg-[#${howWeWork[0]?.color}] w-10 h-10 rounded-full opacity-100 
                     absolute top-[17%] left-[18%]`}></div>
                     <div className={`bg-[#fff] w-6 h-6 rounded-full opacity-100 absolute top-[29%] left-[31%]`}></div>
                 </div>
-                <div className="w-[50%]">
+                <div className="md:w-[50%]">
                 <h6 className="text-white text-[18px] poppins-medium underline">{howWeWork[0]?.title}</h6>
                 <h6 className="text-white text-[16px] poppins-regular">{howWeWork[0]?.description}</h6>
                 </div>
                 {/* Right section: Video thumbnail */}
                 <div
-                            className="w-[260px] h-[180px] rounded-2xl relative group-hover:opacity-90 cursor-pointer invisible group-hover:visible"
+                            className="w-[260px] mt-5 h-[180px] rounded-2xl relative group-hover:opacity-90 cursor-pointer md:invisible hide group-hover:block
+                            md:group-hover:visible"
                             onClick={() => openModal(0)}
                             style={{
                                 backgroundImage: `url(${howWeWork[0]?.thumbnail})`,
@@ -80,10 +81,10 @@ const closeModal = () => {
                             </div>
             </div></div>
 
-            <div className="flex gap-2 group">
+            <div className="md:flex gap-2 group mb-5">
                                 {/* Right section: Video thumbnail */}
                                 <div
-                            className="w-[260px] h-[180px] rounded-2xl relative group-hover:opacity-90 cursor-pointer invisible group-hover:visible"
+                            className="w-[260px] h-[180px] rounded-2xl md:mt-0 mt-5 mb-5 relative group-hover:opacity-90 cursor-pointer md:invisible hide group-hover:block md:group-hover:visible"
                             onClick={() => openModal(3)}
                             style={{
                                 backgroundImage: `url(${howWeWork[3]?.thumbnail})`,
@@ -110,17 +111,17 @@ const closeModal = () => {
                     absolute top-[17%] left-[18%]`}></div>
                     <div className={`bg-[#fff] w-6 h-6 rounded-full opacity-100 absolute top-[29%] left-[31%]`}></div>
                 </div>
-                <div className="w-[50%]">
+                <div className="md:w-[50%]">
                 <h6 className="text-white text-[18px] poppins-medium underline">{howWeWork[3]?.title}</h6>
                 <h6 className="text-white text-[16px] poppins-regular">{howWeWork[3]?.description}</h6>
                 </div>
             </div>
         </div>
-
-        <div className="flex gap-2 pl-[440px] pr-[180px] mt-5 group">
+ 
+        <div className="md:flex gap-2 lg:pl-[440px] lg:pl-[150px] md:pr-[130px] mt-5 group mb-5">
                 {/* Right section: Video thumbnail */}
                 <div
-                            className="w-[260px] h-[180px] rounded-2xl relative group-hover:opacity-90 cursor-pointer invisible group-hover:visible"
+                            className="w-[260px] h-[180px] rounded-2xl relative mb-5 group-hover:opacity-90 cursor-pointer md:invisible hide group-hover:block md:group-hover:visible"
                             onClick={() => openModal(2)}
                             style={{
                                 backgroundImage: `url(${howWeWork[2]?.thumbnail})`,
@@ -147,26 +148,26 @@ const closeModal = () => {
                     absolute top-[17%] left-[18%]`}></div>
                     <div className={`bg-[#fff] w-6 h-6 rounded-full opacity-100 absolute top-[29%] left-[31%]`}></div>
                 </div>
-                <div className="w-[45%]">
+                <div className="md:w-[45%]">
                 <h6 className="text-white text-[18px] poppins-medium underline">{howWeWork[2]?.title}</h6>
                 <h6 className="text-white text-[16px] poppins-regular">{howWeWork[2]?.description}</h6>
                 </div>
             </div>
 
-            <div className="flex gap-2 pr-[420px] pl-[250px] mt-5 group">
+            <div className="md:flex gap-2 lg:pr-[420px] lg:pl-[250px] mt-5 group mb-5">
                 <div className="relative w-16 h-16">
                     <div className={`bg-[#${howWeWork[1]?.color}] w-16 h-16 rounded-full opacity-30`}></div>
                     <div className={`bg-[#${howWeWork[1]?.color}] w-10 h-10 rounded-full opacity-100 
                     absolute top-[17%] left-[18%]`}></div>
                     <div className={`bg-[#fff] w-6 h-6 rounded-full opacity-100 absolute top-[29%] left-[31%]`}></div>
                 </div>
-                <div className="w-[45%]">
+                <div className="md:w-[45%]">
                 <h6 className="text-white text-[18px] poppins-medium underline">{howWeWork[1]?.title}</h6>
                 <h6 className="text-white text-[16px] poppins-regular">{howWeWork[1]?.description}</h6>
                 </div>
                 {/* Right section: Video thumbnail */}
                 <div
-                            className="w-[260px] h-[180px] rounded-2xl relative group-hover:opacity-90 cursor-pointer invisible group-hover:visible"
+                            className="w-[260px] h-[180px] rounded-2xl mt-5 relative group-hover:opacity-90 cursor-pointer hide group-hover:block md:invisible md:group-hover:visible"
                             onClick={() => openModal(1)}
                             style={{
                                 backgroundImage: `url(${howWeWork[1]?.thumbnail})`,
@@ -188,6 +189,7 @@ const closeModal = () => {
                             </div>
             </div>
             </div>
+
             {isModalOpen && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-white bg-opacity-30"
                   >
