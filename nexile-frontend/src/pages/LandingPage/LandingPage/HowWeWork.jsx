@@ -14,7 +14,11 @@ const HowWeWork = () =>{
     const fetchHowWeWork = async () => {
       try {
         const response = await axios.get(`${endPoint}/howwework`);
-        setHowWeWork(response.data);
+        const data = response.data.map((item) => ({
+            ...item,
+            color: item.color || "FFFFFF", // Fallback color if not provided
+          }));
+        setHowWeWork(data);
       } catch (error) {
         console.error("Error fetching HowWeWorks:", error);
       } finally {

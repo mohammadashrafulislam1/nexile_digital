@@ -52,12 +52,12 @@ const Header = () => {
                         alt={`${header[0]?.title || ''} ${header[0]?.description || ''}`} 
                         className="w-[250px] h-[52px]"
                     />
-                    <div className="text-white flex-none menu menu-horizontal px-1 poppins-regular text-[18px] font-light hidden md:hidden lg:flex" 
+                    <div className="text-white flex-none menu menu-horizontal px-3 gap-6 poppins-regular text-[18px] font-light hidden md:hidden lg:flex" 
                         style={{ textDecoration: 'none' }}>
                         {header[0]?.menu && header[0].menu.map(item => (
-                            <li key={item._id}>
+                            <p key={item._id}>
                                 <a href={item?.link}>{item?.name}</a>
-                            </li>
+                            </p>
                         ))}
                     </div>
                     <div className="lg:hidden">
@@ -85,15 +85,16 @@ const Header = () => {
                                 alt={`${header[0]?.title || ''} ${header[0]?.description || ''}`} 
                                 className="w-[250px] h-[50px] mb-10"
                             />
-                            <ul className="text-center space-y-6 text-[18px] font-light poppins-regular">
+                            <div className="text-center no-underline space-y-6 text-[18px] font-light poppins-regular">
                                 {header[0]?.menu && header[0].menu.map(item => (
                                     <a href={item?.link} key={item._id}>
-                                        <li className="mb-2 bg-white bg-opacity-60 text-black px-24 py-2 rounded-md">
+                                        <p className="mb-2 no-underline bg-white bg-opacity-60 
+                                        text-black px-24 py-2 rounded-md">
                                             {item?.name}
-                                        </li>
+                                        </p>
                                     </a>
                                 ))}
-                            </ul>
+                            </div>
                         </div>
                     )}
                 </div>
