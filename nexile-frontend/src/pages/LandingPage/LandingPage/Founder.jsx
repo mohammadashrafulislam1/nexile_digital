@@ -50,59 +50,95 @@ const Founder = () => {
           <h2 className="text-white lg:py-10 lg:text-[130px] text-[40px] uppercase font-bold underline lg:leading-[160px] leading-[40px]">
             {founder ? founder[0]?.title : ""}
           </h2>
-          <div className="border-b-[0.5px] opacity-50"></div>
+          <div className="border-b-[0.5px] opacity-30"></div>
 
           <div className="grid grid-cols-3">
-            <div className="col-span-1 border-r-[0.5px] border-[#fff] mt-20">
-              <div>
-                <p className="text-white uppercase poppins-light text-[20px]">
-                  Working since
-                </p>
-                <h1 className="text-9xl text-white poppins-bold">
-                  {founder ? founder[0]?.year : ""}
-                </h1>
-              </div>
+          <div className="col-span-1 border-r-[0.5px] h-[877px] border-[#333] flex flex-col gap-10 mt-20 relative">
+  {/* Decorative Background Image */}
+  <img 
+    src="https://res.cloudinary.com/dnwmtd4p1/image/upload/v1734140579/nexile%20digital/asset/gpxiwox8b63hdydxgtvf.webp" 
+    alt="Nexile Digital" 
+    className="absolute w-full h-full top-[-130px] left-[-30px] object-cover z-0" 
+  />
 
-              <div>
-                <p className="text-white uppercase poppins-light text-[20px] mt-20">
-                  Client satisfaction
-                </p>
-                <h1 className="text-9xl text-white poppins-bold">
-                  {founder ? founder[0]?.satisfaction : "0"}%
-                </h1>
-              </div>
+  {/* Working Since Section */}
+  <div className="relative z-10">
+    <p className="text-white uppercase poppins-light text-[20px]">
+      Working since
+    </p>
+    <h1 className="text-9xl text-white poppins-bold">
+      {founder ? founder[0]?.year : ""}
+    </h1>
+  </div>
 
-              <div>
-                <p className="text-white uppercase poppins-light text-[20px] mt-20">
-                  Total completed projects
-                </p>
-                <h1 className="text-9xl text-white poppins-bold">
-                  {founder ? founder[0]?.completedPersonally : "0"}+
-                </h1>
-              </div>
-            </div>
+  {/* Client Satisfaction Section */}
+  <div className="relative z-20 mt-20">
+    <p className="text-white uppercase poppins-light text-[20px]">
+      Client satisfaction
+    </p>
+    <h1 className="text-9xl text-white poppins-bold">
+      {founder ? founder[0]?.satisfaction : "0"}%
+    </h1>
+  </div>
 
-            <div className="col-span-2 px-24 py-10">
-              <h4 className="text-white poppins-semibold text-[50px] underline">
-                {founder ? founder[0]?.des : "0"}
-              </h4>
+  {/* Completed Projects Section */}
+  <div className="relative z-10 mt-20">
+    <p className="text-white uppercase poppins-light text-[20px]">
+      Total completed projects
+    </p>
+    <h1 className="text-9xl text-white poppins-bold">
+      {founder ? founder[0]?.completedPersonally : "0"}+
+    </h1>
+    <p className="text-white poppins-light text-center">Personally</p>
+  </div>
 
-              <div className="mr-[-160px] relative">
-                <img
-                  src={founder ? founder[0]?.founderImage : ""}
-                  alt={founder ? founder[0]?.founderName : ""}
-                />
-                
-<div
-  className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/100 to-transparent z-20"
->
-  <img src="https://res.cloudinary.com/dnwmtd4p1/image/upload/v1734079536/nexile%20digital/asset/bqsw3evceqmolxx6phe4.webp" alt="" />
 </div>
-               <div
-  className="absolute bottom-0 left-0 right-0 h-130 bg-gradient-to-t from-black via-black/95 to-transparent z-10"
-></div>
 
+            <div className="col-span-2 px-24 py-10 relative">
+              <h4 className="text-white poppins-semibold text-[50px] underline">
+                {founder ? founder[0]?.des : ""}
+              </h4>
+              <a href="https://mdashrafulislam-portfolio.netlify.app/" target="_blank" className="absolute bottom-[56%] left-[230px] z-30"><h5 className="text-white poppins-light text-2xl mt-[-10px] underline">
+  Visit Website
+  <span className="bg-[#00ECFB] w-2 h-2 ml-2 rounded-sm inline-block"></span>
+</h5>
+</a>
+             <div className="flex absolute bottom-[26%] left-[150px] z-30">
+              <div className="mr-[-2px]">
+              <h6 className="text-white poppins-semibold text-xl mb-0">{founder ? founder[0]?.experience :''} YEARS</h6>
+              <p className="text-white poppins-light text-lg mt-[-10px]">experience</p>
               </div>
+              <h2 className="text-white poppins-semibold text-3xl mb-0 uppercase pr-[630px] 
+              text-right ml-[-100px] mt-0">{founder ? founder[0]?.founderName:''}</h2>
+             </div>
+             <div className="mr-[-160px] relative">
+  {/* Primary Founder Image */}
+  <img
+    src={founder ? founder[0]?.founderImage : ""}
+    alt={founder ? founder[0]?.founderName : ""}
+    className="relative z-20" // Ensure this is above the decorative image
+  />
+
+  {/* Decorative Image Overlay */}
+  <img
+    src="https://res.cloudinary.com/dnwmtd4p1/image/upload/v1734139170/nexile%20digital/asset/fgyjlcl7x1xoz826hlar.webp"
+    alt=""
+    className="absolute top-[-100px] bottom-0 left-[-20px] w-full h-full z-10" // Lower z-index
+  />
+
+  {/* Gradient Overlay */}
+  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black/100 to-transparent z-30">
+    <img
+      src="https://res.cloudinary.com/dnwmtd4p1/image/upload/v1734079536/nexile%20digital/asset/bqsw3evceqmolxx6phe4.webp"
+      alt=""
+    />
+  </div>
+
+  {/* Additional Gradient for Depth */}
+  <div className="absolute bottom-0 left-0 right-0 h-130 bg-gradient-to-t from-black via-black/95 to-transparent z-15"></div>
+</div>
+
+
             </div>
           </div>
         </div>

@@ -46,7 +46,7 @@ const Header = () => {
             {loading ? (
                 <SkeletonLoader />
             ) : (
-                <div className="navbar flex justify-between items-center">
+                <div className="navbar p-3 flex justify-between items-center">
                     <img 
                         src={header[0]?.logo || ''} 
                         alt={`${header[0]?.title || ''} ${header[0]?.description || ''}`} 
