@@ -51,10 +51,11 @@ const closeModal = () => {
         <div className="grid lg:grid-cols-2 gap-18 mt-8">
             <div className="md:flex gap-2 group lg:mb-0 mb-5">
                 <div className="relative w-16 h-16">
-                    <div className={`bg-[#${howWeWork[0]?.color}] w-16 h-16 rounded-full opacity-30`}></div>
-                    <div className={`bg-[#${howWeWork[0]?.color}] w-10 h-10 rounded-full opacity-100 
+                    <div className={`bg-[#FF0000] w-16 h-16 rounded-full opacity-30`}></div>
+                    <div className={`bg-[#FF0000] w-10 h-10 rounded-full opacity-100 
                     absolute top-[17%] left-[18%]`}></div>
-                    <div className={`bg-[#fff] w-6 h-6 rounded-full opacity-100 absolute top-[29%] left-[31%]`}></div>
+                    <div className={`bg-[#fff] w-6 h-6 rounded-full opacity-100 absolute top-[29%] left-[31%] flex
+                        justify-center items-center poppins-semibold`}>1</div>
                 </div>
                 <div className="md:w-[50%]">
                 <h6 className="text-white text-[18px] poppins-medium underline">{howWeWork[0]?.title}</h6>
@@ -110,10 +111,11 @@ const closeModal = () => {
                             </div>
             </div>
                 <div className="relative w-16 h-16">
-                    <div className={`bg-[#${howWeWork[3]?.color}] w-16 h-16 rounded-full opacity-30`}></div>
-                    <div className={`bg-[#${howWeWork[3]?.color}] w-10 h-10 rounded-full opacity-100 
+                    <div className={`bg-[#2D9A06] w-16 h-16 rounded-full opacity-30`}></div>
+                    <div className={`bg-[#2D9A06] w-10 h-10 rounded-full opacity-100 
                     absolute top-[17%] left-[18%]`}></div>
-                    <div className={`bg-[#fff] w-6 h-6 rounded-full opacity-100 absolute top-[29%] left-[31%]`}></div>
+                    <div className={`bg-[#fff] w-6 h-6 rounded-full opacity-100 absolute top-[29%] left-[31%] flex
+                        justify-center items-center poppins-semibold`}>4</div>
                 </div>
                 <div className="md:w-[50%]">
                 <h6 className="text-white text-[18px] poppins-medium underline">{howWeWork[3]?.title}</h6>
@@ -147,10 +149,11 @@ const closeModal = () => {
                             </div>
             </div>
                 <div className="relative w-16 h-16">
-                    <div className={`bg-[#${howWeWork[2]?.color}] w-16 h-16 rounded-full opacity-30`}></div>
-                    <div className={`bg-[#${howWeWork[2]?.color}] w-10 h-10 rounded-full opacity-100 
+                    <div className={`bg-[#FF00E5] w-16 h-16 rounded-full opacity-30`}></div>
+                    <div className={`bg-[#FF00E5] w-10 h-10 rounded-full opacity-100 
                     absolute top-[17%] left-[18%]`}></div>
-                    <div className={`bg-[#fff] w-6 h-6 rounded-full opacity-100 absolute top-[29%] left-[31%]`}></div>
+                    <div className={`bg-[#fff] w-6 h-6 rounded-full opacity-100 absolute top-[29%] left-[31%] flex
+                        justify-center items-center poppins-semibold`}>3</div>
                 </div>
                 <div className="md:w-[45%]">
                 <h6 className="text-white text-[18px] poppins-medium underline">{howWeWork[2]?.title}</h6>
@@ -160,10 +163,11 @@ const closeModal = () => {
 
             <div className="md:flex gap-2 lg:pr-[420px] lg:pl-[250px] mt-5 group mb-5">
                 <div className="relative w-16 h-16">
-                    <div className={`bg-[#${howWeWork[1]?.color}] w-16 h-16 rounded-full opacity-30`}></div>
-                    <div className={`bg-[#${howWeWork[1]?.color}] w-10 h-10 rounded-full opacity-100 
+                    <div className={`bg-[#0019FF] w-16 h-16 rounded-full opacity-30`}></div>
+                    <div className={`bg-[#0019FF] w-10 h-10 rounded-full opacity-100 
                     absolute top-[17%] left-[18%]`}></div>
-                    <div className={`bg-[#fff] w-6 h-6 rounded-full opacity-100 absolute top-[29%] left-[31%]`}></div>
+                    <div className={`bg-[#fff] w-6 h-6 rounded-full opacity-100 absolute top-[29%] left-[31%] flex
+                        justify-center items-center poppins-semibold`}>2</div>
                 </div>
                 <div className="md:w-[45%]">
                 <h6 className="text-white text-[18px] poppins-medium underline">{howWeWork[1]?.title}</h6>

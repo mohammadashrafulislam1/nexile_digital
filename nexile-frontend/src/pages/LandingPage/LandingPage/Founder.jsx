@@ -47,13 +47,13 @@ const Founder = () => {
         <SkeletonLoader />
       ) : (
         <div className="my-10 px-8 lg:pb-5 relative overflow-hidden">
-          <h2 className="text-white lg:py-10 lg:text-[130px] text-[40px] uppercase font-bold underline lg:leading-[160px] leading-[40px]">
+          <h2 className="text-white md:mt-0 mt-7 lg:py-10 lg:text-[130px] text-[40px] uppercase font-bold underline lg:leading-[160px] leading-[40px]">
             {founder ? founder[0]?.title : ""}
           </h2>
-          <div className="border-b-[0.5px] opacity-30"></div>
+          <div className="border-b-[0.5px] opacity-30 md:mt-0 mt-5"></div>
 
-          <div className="grid grid-cols-3">
-          <div className="col-span-1 border-r-[0.5px] h-[877px] border-[#333] flex flex-col gap-10 mt-20 relative">
+          <div className="grid md:grid-cols-3">
+          <div className="md:col-span-1 md:border-r-[0.5px] lg:h-[877px] md:h-[600px] border-[#333] flex flex-col md:gap-10 gap-0 mt-20 relative">
   {/* Decorative Background Image */}
   <img 
     src="https://res.cloudinary.com/dnwmtd4p1/image/upload/v1734140579/nexile%20digital/asset/gpxiwox8b63hdydxgtvf.webp" 
@@ -66,7 +66,7 @@ const Founder = () => {
     <p className="text-white uppercase poppins-light text-[20px]">
       Working since
     </p>
-    <h1 className="text-9xl text-white poppins-bold">
+    <h1 className="lg:text-9xl md:text-5xl text-9xl text-white poppins-bold">
       {founder ? founder[0]?.year : ""}
     </h1>
   </div>
@@ -76,7 +76,7 @@ const Founder = () => {
     <p className="text-white uppercase poppins-light text-[20px]">
       Client satisfaction
     </p>
-    <h1 className="text-9xl text-white poppins-bold">
+    <h1 className="lg:text-9xl md:text-5xl text-9xl text-white poppins-bold">
       {founder ? founder[0]?.satisfaction : "0"}%
     </h1>
   </div>
@@ -86,7 +86,7 @@ const Founder = () => {
     <p className="text-white uppercase poppins-light text-[20px]">
       Total completed projects
     </p>
-    <h1 className="text-9xl text-white poppins-bold">
+    <h1 className="lg:text-9xl md:text-5xl text-9xl text-white poppins-bold">
       {founder ? founder[0]?.completedPersonally : "0"}+
     </h1>
     <p className="text-white poppins-light text-center">Personally</p>
@@ -94,24 +94,25 @@ const Founder = () => {
 
 </div>
 
-            <div className="col-span-2 px-24 py-10 relative">
-              <h4 className="text-white poppins-semibold text-[50px] underline">
+            <div className="md:col-span-2 lg:px-24 py-10 relative">
+              <h4 className="text-white poppins-semibold lg:text-[50px] md:text-[30px] text-[30px] underline pl-3">
                 {founder ? founder[0]?.des : ""}
               </h4>
-              <a href="https://mdashrafulislam-portfolio.netlify.app/" target="_blank" className="absolute bottom-[56%] left-[230px] z-30"><h5 className="text-white poppins-light text-2xl mt-[-10px] underline">
+              <a href="https://mdashrafulislam-portfolio.netlify.app/" target="_blank" 
+              className="absolute bottom-[56%] md:bottom-[65%] lg:left-[230px] md:left-[30px] z-30"><h5 className="text-white poppins-light md:text-2xl text-md mt-[-10px] underline">
   Visit Website
   <span className="bg-[#00ECFB] w-2 h-2 ml-2 rounded-sm inline-block"></span>
 </h5>
 </a>
-             <div className="flex absolute bottom-[26%] left-[150px] z-30">
+             <div className="flex absolute md:gap-0 gap-6 md:bottom-[38%] lg:bottom-[29%] bottom-[35%] md:left-[70px] lg:left-[150px] lg:z-30 md:z-50">
               <div className="mr-[-2px]">
-              <h6 className="text-white poppins-semibold text-xl mb-0">{founder ? founder[0]?.experience :''} YEARS</h6>
-              <p className="text-white poppins-light text-lg mt-[-10px]">experience</p>
+              <h6 className="text-white poppins-semibold text-xl md:mb-0">{founder ? founder[0]?.experience :''} YEARS</h6>
+              <p className="text-white poppins-light md:text-lg text-md mt-[-10px]">experience</p>
               </div>
-              <h2 className="text-white poppins-semibold text-3xl mb-0 uppercase pr-[630px] 
-              text-right ml-[-100px] mt-0">{founder ? founder[0]?.founderName:''}</h2>
+              <h2 className="text-white poppins-semibold md:text-3xl text-2xl mb-0 uppercase lg:pr-[630px] md:pr-[550px] pr-[400px] 
+              text-right ml-[-100px] md:mt-0 mt-1 md:z-10 z-50">{founder ? founder[0]?.founderName:''}</h2>
              </div>
-             <div className="mr-[-160px] relative">
+             <div className="lg:mr-[-160px] mr-[-56px] relative">
   {/* Primary Founder Image */}
   <img
     src={founder ? founder[0]?.founderImage : ""}
