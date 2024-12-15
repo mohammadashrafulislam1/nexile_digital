@@ -120,6 +120,26 @@
     }
   }
   
+/* Custom styles for the swiper pagination bullets */
+.swiper-pagination-bullet {
+  width: 10px !important;
+  height: 10px !important;
+  background-color: #1253ae7d !important;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  border-radius: 0px !important;
+  margin-right: 10px !important;
+}
+
+/* Active bullet styles */
+.swiper-pagination-bullet-active {
+  padding: 1px; 
+  background-color: #00ECFB !important; 
+  border: 1px solid #00ECFB; 
+  transform: scale(1.3) rotate(45deg); 
+  background-clip: content-box !important; 
+  box-sizing: border-box;
+}
+
   
 
 @tailwind base;
