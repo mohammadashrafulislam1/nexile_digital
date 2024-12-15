@@ -126,7 +126,7 @@
   height: 10px !important;
   background-color: #FFFFFF !important;
   transition: background-color 0.3s ease, transform 0.3s ease;
-  border-radius: 0px !important;
+  border-radius: 2px !important;
   margin-right: 10px !important; 
 }
 .swiper-wrapper {

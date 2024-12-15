@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { endPoint } from "../../../Components/ForAll/ForAll";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -13,11 +13,8 @@ import { LuMoveRight } from "react-icons/lu";
 
 const Works = () => {
   const [works, setWorks] = useState([]);
-  const prevRef = useRef(null);
-  const nextRef = useRef(null);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [initialized, setInitialized] = useState(false);
   useEffect(()=>{
     const fetchCategories = async () => {
       try {
@@ -54,14 +51,13 @@ const Works = () => {
     const timer = setTimeout(() => setLoading(false), 2000);
 
     return () => clearTimeout(timer); // Clear the timer on component unmount
-  },[])
+  },[categories])
 
-  useEffect(() => {
-    if (prevRef.current && nextRef.current && !initialized) {
-      setInitialized(true);
-    }
-  }, [prevRef, nextRef, initialized]);
 
+  if (loading) {
+    return <div>Loading...</div>; // Placeholder for loading state
+  }
+  
   return (
     <div className="px-8 lg:py-5 relative overflow-hidden">
             <div className="lg:flex justify-end flex-row-reverse items-center mt-14 md:mt-0">
@@ -81,12 +77,12 @@ const Works = () => {
       </div>
     </div>
 
-    <div className="grid grid-cols-3 py-20">
-      <div className="col-span-1">
+    <div className="grid md:grid-cols-3 grid-cols-1 py-20 items-center">
+      <div className="md:col-span-1 md:mb-0 mb-40">
       {
         categories?.map(category => 
-          <div className="group flex justify-between items-center border-b-[3px] border-[#333] py-6">
-            <h3 className="text-[#A8A8A8] lg:text-[43px] text-[20px] md:text-[30px] poppins-semibold md:col-span-4 group-hover:text-white relative md:mb-0 mb-[-70px]">
+          <div className="group flex pointer justify-between items-center border-b-[3px] border-[#333] py-6">
+            <h3 className="text-[#A8A8A8] lg:text-[43px] text-[20px] md:text-[30px] poppins-semibold md:col-span-4 group-hover:text-white relative md:mb-0">
           {category.name}
           {/* Square Dot */}
           <span className="hidden group-hover:inline-block bg-[#00ECFB] w-2 h-2 ml-2 mb-1 rounded-sm absolute bottom-2"></span>
@@ -97,36 +93,12 @@ const Works = () => {
       }
       </div>
 
-      <div className="col-span-2">
+      <div className="md:col-span-2 md:px-8 relative">
 {/* Navigation Arrows */}
 <div>
-      <div
-        ref={prevRef}
-        className="absolute left-2 top-1/2 transform -translate-y-1/2 z-10 bg-gray-200 p-2 rounded-full cursor-pointer"
-      >
-        <FaAngleLeft size={20} />
-      </div>
-      <div
-        ref={nextRef}
-        className="absolute right-2 top-1/2 transform -translate-y-1/2 z-10 bg-gray-200 p-2 rounded-full cursor-pointer"
-      >
-        <FaAngleRight size={20} />
-      </div>
-
       <Swiper
         spaceBetween={30}
         pagination={{ clickable: true }}
-        navigation={initialized ? { prevEl: prevRef.current, nextEl: nextRef.current } : false}
-        onBeforeInit={(swiper) => {
-          swiper.params.navigation.prevEl = prevRef.current;
-          swiper.params.navigation.nextEl = nextRef.current;
-        }}
-        onSwiper={(swiper) => {
-          if (initialized) {
-            swiper.navigation.init();
-            swiper.navigation.update();
-          }
-        }}
         breakpoints={{
           640: { slidesPerView: 1 },
           768: { slidesPerView: 1 },
@@ -137,24 +109,41 @@ const Works = () => {
       >
         {works.map((work) => (
           <SwiperSlide key={work._id} className="p-4 rounded-lg shadow-md">
-            <div className="flex items-center">
-              <img
-                src={work.images?.[0]?.url || "https://via.placeholder.com/150"}
-                alt={work.title}
-                className="w-[540px] h-[464px] object-cover rounded-[10px]"
-              />
-              <div className="ml-[-150px]">
-                <h3 className="mt-4 text-white poppins-semibold text-[49px]">{work.title}</h3>
+            <div className="md:flex items-center">
+            <div className="relative md:w-[1080px] w-full md:h-[440px] overflow-visible">
+  <img
+    src={work.images?.[0]?.url || "https://via.placeholder.com/150"}
+    alt={work.title}
+    className=" md:w-[1080px] w-full md:h-[400px] object-cover rounded-[10px] mt-10"
+  />
+  {/* Overlay */}
+  <div className="absolute inset-0 bg-black bg-opacity-50 rounded-[10px] opacity-80 transition-opacity duration-300 flex items-center justify-center">
+  </div>
+  
+  <img
+  src="https://res.cloudinary.com/dnwmtd4p1/image/upload/v1734276289/nexile%20digital/asset/fslpkycofr0yd2w0xjv5.webp"
+  alt=""
+  className="absolute lg:top-[-23px] top-[-32px] right-[-30px] z-20 "
+/>
+
+</div>
+
+              <div className="md:ml-[-107px] z-20">
+                <h3 className="mt-4 text-white poppins-semibold md:text-[49px] text-[29px]">{work.title}</h3>
               <p className=" text-[20px] text-[#00ECFB]">
                 {work.categoryName || "No category specified"}
               </p>
-             <Link to='/'> <div className=" text-[30px] text-[#fff] flex items-center gap-3 border-b-[2px] w-fit">View This project 
-             <LuMoveRight className="text-5xl font-[400]"/></div></Link></div>
+             <Link to='/'> <div className="md:text-[30px] text-[#fff] flex items-center gap-3 border-b-[2px] w-fit">View This project 
+             <LuMoveRight className="md:text-5xl font-[400]"/></div></Link></div>
             </div>
           </SwiperSlide>
         ))}
       </Swiper>
       </div>
+
+      <img src="https://res.cloudinary.com/dnwmtd4p1/image/upload/v1734277609/nexile%20digital/asset/pj1hz0xmvb0lxvx74qw2.webp" 
+      alt="" 
+      className="absolute top-0 right-0"/>
       </div>
     </div>
         
