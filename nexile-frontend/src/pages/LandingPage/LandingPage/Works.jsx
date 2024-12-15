@@ -9,6 +9,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Link } from "react-router-dom";
 import { FaChevronRight } from "react-icons/fa";
+import { LuMoveRight } from "react-icons/lu";
 
 const Works = () => {
   const [works, setWorks] = useState([]);
@@ -17,7 +18,6 @@ const Works = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [initialized, setInitialized] = useState(false);
-
   useEffect(()=>{
     const fetchCategories = async () => {
       try {
@@ -31,17 +31,24 @@ const Works = () => {
     };
     fetchCategories();
 
-    const fetchWorks = async () => {
+    const fetchWorksWithCategory = async () => {
       try {
-        const response = await axios.get(`${endPoint}/works`);
-        setWorks(response.data.works);
+        const worksResponse = await axios.get(`${endPoint}/works`);
+        const worksWithCategories = worksResponse.data.works.map(work => {
+          const category = categories.find(cat => cat._id === work.category);
+          return { ...work, categoryName: category?.name || "No category specified" };
+        });
+        setWorks(worksWithCategories);
       } catch (error) {
-        console.error("Error fetching Workss:", error);
+        console.error("Error fetching Works:", error);
       } finally {
         setLoading(false);
       }
     };
-    fetchWorks();
+  
+    if (categories.length > 0) {
+      fetchWorksWithCategory();
+    }
 
     // Set a timeout for loader to hide after 2 seconds if data fetch is complete
     const timer = setTimeout(() => setLoading(false), 2000);
@@ -129,17 +136,20 @@ const Works = () => {
         className="mySwiper"
       >
         {works.map((work) => (
-          <SwiperSlide key={work._id} className="bg-gray-100 p-4 rounded-lg shadow-md">
-            <div>
+          <SwiperSlide key={work._id} className="p-4 rounded-lg shadow-md">
+            <div className="flex items-center">
               <img
                 src={work.images?.[0]?.url || "https://via.placeholder.com/150"}
                 alt={work.title}
-                className="w-full h-48 object-cover rounded-md"
+                className="w-[540px] h-[464px] object-cover rounded-[10px]"
               />
-              <h3 className="text-lg font-semibold mt-4">{work.title}</h3>
-              <p className="text-sm text-gray-500">
-                {work.category || "No category specified"}
+              <div className="ml-[-150px]">
+                <h3 className="mt-4 text-white poppins-semibold text-[49px]">{work.title}</h3>
+              <p className=" text-[20px] text-[#00ECFB]">
+                {work.categoryName || "No category specified"}
               </p>
+             <Link to='/'> <div className=" text-[30px] text-[#fff] flex items-center gap-3 border-b-[2px] w-fit">View This project 
+             <LuMoveRight className="text-5xl font-[400]"/></div></Link></div>
             </div>
           </SwiperSlide>
         ))}
