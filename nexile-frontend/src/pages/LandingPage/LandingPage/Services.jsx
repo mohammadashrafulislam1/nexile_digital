@@ -77,7 +77,7 @@ const SkeletonLoader = () => (
         ) : (<div>
             
             <div className="lg:flex justify-end items-center">
-              <h2 className="text-white lg:py-20 pb-6 lg:text-[130px] text-[40px] uppercase font-bold underline lg:leading-[160px] leading-[40px]">
+              <h2 className="text-white lg:py-20 pb-6 lg:text-[120px] text-[40px] uppercase font-bold underline lg:leading-[160px] leading-[40px]">
                 services
                 <br />
                 NEXILE PROVIDES

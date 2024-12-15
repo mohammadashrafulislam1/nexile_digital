@@ -114,7 +114,7 @@ const About = ()=>{
     </div>
 
 <div className="lg:flex justify-end flex-row-reverse items-center mt-14 md:mt-0">
-      <h2 className="text-white lg:py-6 pb-6 text-right lg:text-[130px] text-[40px] uppercase font-bold underline lg:leading-[160px] leading-[40px]">
+      <h2 className="text-white lg:py-6 pb-6 text-right  lg:text-[120px] text-[40px] uppercase font-bold underline lg:leading-[160px] leading-[40px]">
       ABOUT
         <br />
         NEXILE DIGITAL

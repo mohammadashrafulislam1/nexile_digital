@@ -47,7 +47,7 @@ const Founder = () => {
         <SkeletonLoader />
       ) : (
         <div className="my-10 px-8 lg:pb-5 relative overflow-hidden">
-          <h2 className="text-white md:mt-0 mt-7 lg:py-10 lg:text-[130px] text-[40px] uppercase font-bold underline lg:leading-[160px] leading-[40px]">
+          <h2 className="text-white md:mt-0 mt-7 lg:py-10  lg:text-[120px] text-[40px] uppercase font-bold underline lg:leading-[160px] leading-[40px]">
             {founder ? founder[0]?.title : ""}
           </h2>
           <div className="border-b-[0.5px] opacity-30 md:mt-0 mt-5"></div>
@@ -109,7 +109,7 @@ const Founder = () => {
               <h6 className="text-white poppins-semibold text-xl md:mb-0">{founder ? founder[0]?.experience :''} YEARS</h6>
               <p className="text-white poppins-light md:text-lg text-md mt-[-10px]">experience</p>
               </div>
-              <h2 className="text-white poppins-semibold md:text-3xl text-2xl mb-0 uppercase lg:pr-[630px] md:pr-[550px] pr-[400px] 
+              <h2 className="text-white poppins-semibold underline md:text-3xl text-2xl mb-0 uppercase lg:pr-[630px] md:pr-[550px] pr-[400px] 
               text-right ml-[-100px] md:mt-0 mt-1 md:z-10 z-50">{founder ? founder[0]?.founderName:''}</h2>
              </div>
              <div className="lg:mr-[-160px] mr-[-56px] relative">
@@ -142,6 +142,12 @@ const Founder = () => {
 
             </div>
           </div>
+
+          <a href="" target="_blank"><div className="flex justify-center items-center gap-3">
+            <h4 className="text-white poppins-thin md:text-4xl text-2xl">Meet Our Team</h4> <img 
+          src="https://res.cloudinary.com/dnwmtd4p1/image/upload/v1732024726/nexile%20digital/assets/ejj6ajpv5ykj5qdgeqmi.png" 
+          alt="" 
+          className="lg:w-[125px] w-[80px] ml-19"/></div></a>
         </div>
       )}
     </div>

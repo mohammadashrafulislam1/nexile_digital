@@ -44,7 +44,7 @@ const closeModal = () => {
 };
 
     return(
-        <div className="px-8 lg:pb-5 relative overflow-hidden"> <h2 className="text-white lg:py-20 pb-6 lg:text-[130px] text-[40px] uppercase font-bold underline lg:leading-[160px] leading-[40px]">
+        <div className="px-8 lg:pb-5 relative overflow-hidden"> <h2 className="text-white lg:py-20 pb-6  lg:text-[120px] text-[40px] uppercase font-bold underline lg:leading-[160px] leading-[40px]">
      HOW WE WORK
           </h2>
        

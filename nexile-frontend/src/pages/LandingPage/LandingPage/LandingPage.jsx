@@ -5,6 +5,7 @@ import Service from "./Services";
 import About from "./About";
 import HowWeWork from "./HowWeWork";
 import Founder from "./Founder";
+import Works from "./Works";
 
 const LandingPage = ()=>{
     return(
@@ -59,6 +60,7 @@ const LandingPage = ()=>{
   <About className="!z-60"/>
   <HowWeWork className="!z-60"/>
   <Founder className="!z-60"/>
+  <Works className="!z-60"/>
 </div>
     </div>
     )
