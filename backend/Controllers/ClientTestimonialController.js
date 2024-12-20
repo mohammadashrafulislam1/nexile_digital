@@ -124,21 +124,36 @@ export const getClientTestimonialById = async (req, res) => {
 export const deleteClientTestimonial = async (req, res) => {
     try {
         const { id } = req.params;
+        
+        // Find the testimonial by ID
         const testimonial = await ClientTestimonialModel.findById(id);
         if (!testimonial) {
             return res.status(404).json({ success: false, message: 'Testimonial not found.' });
         }
 
-        // Delete associated images from Cloudinary
-        for (const t of testimonial.testimonials) {
-            if (t.publicId) {
-                await cloudinary.uploader.destroy(t.publicId);
+        // If 'testimonials' is expected to be an array
+        if (Array.isArray(testimonial.testimonials)) {
+            for (const t of testimonial.testimonials) {
+                if (t.publicId) {
+                    await cloudinary.uploader.destroy(t.publicId);
+                }
             }
+        } else {
+            console.warn(`'testimonials' is not an array for ID: ${id}`);
         }
 
-        await testimonial.remove();
+        // Remove the testimonial entry from the database
+        await ClientTestimonialModel.findByIdAndDelete(id);
+
+        // Remove related work entry, if applicable
+        const work = await ClientTestimonialModel.findById(id);
+        if (work) {
+            await ClientTestimonialModel.findByIdAndDelete(id);
+        }
+
         res.status(200).json({ success: true, message: 'Client testimonial deleted successfully.' });
     } catch (error) {
+        console.error('Error deleting testimonial:', error);
         res.status(500).json({ success: false, message: error.message });
     }
 };
