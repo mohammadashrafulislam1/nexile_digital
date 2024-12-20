@@ -2,7 +2,14 @@ import { Link } from "react-router-dom";
 
 const Testimonials = () =>{
     return(
-    <div className="px-8 lg:py-5 relative overflow-x-hidden">
+    <div className="px-8 lg:py-5 relative overflow-x-hidden"
+    style={{
+      backgroundImage: 'url(https://res.cloudinary.com/dnwmtd4p1/image/upload/v1734718037/nexile%20digital/asset/ow0kdpfdx5ebqmhyebxa.webp)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      position: 'relative', // Ensure background is a layer
+      zIndex: 0, // Send background layer to the back
+    }}>
    <div className="lg:flex justify-end items-center">
               <h2 className="text-white lg:w-[90%] lg:py-20 pb-6 lg:text-[120px] text-[40px] uppercase font-bold underline lg:leading-[160px] leading-[40px]">
               What our clients saying
@@ -20,6 +27,10 @@ const Testimonials = () =>{
                 </Link>
               </div>
             </div>
+        
+        <div className=" h-[810px] w-[1442px]">
+
+        </div>
     </div>
     )
 }
