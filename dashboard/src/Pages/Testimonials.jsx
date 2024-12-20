@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { endPoint } from "../Components/ForAll/ForAll";
 import { Link, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const Testimonials = () => {
     const [testimonials, setTestimonials] = useState();
@@ -26,6 +27,50 @@ const Testimonials = () => {
         // Handle edit work functionality;
     navigate("/addTestimonial", { state: { testimonial } });
     };
+
+    const handleDeleteTestimonial = async (testimonial) => {
+        if (!testimonial?._id) {
+            Swal.fire({
+                icon: "error",
+                title: "Invalid Testimonial",
+                text: "Testimonial data is incomplete or missing.",
+            });
+            return;
+        }
+    
+        const confirmDelete = await Swal.fire({
+            title: "Are you sure?",
+            text: "This action cannot be undone.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Yes, delete it!",
+        });
+    
+        if (confirmDelete.isConfirmed) {
+            try {
+                await axios.delete(`${endPoint}/clientTestimonial/${testimonial._id}`);
+                Swal.fire({
+                    position: "top-end",
+                    icon: "success",
+                    title: "Testimonial deleted successfully!",
+                    showConfirmButton: false,
+                    timer: 1500,
+                });
+                fetchTestimonail(); // Refresh the testimonials list
+            } catch (error) {
+                console.error("Error deleting testimonial:", error.response?.data || error.message);
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "Something went wrong while deleting the testimonial!",
+                });
+            }
+        }
+    };
+    
+
     return (
     <div className=" my-10 w-[90%] mx-auto">
          <Link to="/addTestimonial">
