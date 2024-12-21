@@ -25,13 +25,13 @@ const FAQs = () => {
   }
 
   return (
-    <div className="lg:py-12 px-8 relative overflow-hidden">
+    <div className="lg:py-12 py-4 md:pt-24 px-8 relative overflow-hidden">
       <h2 className="text-white text-center lg:pt-20 lg:text-[120px] text-[40px] uppercase font-bold underline lg:leading-[160px] leading-[40px]">
         {faqs?.sectionTitle}
       </h2>
 
-      <div className="flex items-center">
-        <div className="w-[40%]">
+      <div className="lg:flex items-center">
+        <div className="lg:w-[40%] w-full">
           {/* Arrow */}
           <img
             src="https://res.cloudinary.com/dnwmtd4p1/image/upload/v1732024726/nexile%20digital/assets/ejj6ajpv5ykj5qdgeqmi.png"
@@ -49,7 +49,7 @@ const FAQs = () => {
           />
         </div>
 
-        <div className="w-[60%] mt-24">
+        <div className="lg:w-[60%] w-full mt-24">
           {faqs.faqs?.slice(0, 4).map((faq, index) => (
             <div
               key={index}
