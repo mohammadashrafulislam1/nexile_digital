@@ -36,7 +36,7 @@ const Testimonials = () => {
     return Array.from({ length: 5 }, (_, index) => (
       <span
         key={index}
-        className={`${index < rating ? "text-[#00ECFB]" : "text-[#fff]"} ${
+        className={`${index < rating ? "text-[#00ECFB] text-[20px]" : "text-[#fff] text-[20px]"} ${
           index < rating ? "fas fa-star" : "far fa-star"
         }`}
       >
@@ -92,7 +92,7 @@ const Testimonials = () => {
         1024: { slidesPerView: 1.2 },
       }}
       modules={[Pagination]}
-      className="mySwipe"
+      className="mySwipe relative"
       onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
       onSwiper={(swiper) => setActiveIndex(swiper.activeIndex)}
     >
@@ -104,7 +104,7 @@ const Testimonials = () => {
           }`}
         >
           <div className="flex flex-col items-start p-6 rounded-lg">
-            <p className="mt-4 mb-10 text-white text-start text-[26px] poppins-regular">
+            <p className="mt-4 mb-10 z-20 text-white text-start text-[26px] poppins-regular">
               {expandedTestimonials[testimonial._id]
                 ? testimonial.testimonialText
                 : `${testimonial.testimonialText.slice(0, 164)}...`}
@@ -140,14 +140,17 @@ const Testimonials = () => {
             </div>
           </div>
             </div>
+            
+            <div className="flex items-center gap-3 ml-5">
             <div>
               <p className="text-[18px] text-white poppins-extralight">Reviews on</p>
               <img src="https://res.cloudinary.com/dnwmtd4p1/image/upload/v1731042430/nexile%20digital/asset/zyg5fsrl4n7oyssnvf06.webp"
-              className="w-[50px] h-[19px]" alt="" />
+              className="w-[80px] h-[29px]" alt="" />
             </div>
             <div>
                <div className="mt-2 text-[#00ECFB]">{renderStars(testimonial.rating)}</div>
                <p className="text-[18px] text-white poppins-regular">Got {testimonial.rating} stars</p>
+            </div>
             </div>
         </SwiperSlide>
       ))}

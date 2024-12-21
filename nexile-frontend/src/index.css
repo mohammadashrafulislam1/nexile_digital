@@ -143,7 +143,11 @@
   box-sizing: border-box;
 }
 
-  
+.swiper-pagination.swiper-pagination-clickable.swiper-pagination-bullets.swiper-pagination-horizontal{
+  position: absolute;
+  top: 0;
+  left: -380px;
+}
 
 @tailwind base;
 @tailwind components;
