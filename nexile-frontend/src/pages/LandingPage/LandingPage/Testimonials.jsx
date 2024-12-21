@@ -13,11 +13,13 @@ const Testimonials = () => {
   const [activeIndex, setActiveIndex] = useState(0);
 
   const toggleReadMore = (id) => {
+    console.log(id)
     setExpandedTestimonials((prevState) => ({
       ...prevState,
-      [id]: !prevState[id],
+      [id]: !prevState[id], // Toggle the boolean value for the given testimonial ID
     }));
   };
+  
 
   useEffect(() => {
     const fetchTestimonials = async () => {
@@ -68,7 +70,7 @@ const Testimonials = () => {
       </div>
 
       <div
-        className="h-[800px] w-full lg:grid lg:grid-cols-3 md:grid-cols-2 gap-10 justify-center items-center"
+        className="h-[800px] w-full lg:grid lg:grid-cols-3 md:grid-cols-2 gap-10 justify-center items-center relative"
         style={{
           backgroundImage:
             "url(https://res.cloudinary.com/dnwmtd4p1/image/upload/v1734718037/nexile%20digital/asset/ow0kdpfdx5ebqmhyebxa.webp)",
@@ -78,11 +80,10 @@ const Testimonials = () => {
           zIndex: 0,
         }}
       >
-        <div className="lg:col-span-1 col-span-1">
+        <div className="lg:col-span-1 col-span-1 z-20">
          <img src="https://res.cloudinary.com/dnwmtd4p1/image/upload/v1734735974/nexile%20digital/asset/k3gel9qz6m3wb5gxtanm.webp" alt="" />
         </div>
-
-        <div className="lg:col-span-2 col-span-1">
+        <div className="lg:col-span-2 col-span-1 z-60">
         <Swiper
       spaceBetween={4}
       pagination={{ clickable: true }}
@@ -104,17 +105,21 @@ const Testimonials = () => {
           }`}
         >
           <div className="flex flex-col items-start p-6 rounded-lg">
-            <p className="mt-4 mb-10 z-20 text-white text-start md:text-[26px] text-[18px] poppins-regular">
-              {expandedTestimonials[testimonial._id]
-                ? testimonial.testimonialText
-                : `${testimonial.testimonialText.slice(0, 164)}...`}
-              <p
-                className="text-[#00ECFB] cursor-pointer underline"
-                onClick={() => toggleReadMore(testimonial._id)}
-              >
-                {expandedTestimonials[testimonial._id] ? "See Less" : "See More"}
-              </p>
-            </p>
+          <p
+  className="mt-4 mb-10 z-50 text-white text-start md:text-[26px] text-[18px] poppins-regular relative"
+>
+  {expandedTestimonials[testimonial._id]
+    ? testimonial.testimonialText
+    : `${testimonial.testimonialText.slice(0, 164)}...`}
+  <span
+    className="text-[#00ECFB] cursor-pointer underline relative z-60"
+    onClick={() => toggleReadMore(testimonial._id)}
+  >
+    {expandedTestimonials[testimonial._id] ? "See Less" : "See More"}
+  </span>
+</p>
+
+
             
             <div className="flex md:flex-row flex-col justify-center items-center gap-6">
             <div className="md:w-24 w-18 h-18 md:h-24 w-18 h-18 relative mb-3">
@@ -145,7 +150,7 @@ const Testimonials = () => {
             <div>
               <p className="text-[18px] text-white poppins-extralight">Reviews on</p>
               <img src="https://res.cloudinary.com/dnwmtd4p1/image/upload/v1731042430/nexile%20digital/asset/zyg5fsrl4n7oyssnvf06.webp"
-              className="w-[80px] h-[29px]" alt="" />
+              className="w-[80px] h-[29px]  mb-[-10px]" alt="" />
             </div>
             <div>
                <div className="mt-2 text-[#00ECFB]">{renderStars(testimonial.rating)}</div>
@@ -156,6 +161,9 @@ const Testimonials = () => {
       ))}
     </Swiper>
         </div>
+        
+        <img src="https://res.cloudinary.com/dnwmtd4p1/image/upload/v1734789723/nexile%20digital/asset/zj7pdreutg396pv9cqdy.webp" 
+        alt="" className="absolute z-[-100px] overflow-hidden"/>
       </div>
     </div>
   );
