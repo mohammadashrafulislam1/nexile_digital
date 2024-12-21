@@ -48,13 +48,14 @@ const Blogs = () => {
   
   return (
     <div className="py-24 container mx-auto">
-      {/* Category: Video Editing - 1 Latest Blog */}
+      <div className="flex items-center gap-6">
+        {/* Category: Video Editing - 1 Latest Blog */}
       <div className="mb-16">
         {videoEditingBlog.length > 0 ? (
           videoEditingBlog.map((blog) => (
             <div
               key={blog._id}
-              className="h-[630px] w-[400px] p-6 rounded-lg shadow-md"
+              className="h-[630px] w-[450px] rounded-[10px] shadow-md"
               style={{
                 backgroundImage:
                   `url(${blog.image})`,
@@ -64,15 +65,22 @@ const Blogs = () => {
                 zIndex: 0,
               }}
             >
-              <div className="flex justify-between">
+             <div className="absolute bottom-0 px-5 pb-12  z-20">
+             <div className="flex justify-between">
               <p className="text-[#00ECFB] text-[20px] poppins-semibold mt-4">{blog.category}</p>
               <p className="text-[#fff] text-[20px] mt-4"><b className="poppins-black ">.  </b>{formatDate(blog.created_at)}</p>
               </div>
               <a
                 href={`/blog/${blog._id}`}
-                className="text-blue-500 mt-4 inline-block"
-              > <h3 className="text-white text-xl font-semibold">{blog.title}</h3>
+                className="text-blue-500 mt-4 inline-block mt-0"
+              > <h3 className="text-white text-[24px] font-semibold">{blog.title}</h3>
               </a>
+             </div>
+              {/* Black shadow at the bottom */}
+<div
+  className="absolute bottom-0 left-0 right-0 h-80 bg-gradient-to-t from-black to-transparent z-0"
+></div>;
+
             </div>
           ))
         ) : (
@@ -82,27 +90,39 @@ const Blogs = () => {
 
       {/* Other Categories - 2 Latest Blogs */}
       <div>
-        <h2 className="text-white text-2xl font-bold mb-8">Other Categories</h2>
+      <div className="flex items-center gap-4">
+      <img src="https://res.cloudinary.com/dnwmtd4p1/image/upload/v1734805953/nexile%20digital/asset/uls3io21ae7r1hbrvaw9.png" alt="" />
+      <h2 className="text-white text-end  lg:text-[100px] text-[40px] uppercase font-bold underline lg:leading-[160px] leading-[40px]">
+      Latest Blogs 
+      </h2>
+      </div>
+      <div className="flex justify-end">
+        
+      <img src="https://res.cloudinary.com/dnwmtd4p1/image/upload/v1732024726/nexile%20digital/assets/ejj6ajpv5ykj5qdgeqmi.png"
+       alt="" className="lg:w-[125px] w-[80px] ml-19 flex justify-end"/>
+      </div>
         {otherCategoryBlogs.length > 0 ? (
           otherCategoryBlogs.map((blog) => (
             <div
               key={blog._id}
-              className="bg-gray-800 p-6 rounded-lg shadow-md mb-6"
+              className="rounded-lg shadow-md mb-6 flex gap-8"
             >
+                <img src={blog.image} alt="" className="w-[200px] h-[188px] rounded-[10px]" />
+              <div>
+              <p className="text-[#fff] text-[20px] mt-4">{formatDate(blog.created_at)}</p>
               
-              <p className="text-[#00ECFB] text-[20px] poppins-semibold mt-4">{blog.category}</p>
-              <h3 className="text-white text-xl font-semibold">{blog.title}</h3>
+              <p className="text-[#00ECFB] text-[20px] poppins-semibold">{blog.category}</p>
               <a
                 href={`/blog/${blog._id}`}
-                className="text-blue-500 mt-4 inline-block"
-              >
-                Read More
-              </a>
+                className="text-blue-500 inline-block"
+              ><h3 className="text-white text-[24px] font-semibold">{blog.title}</h3></a>
+              </div>
             </div>
           ))
         ) : (
           <p className="text-gray-400">No blogs found in other categories.</p>
         )}
+      </div>
       </div>
     </div>
   );
