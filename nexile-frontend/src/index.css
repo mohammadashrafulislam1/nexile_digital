@@ -119,6 +119,14 @@
       display: none;
     }
   }
+  @media screen and (max-width: 1000px) {
+
+    .swiper-pagination.swiper-pagination-clickable.swiper-pagination-bullets.swiper-pagination-horizontal{
+      position: absolute;
+      top: 0;
+      left: 0 !important;
+    }
+  }
   
 /* Custom styles for the swiper pagination bullets */
 .swiper-pagination-bullet {
