@@ -7,6 +7,8 @@ import HowWeWork from "./HowWeWork";
 import Founder from "./Founder";
 import Works from "./Works";
 import Testimonials from "./Testimonials";
+import FAQs from "./FAQs";
+import ContactBtn from "./ContactBtn";
 
 const LandingPage = ()=>{
     return(
@@ -63,6 +65,8 @@ const LandingPage = ()=>{
   <Founder className="!z-60"/>
   <Works className="!z-60"/>
   <Testimonials className="!z-60"/>
+  <FAQs className="!z-60"/>
+  <ContactBtn className="!z-60"/>
 </div>
     </div>
     )

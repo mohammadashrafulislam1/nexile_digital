@@ -48,7 +48,7 @@ const Testimonials = () => {
   };
 
   return (
-    <div className="lg:py-5 relative overflow-x-hidden">
+    <div className="lg:py-5 relative overflow-hidden">
       <div className="px-8 lg:flex justify-end items-center">
         <h2 className="text-white lg:w-[90%] lg:pt-20 lg:text-[120px] text-[40px] uppercase font-bold underline lg:leading-[160px] leading-[40px]">
           What our clients are saying
@@ -80,6 +80,9 @@ const Testimonials = () => {
           zIndex: 0,
         }}
       >
+        <div
+    className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-black to-transparent z-10"
+  ></div>
         <div className="lg:col-span-1 col-span-1 z-20">
          <img src="https://res.cloudinary.com/dnwmtd4p1/image/upload/v1734735974/nexile%20digital/asset/k3gel9qz6m3wb5gxtanm.webp" alt="" />
         </div>
@@ -164,6 +167,11 @@ const Testimonials = () => {
         
         <img src="https://res.cloudinary.com/dnwmtd4p1/image/upload/v1734789723/nexile%20digital/asset/zj7pdreutg396pv9cqdy.webp" 
         alt="" className="absolute z-[-100px] overflow-hidden"/>
+      </div>
+
+      <div className="flex items-center gap-4 px-8">
+        <div className="swiper-pagination-bullet-active w-3 h-3"></div>
+        <h5 className="text-white poppins-semibold text-[25px]">Clients</h5>
       </div>
     </div>
   );
