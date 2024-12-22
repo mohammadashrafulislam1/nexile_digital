@@ -48,14 +48,14 @@ const Blogs = () => {
   
   return (
     <div className="py-24 container mx-auto">
-      <div className="flex items-center gap-10">
+      <div className="flex lg:flex-row flex-col-reverse items-center gap-10 px-0 lg:px-0 md:px-8">
         {/* Category: Video Editing - 1 Latest Blog */}
       <div className="">
         {videoEditingBlog.length > 0 ? (
           videoEditingBlog.map((blog) => (
             <div
               key={blog._id}
-              className="h-[630px] w-[450px] rounded-[10px] shadow-md"
+              className="lg:h-[630px] h-[500px] lg:w-[450px] w-[350px] rounded-[10px] shadow-md"
               style={{
                 backgroundImage:
                   `url(${blog.image})`,
@@ -90,13 +90,13 @@ const Blogs = () => {
 
       {/* Other Categories - 2 Latest Blogs */}
       <div>
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-4 px-8 md:px-0">
       <img src="https://res.cloudinary.com/dnwmtd4p1/image/upload/v1734805953/nexile%20digital/asset/uls3io21ae7r1hbrvaw9.png" alt="" />
       <h2 className="text-white text-end  lg:text-[100px] text-[40px] uppercase font-bold underline lg:leading-[160px] leading-[40px]">
       Latest Blogs 
       </h2>
       </div>
-      <div className="flex justify-end">
+      <div className="flex justify-end md:mb-0 mb-24 px-8 md:px-0">
         
       <img src="https://res.cloudinary.com/dnwmtd4p1/image/upload/v1732024726/nexile%20digital/assets/ejj6ajpv5ykj5qdgeqmi.png"
        alt="" className="lg:w-[125px] w-[80px] ml-19 flex justify-end absolute"/>
@@ -105,9 +105,10 @@ const Blogs = () => {
           otherCategoryBlogs.map((blog) => (
             <div
               key={blog._id}
-              className="rounded-lg shadow-md mb-6 flex gap-8 mt-10 z-24  relative"
+              className="rounded-lg shadow-md mb-6 flex md:flex-row flex-col justify-center items-center
+               gap-8 mt-10 z-24 px-8  md:px-0 relative"
             >
-                <img src={blog.image} alt="" className="w-[200px] h-[188px] rounded-[10px]" />
+                <img src={blog.image} alt="" className="md:w-[200px] w-full md:h-[188px] rounded-[10px]" />
               <div>
               <p className="text-[#fff] text-[20px] mt-4">{formatDate(blog.created_at)}</p>
               
