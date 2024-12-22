@@ -78,10 +78,10 @@ const Works = () => {
     </div>
 
     <div className="grid md:grid-cols-3 grid-cols-1 py-20 items-center">
-      <div className="md:col-span-1 md:mb-0 mb-40 relative">
+      <div className="md:col-span-1 md:mb-0 mb-40 relative z-10">
       {
         categories?.map(category => 
-          <div className="group flex pointer justify-between items-center border-b-[3px] border-[#333] py-6 z-10">
+          <div className="group flex z-12 relative cursor-pointer justify-between items-center border-b-[3px] border-[#333] py-6 z-10">
             <h3 className="text-[#A8A8A8] lg:text-[43px] text-[20px] md:text-[30px] poppins-semibold md:col-span-4 group-hover:text-white relative md:mb-0">
           {category.name}
           {/* Square Dot */}
