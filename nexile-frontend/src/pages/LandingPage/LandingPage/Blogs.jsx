@@ -47,7 +47,7 @@ const Blogs = () => {
   };
   
   return (
-    <div className="py-24 container mx-auto">
+    <div className="py-24 md:px-10 mx-auto">
       <div className="flex lg:flex-row flex-col-reverse items-center gap-10 px-0 lg:px-0 md:px-8">
         {/* Category: Video Editing - 1 Latest Blog */}
       <div className="">
@@ -92,7 +92,7 @@ const Blogs = () => {
       <div>
       <div className="flex items-center gap-4 px-8 md:px-0">
       <img src="https://res.cloudinary.com/dnwmtd4p1/image/upload/v1734805953/nexile%20digital/asset/uls3io21ae7r1hbrvaw9.png" alt="" />
-      <h2 className="text-white text-end  lg:text-[100px] text-[40px] uppercase font-bold underline lg:leading-[160px] leading-[40px]">
+      <h2 className="text-white text-end  lg:text-[80px] text-[35px] uppercase font-bold underline lg:leading-[160px] leading-[40px]">
       Latest Blogs 
       </h2>
       </div>

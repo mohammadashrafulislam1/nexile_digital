@@ -81,7 +81,7 @@ const Footer = () =>{
     console.log(footer)
     return(
     <div className=" z-10">
-         <div className="flex justify-around">
+         <div className="flex flex-wrap lg:justify-around justify-start lg:gap-0 gap-24">
 
 <div className="px-8 lg:py-5 z-10">
     <h6 className="text-white poppins-black text-[16px]">Company</h6>
