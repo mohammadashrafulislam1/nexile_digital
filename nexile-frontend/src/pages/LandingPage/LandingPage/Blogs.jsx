@@ -48,9 +48,9 @@ const Blogs = () => {
   
   return (
     <div className="py-24 container mx-auto">
-      <div className="flex items-center gap-6">
+      <div className="flex items-center gap-10">
         {/* Category: Video Editing - 1 Latest Blog */}
-      <div className="mb-16">
+      <div className="">
         {videoEditingBlog.length > 0 ? (
           videoEditingBlog.map((blog) => (
             <div
@@ -66,7 +66,7 @@ const Blogs = () => {
               }}
             >
              <div className="absolute bottom-0 px-5 pb-12  z-20">
-             <div className="flex justify-between">
+             <div className="flex justify-between items-center">
               <p className="text-[#00ECFB] text-[20px] poppins-semibold mt-4">{blog.category}</p>
               <p className="text-[#fff] text-[20px] mt-4"><b className="poppins-black ">.  </b>{formatDate(blog.created_at)}</p>
               </div>
@@ -78,7 +78,7 @@ const Blogs = () => {
              </div>
               {/* Black shadow at the bottom */}
 <div
-  className="absolute bottom-0 left-0 right-0 h-80 bg-gradient-to-t from-black to-transparent z-0"
+  className="absolute bottom-0 left-0 right-0 opacity-90 h-80 bg-gradient-to-t from-black to-transparent z-0"
 ></div>;
 
             </div>
@@ -99,13 +99,13 @@ const Blogs = () => {
       <div className="flex justify-end">
         
       <img src="https://res.cloudinary.com/dnwmtd4p1/image/upload/v1732024726/nexile%20digital/assets/ejj6ajpv5ykj5qdgeqmi.png"
-       alt="" className="lg:w-[125px] w-[80px] ml-19 flex justify-end"/>
+       alt="" className="lg:w-[125px] w-[80px] ml-19 flex justify-end absolute"/>
       </div>
         {otherCategoryBlogs.length > 0 ? (
           otherCategoryBlogs.map((blog) => (
             <div
               key={blog._id}
-              className="rounded-lg shadow-md mb-6 flex gap-8"
+              className="rounded-lg shadow-md mb-6 flex gap-8 mt-10"
             >
                 <img src={blog.image} alt="" className="w-[200px] h-[188px] rounded-[10px]" />
               <div>

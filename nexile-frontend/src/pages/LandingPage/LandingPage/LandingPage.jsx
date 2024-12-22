@@ -10,6 +10,7 @@ import Testimonials from "./Testimonials";
 import FAQs from "./FAQs";
 import ContactBtn from "./ContactBtn";
 import Blogs from "./Blogs";
+import Footer from "../../../Components/ForAll/Footer";
 
 const LandingPage = ()=>{
     return(
@@ -69,6 +70,7 @@ const LandingPage = ()=>{
   <FAQs className="!z-60"/>
   <ContactBtn className="!z-60"/>
   <Blogs className="!z-60"/>
+  <Footer className="!z-60"/>
 </div>
     </div>
     )
