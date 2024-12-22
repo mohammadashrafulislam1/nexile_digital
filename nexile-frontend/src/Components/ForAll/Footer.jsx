@@ -80,43 +80,47 @@ const Footer = () =>{
     }, []);
     console.log(footer)
     return(
-     <div className="flex">
+    <div className=" z-10">
+         <div className="flex justify-around">
 
-        <div className="px-8 lg:py-5">
-            <h6 className="text-white poppins-black text-[16px]">Company</h6>
-            {footer?.company?.map((company) => (
-            <Link to={company?.link}><p className="text-white poppins-medium text-[16px] opacity-60 mt-4 w-fit">{company?.name}</p></Link>
-            ))}
-        </div>
+<div className="px-8 lg:py-5 z-10">
+    <h6 className="text-white poppins-black text-[16px]">Company</h6>
+    {footer?.company?.map((company) => (
+    <Link to={company?.link}><p className="text-white poppins-medium text-[16px] opacity-60 mt-4 w-fit">{company?.name}</p></Link>
+    ))}
+</div>
 
-        <div className="px-8 lg:py-5">
-            <h6 className="text-white poppins-black text-[16px]">Services</h6>
-            {footer?.services?.map((service) => (            
-                <Link to={service.link} key={service._id}><p className="text-white poppins-medium text-[16px] opacity-60 mt-4 w-fit">{service.name}</p></Link>
+<div className="px-8 lg:py-5 z-10">
+    <h6 className="text-white poppins-black text-[16px]">Services</h6>
+    {footer?.services?.map((service) => (            
+        <Link to={service.link} key={service._id}><p className="text-white poppins-medium text-[16px] opacity-60 mt-4 w-fit">{service.name}</p></Link>
 ))}
-        </div>
+</div>
 
-        <div className="px-8 lg:py-5">
-            <h6 className="text-white poppins-black text-[16px]">Resources</h6>
-            {footer?.resources?.map((Resource) => (            
-                <Link to={Resource.link} key={Resource._id}><p className="text-white poppins-medium text-[16px] opacity-60 mt-4 w-fit">{Resource.name}</p></Link>
+<div className="px-8 lg:py-5 z-10">
+    <h6 className="text-white poppins-black text-[16px]">Resources</h6>
+    {footer?.resources?.map((Resource) => (            
+        <Link to={Resource.link} key={Resource._id}><p className="text-white poppins-medium text-[16px] opacity-60 mt-4 w-fit">{Resource.name}</p></Link>
 ))}
-        </div>
+</div>
 
-        <div className="px-8 lg:py-5">
-            <h6 className="text-white poppins-black text-[16px]">Follow us</h6>
-            {footer?.followUs?.map((follow) => (            
-                <Link to={follow.url} key={follow._id}><p className="text-white poppins-medium text-[16px] opacity-60 mt-4 w-fit">{follow.platform}</p></Link>
+<div className="px-8 lg:py-5 z-10">
+    <h6 className="text-white poppins-black text-[16px]">Follow us</h6>
+    {footer?.followUs?.map((follow) => (            
+        <Link to={follow.url} key={follow._id}><p className="text-white poppins-medium text-[16px] opacity-60 mt-4 w-fit">{follow.platform}</p></Link>
 ))}
-        </div>
+</div>
 
-        <div className="px-8 lg:py-5">
-            <img src={footer?.logo} alt="" className="w-[160px] h-[33px]" />
-            <p className="text-white poppins-bold opacity-60">{footer?.contactMessage}</p>
-            <button className="bg-white lg:py-2 lg:px-5 mt-6 px-4 py-2 text-[20px] rounded-sm poppins-medium lg:text-[25px]">Let’s Work Together!</button>
+<div className="px-8 lg:py-5 z-10">
+    <img src={footer?.logo} alt="" className="w-[160px] h-[33px]" />
+    <p className="text-white poppins-bold opacity-60 mt-8">{footer?.contactMessage}</p>
+    <button className="bg-white lg:py-2 lg:px-5 mt-6 px-4 py-2 text-[20px] rounded-sm poppins-medium lg:text-[25px]">Let’s Work Together!</button>
 
-        </div>
+</div>
+</div>
 
+
+<p className="text-white text-center py-8 opacity-40 text-[16px]">{footer?.copyright?.message} {footer?.copyright?.company}</p>
     </div>
     )
 }

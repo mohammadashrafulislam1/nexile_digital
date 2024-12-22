@@ -69,8 +69,14 @@ const LandingPage = ()=>{
   <Testimonials className="!z-60"/>
   <FAQs className="!z-60"/>
   <ContactBtn className="!z-60"/>
-  <Blogs className="!z-60"/>
-  <Footer className="!z-60"/>
+  <div className="relative">
+  <img 
+  src="https://res.cloudinary.com/dnwmtd4p1/image/upload/v1734839480/nexile%20digital/asset/x5pgdn8cdhi0sqxkpcgx.webp" 
+  alt="" 
+  className="absolute bottom-0 right-0 z-0"/>
+  <Blogs className="!z-10"/>
+  <Footer className="!z-24"/>
+  </div>
 </div>
     </div>
     )

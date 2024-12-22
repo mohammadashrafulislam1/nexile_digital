@@ -105,7 +105,7 @@ const Blogs = () => {
           otherCategoryBlogs.map((blog) => (
             <div
               key={blog._id}
-              className="rounded-lg shadow-md mb-6 flex gap-8 mt-10"
+              className="rounded-lg shadow-md mb-6 flex gap-8 mt-10 z-24  relative"
             >
                 <img src={blog.image} alt="" className="w-[200px] h-[188px] rounded-[10px]" />
               <div>
@@ -114,8 +114,8 @@ const Blogs = () => {
               <p className="text-[#00ECFB] text-[20px] poppins-semibold">{blog.category}</p>
               <a
                 href={`/blog/${blog._id}`}
-                className="text-blue-500 inline-block"
-              ><h3 className="text-white text-[24px] font-semibold">{blog.title}</h3></a>
+                className="text-blue-500 inline-block z-10 relative"
+              ><h3 className="text-white text-[24px] font-semibold z-10">{blog.title}</h3></a>
               </div>
             </div>
           ))
