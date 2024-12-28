@@ -114,3 +114,14 @@ console.log('adminMailOptions:', adminMailOptions);
         return res.status(500).json({ message: 'An error occurred while processing your request.' });
     }
 };
+
+
+export const getContacts = async(req, res) =>{
+    try{
+      const contacts = await ContactModel.find();
+      return res.status(201).json(contacts)
+    }catch (error) {
+        console.error('Error in createContact:', error);
+        return res.status(500).json({ message: 'An error occurred while processing your request.' });
+    }
+}
