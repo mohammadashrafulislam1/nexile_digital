@@ -108,6 +108,7 @@
     font-style: italic;
   }
   @media screen and (max-width: 800px) {
+    
     .sm-hidden {
       display: none;
     }
@@ -119,6 +120,33 @@
       display: none;
     }
   }
+ /* For screens between 455px and 560px */
+@media screen and (max-width: 560px) and (min-width: 455px) { 
+  .surface-duo {
+    width: 100% !important;
+    padding-left: 100px !important;
+    padding-right: 100px !important;
+  }
+}
+
+/* For screens between 601px and 767px */
+@media screen and (max-width: 685px) and (min-width: 561px) { 
+  .surface-duo {
+    width: 100% !important;
+    padding-left: 150px !important;
+    padding-right: 150px !important;
+  }
+}
+
+@media screen and (max-width: 767px) and (min-width: 686px) { 
+  .surface-duo {
+    width: 100% !important;
+    padding-left: 200px !important;
+    padding-right: 200px !important;
+  }
+}
+
+  
   @media screen and (max-width: 1000px) {
 
     .swiper-pagination.swiper-pagination-clickable.swiper-pagination-bullets.swiper-pagination-horizontal{

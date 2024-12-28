@@ -26,7 +26,7 @@ const Error = () => {
               zIndex: 0,
               height: "940px",
             }}
-            className="relative "
+            className="relative md:h-[940px] h-[500px]"
           >
 
             {/* Background images */}
@@ -45,9 +45,9 @@ const Error = () => {
             
             {/* Transparent box with borders */}
            <div
-  className="h-[940px] mx-auto my-auto flex items-center justify-center p-2">
+  className="md:h-[940px] h-[500px] mx-auto my-auto flex items-center justify-center p-1">
            <div
-  className="md:w-[714px] bg-contain w-full h-[701px] mx-auto my-auto md:p-[40px] p-3"
+  className="md:w-[714px] bg-contain surface-duo w-full md:h-[701px] mx-auto my-auto md:p-[40px] p-9"
   style={{
     backgroundImage: "url(https://res.cloudinary.com/dnwmtd4p1/image/upload/v1735398014/nexile%20digital/asset/t5stitbzllfjnxnmqjsp.webp)",
     borderRadius: "16px", 
@@ -56,7 +56,7 @@ const Error = () => {
   }}
 >
   <img src="https://res.cloudinary.com/dnwmtd4p1/image/upload/v1735399287/nexile%20digital/asset/tf8sy1o17ueddlfptnyo.webp" alt="" 
-  className="md:pb-[40px] pb-3 md:w-full w-1/2" />
+  className="md:pb-[40px] pb-3 lg:w-[80%] md:w-[80%] w-1/2" />
   <div className="hr"></div>
   <p className="md:py-[30px] py-3 text-white md:text-[40px] text-[15px] poppins-regular">
     There is no such page or element or section like this, redirect to other pages.</p>
@@ -69,11 +69,11 @@ const Error = () => {
       <p className="text-[#808182] text-[16px] mt-0">nexiledigital.com</p>
       </div>
     </div>
-    <div className="flex md:gap-6">
+    <div className="flex md:gap-6 gap-3">
      <Link to="/"> <button className="text-white uppercase md:poppins-black poppins-semibold bg-[#141414] rounded-full border-[#333333] border-[2px]
-      md:w-[160px] w-[120px] md:h-[48px] h-[40px]">Home Page</button></Link>
+      md:w-[160px] w-[100px] md:h-[48px] h-[35px] md:text-[15px] text-[13px]">Home Page</button></Link>
       <Link to="/contact_us"> <button className="text-white uppercase md:poppins-black poppins-semibold bg-[#141414] rounded-full border-[#333333] border-[2px]
-      md:w-[160px] w-[120px] md:h-[48px] h-[40px]">Contact us</button></Link>
+      md:w-[160px] w-[100px] md:h-[48px] h-[35px] md:text-[15px] text-[13px]">Contact us</button></Link>
     </div>
   </div>
 
