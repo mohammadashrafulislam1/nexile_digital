@@ -1,5 +1,5 @@
 import nodemailer from 'nodemailer';
-import { ContactModel } from '../Model/ContactModel';
+import { ContactModel } from '../Model/ContactModel.js';
 
 // Nodemailer transporter configuration
 const transporter = nodemailer.createTransport({
@@ -32,15 +32,18 @@ export const createContact = async (req, res) => {
         const mailOptions = {
             from: process.env.EMAIL_USER, // Sender address
             to: email, // Receiver address
-            subject: 'Thank you for contacting us!',
+            subject: 'Thank you for contacting Nexile Digital!',
             text: `Hello ${name},
 
-Thank you for reaching out to us at Nexile Digital! 🎉  
-We’re thrilled to have received your message and are excited to assist you.
+Thank you for reaching out to us at Nexile Digital! 🎉 We’re thrilled to have received your message and are excited to assist you.
 
 Here’s a quick summary of what you shared:  
-**Subject**: ${subject || 'N/A'}  
-**Message**: ${message}  
+
+**Subject**: "${subject || 'N/A'} " 
+
+**Message**: 
+"${message}"
+
 
 Our team is already reviewing your request, and you can expect to hear back from us shortly. Whether it’s creating a stunning website, boosting your digital presence, or providing custom solutions, we’re here to help you achieve your goals.
 
@@ -49,9 +52,10 @@ Stay tuned—we’ll connect with you soon! 🚀
 Warm regards,  
 **The Nexile Digital Team**  
 "Empowering businesses with innovative digital solutions!"  
+
 ---
 
-### About the Company (Updated)
+### About the Nexile Digital
 
 **Nexile Digital: All-In-One Digital Solutions, Right Here in One Place**  
 At Nexile Digital, we are your ultimate partner for transforming your digital presence. From cutting-edge development to creative design and effective marketing strategies, our mission is to empower businesses like yours to thrive in the fast-paced digital world.
@@ -60,7 +64,7 @@ At Nexile Digital, we are your ultimate partner for transforming your digital pr
 
 - ⭐ **Top-rated services**: 5-star reviews on Google and across platforms.
 - 💼 **Successful clients**: Over 20+ happy partners and counting.
-- 🌟 **9+ years of expertise**: Delivering excellence since 2019.
+- 🌟 **9+ years of expertise**: Our Team is working in this field since 2016.
 - 🚀 **Comprehensive services**: From development to SEO, video editing, and more.
 
 **Our Mission**: To provide innovative and customized solutions that solve real-world challenges.  
@@ -77,8 +81,32 @@ Discover how Nexile Digital can help your business grow:
 `,
         };
 
+         // Email to you (your email address)
+         const adminMailOptions = {
+            from: process.env.EMAIL_USER, // Sender address
+            to: process.env.ADMIN_EMAIL, // Your email address
+            subject: `Submission from Nexile Digital by: ${name}`,
+            text: `You have received a new contact submission:
+
+Name: ${name}  
+Email: ${email}  
+Phone: ${phone || 'N/A'}  
+Service Interested In: ${service || 'N/A'}  
+Website Url: ${web || 'N/A'}  
+Subject: ${subject || 'N/A'}  
+Message: 
+${message || 'N/A'}
+
+Please respond to the user promptly.
+`,}
+console.log('mailOptions:', mailOptions, process.env.ADMIN_EMAIL);
+console.log('adminMailOptions:', adminMailOptions);
+
         // Send confirmation email
         await transporter.sendMail(mailOptions);
+
+        // Send email notification to admin
+        await transporter.sendMail(adminMailOptions);
 
         return res.status(201).json({ message: 'Contact saved and email sent successfully!' });
     } catch (error) {
