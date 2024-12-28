@@ -127,6 +127,22 @@
       left: 0 !important;
     }
   }
+
+  .gradient-text {
+    background: linear-gradient(65deg, #9DE8EE, #FA7C0B, #9F8CED);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hr {
+  border: 1px solid transparent;
+  border-image: linear-gradient(to right, #9DE8EE, #FA7C0B, #9F8CED) 1;
+  width: 100%; /* Optional: Adjust width as needed */
+}
+
+
+
+
   
 /* Custom styles for the swiper pagination bullets */
 .swiper-pagination-bullet {

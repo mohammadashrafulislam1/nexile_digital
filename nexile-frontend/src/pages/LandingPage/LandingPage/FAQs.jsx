@@ -29,7 +29,9 @@ const FAQs = () => {
       <h2 className="text-white text-center lg:pt-20 lg:text-[120px] text-[40px] uppercase font-bold underline lg:leading-[160px] leading-[40px]">
         {faqs?.sectionTitle}
       </h2>
-
+      <img 
+      className="absolute"
+      src="https://res.cloudinary.com/dnwmtd4p1/image/upload/v1734902203/nexile%20digital/asset/x6mschkkfnxwl6njcsnj.webp" alt="" />
       <div className="lg:flex items-center">
         <div className="lg:w-[40%] w-full">
           {/* Arrow */}
