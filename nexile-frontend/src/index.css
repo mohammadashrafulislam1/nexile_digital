@@ -127,6 +127,36 @@
     padding-left: 100px !important;
     padding-right: 100px !important;
   }
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .surface-duo2 {
+    padding: 15px; /* Adjust padding for smaller screens */
+    background-size: contain; /* Ensures the image is fully visible */
+  }
+}
+
+@media (max-width: 480px) {
+  .surface-duo2 {
+    padding: 10px; /* Further reduce padding for very small screens */
+    border-radius: 5px; /* Optional: Adjust radius for smaller screens */
+  }
+}
+
+}
+@media screen and (max-width:560px) {
+  
+  .surface-duo2 {
+    width: 100% !important; /* Ensures full width */
+    padding: 130px 60px !important; /* Adds consistent padding */
+    background-image: url('https://res.cloudinary.com/dnwmtd4p1/image/upload/v1735454040/nexile%20digital/asset/mkvejhgsmy9lvi3mgbxt.webp') !important;
+    background-repeat: no-repeat !important; /* Prevents the image from repeating */
+    background-position: center !important; /* Centers the image */
+    background-size: contain;
+    border-radius: 10px !important; /* Optional: Adds rounded corners */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important; /* Optional: Adds a subtle shadow */
+  }
+  
 }
 
 /* For screens between 601px and 767px */
