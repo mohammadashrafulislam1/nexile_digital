@@ -6,6 +6,7 @@ import { Helmet } from "react-helmet";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { endPoint } from "../../Components/ForAll/ForAll";
+import { Link } from "react-router-dom";
 
 const AboutUs = () =>{
     const [about, setAbout] = useState([]);
@@ -69,9 +70,13 @@ const AboutUs = () =>{
              style={{letterSpacing:'-5px'}}>{about?.sectionTitle}</h2>
       <p className="lg:text-[30px] text-[18px] md:px-4 px-2 text-white font-[100] text-center">{about?.intro?.tagline}</p>
        {/* Section Description */}
-        <div className="mt-4">
+        <div className="mt-2">
          <p className="text-[15px] md:text-[18px] md:px-24 p-3 rounded-lg text-white">{about?.sectionDes}</p>
         </div>
+        <Link to={"/contact_us"} className="flex justify-center my-4">
+        <button className="bg-white lg:py-2 lg:px-7 px-4 py-2 text-[20px] rounded-sm poppins-medium lg:text-[25px]">
+            Let’s Get Solution!</button></Link>
+            
 
      </div>
 

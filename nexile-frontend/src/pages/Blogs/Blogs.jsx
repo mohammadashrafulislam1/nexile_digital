@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { endPoint } from "../../Components/ForAll/ForAll";
 import BlogCard from "../../Components/ForAll/BlogCard";
+import { Link } from "react-router-dom";
 
 const Blogs = () => {
   const [blogs, setBlogs] = useState([]);
@@ -111,6 +112,10 @@ const Blogs = () => {
               <p className="lg:text-[30px] text-[20px] text-white font-[100] text-center">
                 Learn more about digital solutions by reading our blogs
               </p>
+              <Link to={"/contact_us"} className="flex justify-center my-4">
+        <button className="bg-white lg:py-2 lg:px-7 px-4 py-2 text-[20px] rounded-sm poppins-medium lg:text-[25px]">
+            Contact Us!</button></Link>
+           
             </div>
 
             {/* Black shadow at the bottom */}
