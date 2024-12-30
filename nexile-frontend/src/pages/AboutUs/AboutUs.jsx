@@ -85,6 +85,54 @@ const AboutUs = () =>{
       ></div>
     </div>
     
+
+    <div
+  className="md:p-3 lg:p-0 p-2  mx-auto my-auto flex items-center justify-center mb-24 lg:mt-[-480px] md:mt-[-800px] mt-[-600px] z-24 relative">
+     <div
+  className=" w-full mx-auto my-auto md:p-[40px] flex flex-col justify-center lg:pt-0 md:p-9 p-3"
+  >
+
+   <div className="rounded-lg p-[2px] bg-gradient-to-r from-[#9DE8EE] via-[#FA7C0B] 
+        to-[#9F8CED] shadow-lg hover:shadow-xl transition duration-300 md:mx-12 mx-3 my-4 p-4">
+        <h4 className="text-[15px] md:text-[18px] md:p-5 p-3 bg-[#131313] rounded-lg text-white poppins-semibold">Who we are</h4>
+         <p className="text-[15px] md:text-[18px] md:p-5 p-3 bg-[#131313] rounded-lg text-white">{about?.sectionDes}</p>
+        </div>
+
+        
+
+    <div className="rounded-lg p-[2px] bg-gradient-to-r from-[#9DE8EE] via-[#FA7C0B] 
+        to-[#9F8CED] shadow-lg hover:shadow-xl transition duration-300 md:mx-12 mx-3 my-4 p-4">
+        <h4 className="text-[15px] md:text-[18px] md:p-5 p-3 bg-[#131313] rounded-lg text-white poppins-semibold">Our story</h4>
+         <div className="text-[15px] md:text-[18px] md:p-5 p-3 bg-[#131313] rounded-lg text-white flex items-center gap-4">
+            <img src={about?.ourStory?.image?.url} alt={about?.ourStory?.description} className="rounded-lg w-72 h-72"/>
+            {about?.ourStory?.description}
+            </div>
+        </div>
+
+
+        <div className="rounded-lg p-[2px] bg-gradient-to-r from-[#9DE8EE] via-[#FA7C0B] 
+        to-[#9F8CED] shadow-lg hover:shadow-xl transition duration-300 md:mx-12 mx-3 my-4 p-4">
+        <h4 className="text-[15px] md:text-[18px] md:p-5 p-3 bg-[#131313] rounded-lg text-white poppins-semibold">Our mission</h4>
+         <div className="text-[15px] md:text-[18px] md:p-5 p-3 bg-[#131313] rounded-lg text-white flex items-center gap-4">
+            <img src={about?.ourMission?.image?.url} alt={about?.ourMission?.description} className="rounded-lg w-72 h-72"/>
+            {about?.ourMission?.description}
+            </div>
+        </div>
+
+        <div className="rounded-lg p-[2px] bg-gradient-to-r from-[#9DE8EE] via-[#FA7C0B] 
+        to-[#9F8CED] shadow-lg hover:shadow-xl transition duration-300 md:mx-12 mx-3 my-4 p-4">
+        <h4 className="text-[15px] md:text-[18px] md:p-5 p-3 bg-[#131313] rounded-lg text-white poppins-semibold">Our vision</h4>
+         <div className="text-[15px] md:text-[18px] md:p-5 p-3 bg-[#131313] rounded-lg text-white flex items-center gap-4">
+            <img src={about?.ourVision?.image?.url} alt={about?.ourVision?.description} className="rounded-lg w-72 h-72"/>
+            {about?.ourVision?.description}
+            </div>
+        </div>
+
+
+
+        
+    </div>
+    </div>
     
      
 
