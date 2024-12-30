@@ -59,6 +59,12 @@ const Blogs = () => {
     setDropdownVisible(!dropdownVisible);
   };
 
+  // Calculate blog count per category
+  const categoryCounts = blogs.reduce((acc, blog) => {
+    acc[blog.category] = (acc[blog.category] || 0) + 1;
+    return acc;
+  }, {});
+
   return (
     <div>
       {/* Helmet */}
@@ -137,7 +143,7 @@ const Blogs = () => {
                     onClick={handleAllCategoriesClick}
                     className="block w-full text-left py-2"
                   >
-                    All Categories
+                    All Categories <span className="ml-2 bg-[#242424] px-2 py-1 rounded-full">{blogs?.length}</span>
                   </button>
                   {Array.from(new Set(blogs.map(blog => blog.category)))?.map((category) => (
                     <button
@@ -145,7 +151,7 @@ const Blogs = () => {
                       onClick={() => handleCategoryClick(category)}
                       className="block w-full text-left py-2"
                     >
-                      {category}
+                      {category} <span className="ml-2 bg-[#242424] px-2 py-1 rounded-full">{categoryCounts[category]}</span>
                     </button>
                   ))}
                 </div>
@@ -153,12 +159,12 @@ const Blogs = () => {
             </div>
 
             {/* Blogs Category (Desktop) */}
-            <div className="hidden md:flex items-center justify-startgap-2 mb-10">
+            <div className="hidden md:flex items-center justify-start gap-2 mb-10">
               <button
                 onClick={handleAllCategoriesClick}
-                className="animated-border-btn text-white poppins-regular text-[20px] bg-[#141414] px-3 py-1 rounded-full"
+                className="animated-border-btn text-white poppins-regular text-[20px] bg-[#141414] px-2 py-1 rounded-full"
               >
-                All Categories
+                All Categories <span className="ml-2 bg-[#242424] px-2 rounded-full">{blogs?.length}</span>
               </button>
               {Array.from(new Set(blogs.map(blog => blog.category)))?.map((category) => (
                 <button
@@ -166,7 +172,7 @@ const Blogs = () => {
                   onClick={() => handleCategoryClick(category)}
                   className={`animated-border-btn text-white poppins-regular text-[20px] bg-[#141414] px-3 py-1 rounded-full ${selectedCategory === category ? 'bg-blue-500' : ''}`}
                 >
-                  {category}
+                  {category} <span className="ml-2 bg-[#242424] px-2 rounded-full">{categoryCounts[category]}</span>
                 </button>
               ))}
             </div>

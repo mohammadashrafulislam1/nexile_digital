@@ -3,6 +3,7 @@ import LandingPage from "../pages/LandingPage/LandingPage/LandingPage";
 import Error from "../pages/Error/Error";
 import ContactUs from "../pages/ContactUs/ContactUs";
 import Blogs from "../pages/Blogs/Blogs";
+import AboutUs from "../pages/AboutUs/AboutUs";
 
 export const router = createBrowserRouter([
     {
@@ -21,5 +22,12 @@ export const router = createBrowserRouter([
         errorElement:<Error />
     },
     
+    {
+        path:'/about_us',
+        element:<AboutUs/>,
+        errorElement:<Error />
+    },
+    
+
 
 ])

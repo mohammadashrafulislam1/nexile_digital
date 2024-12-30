@@ -114,7 +114,7 @@ const Footer = () =>{
 <div className="px-8 lg:py-5 z-10">
     <img src={footer?.logo} alt="" className="w-[160px] h-[33px]" />
     <p className="text-white poppins-bold opacity-60 mt-8">{footer?.contactMessage}</p>
-    <button className="bg-white lg:py-2 lg:px-5 mt-6 px-4 py-2 text-[20px] rounded-sm poppins-medium lg:text-[25px]">Let’s Work Together!</button>
+    <Link to={"/contact_us"}><button className="bg-white lg:py-2 lg:px-5 mt-6 px-4 py-2 text-[20px] rounded-sm poppins-medium lg:text-[25px]">Let’s Work Together!</button></Link>
 
 </div>
 </div>
