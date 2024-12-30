@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 
 const ContactBtn =()=>{
     return(
@@ -19,7 +20,7 @@ const ContactBtn =()=>{
               <p className="text-white text-center md:text-[24px] text-[16px] poppins-light">DO YOU</p>
               <h4 className="text-white md:text-[48px] text-[38px] poppins-semibold underline text-center">Want your imagination into reality?</h4>
              <div className="flex justify-center items-center">
-              <button className="bg-white lg:py-2 lg:px-5 mt-6 px-4 py-2 text-[20px] rounded-sm poppins-medium lg:text-[25px]">Let’s Work Together!</button>
+              <Link to={"/contact_us"}><button className="bg-white lg:py-2 lg:px-5 mt-6 px-4 py-2 text-[20px] rounded-sm poppins-medium lg:text-[25px]">Let’s Work Together!</button></Link>
              </div>
             </div>
          

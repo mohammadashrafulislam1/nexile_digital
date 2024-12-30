@@ -168,7 +168,7 @@ const ContactUs = () =>{
      
 
     <div
-  className="md:h-[1837px] md:p-3 lg:p-0 p-2  mx-auto my-auto flex items-center justify-center mb-24 lg:mt-[-580px] md:mt-[-800px] z-24 relative">
+  className="md:h-[1837px] surface-duo-con md:p-3 lg:p-0 p-2  mx-auto my-auto flex items-center justify-center mb-24 lg:mt-[-580px] md:mt-[-800px] mt-[-600px] z-24 relative">
      <div
   className="md:w-[910px] surface-duo2 bg-contain w-[304px] surface-duo w-full md:h-[1837px] mx-auto my-auto md:p-[40px] flex flex-col justify-center lg:pt-0 md:p-9 p-3"
   style={{

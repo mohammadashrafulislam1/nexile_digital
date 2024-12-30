@@ -144,20 +144,22 @@
 }
 
 }
-@media screen and (max-width:560px) {
-  
+@media screen and (max-width: 560px) {
   .surface-duo2 {
-    width: 100% !important; /* Ensures full width */
-    padding: 130px 60px !important; /* Adds consistent padding */
-    background-image: url('https://res.cloudinary.com/dnwmtd4p1/image/upload/v1735454040/nexile%20digital/asset/mkvejhgsmy9lvi3mgbxt.webp') !important;
-    background-repeat: no-repeat !important; /* Prevents the image from repeating */
-    background-position: center !important; /* Centers the image */
-    background-size: contain;
-    border-radius: 10px !important; /* Optional: Adds rounded corners */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important; /* Optional: Adds a subtle shadow */
+    width: 100% !important; /* Full width of the container */
+    height: auto !important; /* Adjust height dynamically */
+    background-size: cover !important; /* Ensure the image covers the area */
+    background-position: center !important; /* Center the image */
+    padding: 20px 10px !important; /* Responsive padding */
+    z-index: 20;
   }
-  
+
+  .surface-duo-con {
+    padding: 0 10px !important;
+    flex-direction: column !important; /* Stack content vertically */
+  }
 }
+
 
 /* For screens between 601px and 767px */
 @media screen and (max-width: 685px) and (min-width: 561px) { 
