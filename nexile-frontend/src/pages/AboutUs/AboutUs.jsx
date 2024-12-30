@@ -69,9 +69,8 @@ const AboutUs = () =>{
              style={{letterSpacing:'-5px'}}>{about?.sectionTitle}</h2>
       <p className="lg:text-[30px] text-[18px] md:px-4 px-2 text-white font-[100] text-center">{about?.intro?.tagline}</p>
        {/* Section Description */}
-        <div className="rounded-lg p-[2px] bg-gradient-to-r from-[#9DE8EE] via-[#FA7C0B] 
-        to-[#9F8CED] shadow-lg hover:shadow-xl transition duration-300 md:mx-12 mx-3 my-4 p-4">
-         <p className="text-[15px] md:text-[18px] md:p-5 p-3 bg-[#131313] rounded-lg text-white">{about?.sectionDes}</p>
+        <div className="mt-4">
+         <p className="text-[15px] md:text-[18px] md:px-24 p-3 rounded-lg text-white">{about?.sectionDes}</p>
         </div>
 
      </div>
@@ -87,24 +86,24 @@ const AboutUs = () =>{
     
 
     <div
-  className="md:p-3 lg:p-0 p-2  mx-auto my-auto flex items-center justify-center mb-24 lg:mt-[-480px] md:mt-[-800px] mt-[-600px] z-24 relative">
+  className="md:p-3 lg:p-0 p-2  mx-auto my-auto flex items-center justify-center mb-24 lg:mt-[-480px] md:mt-[-680px] mt-[-500px] z-24 relative">
      <div
   className=" w-full mx-auto my-auto md:p-[40px] flex flex-col justify-center lg:pt-0 md:p-9 p-3"
   >
 
    <div className="rounded-lg p-[2px] bg-gradient-to-r from-[#9DE8EE] via-[#FA7C0B] 
         to-[#9F8CED] shadow-lg hover:shadow-xl transition duration-300 md:mx-12 mx-3 my-4 p-4">
-        <h4 className="text-[15px] md:text-[18px] md:p-5 p-3 bg-[#131313] rounded-lg text-white poppins-semibold">Who we are</h4>
-         <p className="text-[15px] md:text-[18px] md:p-5 p-3 bg-[#131313] rounded-lg text-white">{about?.sectionDes}</p>
+        <h4 className="text-[15px] md:text-[18px] md:p-5 p-3 rounded-lg text-[#131313] poppins-semibold">Who we are</h4>
+         <p className="text-[15px] md:text-[18px] md:p-5 p-3 rounded-lg text-[#131313]">{about?.sectionDes}</p>
         </div>
 
         
 
     <div className="rounded-lg p-[2px] bg-gradient-to-r from-[#9DE8EE] via-[#FA7C0B] 
-        to-[#9F8CED] shadow-lg hover:shadow-xl transition duration-300 md:mx-12 mx-3 my-4 p-4">
+        to-[#9F8CED] shadow-lg hover:shadow-xl transition duration-300 md:mx-12 mx-3 my-4 p-3">
         <h4 className="text-[15px] md:text-[18px] md:p-5 p-3 bg-[#131313] rounded-lg text-white poppins-semibold">Our story</h4>
-         <div className="text-[15px] md:text-[18px] md:p-5 p-3 bg-[#131313] rounded-lg text-white flex items-center gap-4">
-            <img src={about?.ourStory?.image?.url} alt={about?.ourStory?.description} className="rounded-lg w-72 h-72"/>
+         <div className="text-[15px] md:text-[18px] md:p-5 p-3 bg-[#131313] rounded-lg text-white lg:flex items-center gap-4">
+            <img src={about?.ourStory?.image?.url} alt={about?.ourStory?.description} className="rounded-lg lg:w-72 w-24 h-24 lg:h-72 mb-5 lg:mb-0"/>
             {about?.ourStory?.description}
             </div>
         </div>
@@ -113,8 +112,8 @@ const AboutUs = () =>{
         <div className="rounded-lg p-[2px] bg-gradient-to-r from-[#9DE8EE] via-[#FA7C0B] 
         to-[#9F8CED] shadow-lg hover:shadow-xl transition duration-300 md:mx-12 mx-3 my-4 p-4">
         <h4 className="text-[15px] md:text-[18px] md:p-5 p-3 bg-[#131313] rounded-lg text-white poppins-semibold">Our mission</h4>
-         <div className="text-[15px] md:text-[18px] md:p-5 p-3 bg-[#131313] rounded-lg text-white flex items-center gap-4">
-            <img src={about?.ourMission?.image?.url} alt={about?.ourMission?.description} className="rounded-lg w-72 h-72"/>
+         <div className="text-[15px] md:text-[18px] md:p-5 p-3 bg-[#131313] rounded-lg text-white lg:flex items-center gap-4">
+            <img src={about?.ourMission?.image?.url} alt={about?.ourMission?.description} className="rounded-lg lg:w-72 w-24 h-24 lg:h-72 mb-5 lg:mb-0"/>
             {about?.ourMission?.description}
             </div>
         </div>
@@ -122,13 +121,67 @@ const AboutUs = () =>{
         <div className="rounded-lg p-[2px] bg-gradient-to-r from-[#9DE8EE] via-[#FA7C0B] 
         to-[#9F8CED] shadow-lg hover:shadow-xl transition duration-300 md:mx-12 mx-3 my-4 p-4">
         <h4 className="text-[15px] md:text-[18px] md:p-5 p-3 bg-[#131313] rounded-lg text-white poppins-semibold">Our vision</h4>
-         <div className="text-[15px] md:text-[18px] md:p-5 p-3 bg-[#131313] rounded-lg text-white flex items-center gap-4">
-            <img src={about?.ourVision?.image?.url} alt={about?.ourVision?.description} className="rounded-lg w-72 h-72"/>
+         <div className="text-[15px] md:text-[18px] md:p-5 p-3 bg-[#131313] rounded-lg text-white lg:flex items-center gap-4">
+            <img src={about?.ourVision?.image?.url} alt={about?.ourVision?.description} className="rounded-lg lg:w-72 w-24 h-24 lg:h-72 mb-5 lg:mb-0"/>
             {about?.ourVision?.description}
             </div>
         </div>
 
+        <div className="md:px-12 lg:px-12 px-0">
+        <h2 style={{
+                background: "linear-gradient(30deg, #FA7C0B, #9F8CED, #9DE8EE)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+            }} className="poppins-extrabold text-center mt-5 pb-0 mb-0 lg:text-[90px] text-[40px]">
+                Why Choose Us
+        </h2>
 
+        {
+            about?.whyChooseUs?.map((why, index) => <div key={why?._id}>
+                <h3 className="poppins-extrabold flex items-center text-white mt-5 pb-0 mb-0 md:text-[20px] py-2 text-[16px]">
+                    <span className="px-4 py-2 border-[1px] border[#fff] rounded-full mr-3">{index+1}</span> 
+                    {why?.title}
+                    </h3>
+                <p className="text-white mt-2">{why?.description}</p>
+            </div>)
+        }
+
+<h2 style={{
+                background: "linear-gradient(30deg, #FA7C0B, #9F8CED, #9DE8EE)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+            }} className="poppins-extrabold text-center mt-10 pb-0 mb-0 lg:text-[90px] text-[40px]">
+                Core values
+        </h2>
+
+        {
+            about?.coreValues?.map((value, index) => <div key={value?._id}>
+                <h3 className="poppins-extrabold flex justify-end items-center text-end text-white mt-5 pb-0 mb-0 md:text-[20px] py-2 text-[16px]">
+                    {value?.title}
+                    <span className="px-4 py-2 border-[1px] border[#fff] rounded-full ml-3">{index+1}</span> 
+                    </h3>
+                <p className="text-white mt-2 text-end">{value?.description}</p>
+            </div>)
+        }
+
+<h2 style={{
+                background: "linear-gradient(30deg, #FA7C0B, #9F8CED, #9DE8EE)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+            }} className="poppins-extrabold text-center mt-10 pb-0 mb-0 lg:text-[90px] text-[40px]">
+                Our Impact
+        </h2>
+
+        {
+            about?.ourImpact?.map((impact, index) => <div key={impact?._id}>
+                <h3 className="poppins-extrabold items-center flex text-white mt-5 pb-0 mb-0 md:text-[20px] py-2 text-[16px]">
+                <span className="px-4 py-2 border-[1px] border[#fff] rounded-full mr-3">{index+1}</span> 
+                    {impact?.title}
+                    </h3>
+                <p className="text-white mt-2">{impact?.description}</p>
+            </div>)
+        }
+        </div>
 
         
     </div>
