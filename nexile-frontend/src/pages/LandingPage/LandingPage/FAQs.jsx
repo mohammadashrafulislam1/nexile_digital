@@ -35,19 +35,20 @@ const FAQs = () => {
       <div className="lg:flex items-center">
         <div className="lg:w-[40%] w-full">
           {/* Arrow */}
+          <Link to="/faqs" className="relative z-20">
           <img
             src="https://res.cloudinary.com/dnwmtd4p1/image/upload/v1732024726/nexile%20digital/assets/ejj6ajpv5ykj5qdgeqmi.png"
             className="lg:w-[125px] w-[80px] ml-24 flex"
             alt=""
-          />
+          /></Link>
 
-          <Link to="">
+          <Link to="/faqs">
             <p>View All</p>
           </Link>
           {/* FAQ's Image */}
           <img
             src="https://res.cloudinary.com/dnwmtd4p1/image/upload/v1734793574/nexile%20digital/asset/sweeuaytvyztteymb3vd.webp"
-            alt=""
+            alt="" className="relative z-20"
           />
         </div>
 

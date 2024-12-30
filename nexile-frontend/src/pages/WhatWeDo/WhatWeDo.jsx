@@ -6,11 +6,14 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { endPoint } from "../../Components/ForAll/ForAll";
 import { ServiceCard } from "../../Components/ForAll/ServiceCard";
+import HowWeWork from "../LandingPage/LandingPage/HowWeWork";
+import { FaArrowRight } from "react-icons/fa";
 
 const WhatWeDo = () =>{
     const [services, setServices] = useState([]);
     const [loading, setLoading] = useState(true);
-    
+    const [faqs, setFaqs] = useState(null); // Initialize as null to handle data absence gracefully
+
   useEffect(() => {
     const fetchService = async () => {
       try {
@@ -23,6 +26,17 @@ const WhatWeDo = () =>{
       }
     };
     fetchService();
+    
+    const fetchFAQs = async () => {
+      try {
+        const response = await axios.get(`${endPoint}/faq`);
+        setFaqs(response.data[0]); // Assuming response.data is an array
+      } catch (error) {
+        console.error("Error fetching FAQs:", error);
+      }
+    };
+
+    fetchFAQs();
     // Set a timeout for loader to hide after 2 seconds if data fetch is complete
     const timer = setTimeout(() => setLoading(false), 2000);
 
@@ -85,10 +99,10 @@ const WhatWeDo = () =>{
               <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-black to-transparent z-10"></div>
             </div>
   
-            <div className="mb-96 relative lg:mt-[-200px] md:mt-[-450px] mt-[-450px]
+            <div className="mb-8 relative lg:mt-[-200px] md:mt-[-450px] mt-[-400px]
             rounded-lg p-[2px] bg-gradient-to-r from-[#9DE8EE] via-[#FA7C0B] 
-        to-[#9F8CED] shadow-lg hover:shadow-xl transition duration-300 md:mx-12 mx-3 my-4 !z-[40]">
-                <div className="bg-[#131313] rounded-lg px-4 lg:py-[80px] lg:px-[80px] py-6">
+        to-[#9F8CED] shadow-lg hover:shadow-xl transition duration-300 lg:mx-12 mx-3 my-4 !z-[40]">
+                <div className="bg-[#131313] rounded-lg px-4 lg:py-[80px] lg:px-[80px] md:py-12 py-6">
                 {
                     services?.map(service => (
                         <ServiceCard service={service}/>
@@ -96,6 +110,36 @@ const WhatWeDo = () =>{
                 }
                 </div>
             </div>
+
+  <HowWeWork/>
+        <div className="w-full lg:mt-0 mt-6 mb-24 mx-auto">
+        <h2 className="text-white lg:mb-24 mb-8 text-center lg:pt-20 lg:text-[120px] text-[40px] uppercase font-bold underline lg:leading-[160px] leading-[40px]">
+        {faqs?.sectionTitle}
+      </h2>
+      <div className="lg:w-[60%] w-full relative px-4 lg:px-0 mx-auto">
+          {faqs?.faqs?.slice(0, 4).map((faq, index) => (
+            <div
+              key={index}
+              className={`text-[20px] pb-6 ${
+                index !== faqs.faqs.slice(0, 4).length - 1
+                  ? "border-b-[3px] border-[#646464]"
+                  : ""
+              } ${index > 0 ? "pt-6" : ""}`}
+            >
+              <h3 className="text-white poppins-semibold">{faq.title}</h3>
+              <p className="text-white poppins-light">{faq.description}</p>
+            </div>
+          ))}<img 
+          className="absolute top-0"
+          src="https://res.cloudinary.com/dnwmtd4p1/image/upload/v1734902203/nexile%20digital/asset/x6mschkkfnxwl6njcsnj.webp" alt="" />
+          
+
+          <Link to="/faqs" className="mt-12 text-white border-[1px] border-[#fff] flex items-center gap-2 justify-center">
+            <p>View All</p> <FaArrowRight/>
+          </Link>
+          </div>
+        </div>
+  
   
             <Footer className="!z-24" />
           </div>
