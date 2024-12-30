@@ -232,7 +232,77 @@
   top: 0;
   left: -350px;
 }
+/* Container styles */
+.animated-border-btn {
+  position: relative;
+  display: inline-block;
+  padding: 12px 24px;
+  font-size: 20px;
+  font-family: "Poppins", sans-serif;
+  color: white;
+  background-color: #141414;
+  border-radius: 50px;
+  text-align: center;
+  overflow: hidden;
+  z-index: 1;
+  cursor: pointer;
+}
 
+/* Gradient border animation */
+.animated-border-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50px;
+  background: linear-gradient(90deg, #9de8ee, #fa7c0b, #9f8ced);
+  z-index: -1;
+  padding: 2px; /* Adjust the width of the border */
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+  animation: rotate-border 6s linear infinite;
+}
+
+/* Inner content box */
+.animated-border-btn::after {
+  content: "";
+  position: absolute;
+  inset: 2px;
+  border-radius: 50px;
+  background: #141414;
+  z-index: -1;
+}
+
+/* Border animation */
+@keyframes rotate-border {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+/* Container for the input */
+.animated-border-input {
+  position: relative;
+  border-radius: 50px;
+  overflow: hidden;
+}
+
+/* Input field styles */
+.animated-border-input input {
+  width: 100%;
+  font-size: 16px;
+  font-family: "Poppins", sans-serif;
+  color: white;
+  background-color: #141414;
+  border: none;
+  border-radius: 50px;
+  z-index: 1;
+  outline: none;
+  position: relative;
+}
 
 
 @tailwind base;
