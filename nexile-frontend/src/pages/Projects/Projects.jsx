@@ -2,8 +2,49 @@ import { Helmet } from "react-helmet";
 import Footer from "../../Components/ForAll/Footer";
 import Header from "../../Components/ForAll/Header";
 import { Link } from "react-router-dom";
+import { useState } from "react";
+import { useEffect } from "react";
+import axios from "axios";
+import { endPoint } from "../../Components/ForAll/ForAll";
+import ProjectCard from "../../Components/ForAll/ProjectCard";
 
 const Projects = () =>{
+  const [works, setWorks] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCategoriesAndWorks = async () => {
+      try {
+        const [categoriesResponse, worksResponse] = await Promise.all([
+          axios.get(`${endPoint}/TechCategory`),
+          axios.get(`${endPoint}/works`),
+        ]);
+
+        const categoriesData = categoriesResponse.data.techCategories;
+        const worksData = worksResponse.data.works.map((work) => {
+          const category = categoriesData.find((cat) => cat._id === work.category);
+          return { ...work, categoryName: category?.name || "No category specified" };
+        });
+
+        setCategories([{ name: "All", _id: "all" }, ...categoriesData]);
+        setWorks(worksData);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCategoriesAndWorks();
+  }, []);
+
+  const filteredWorks =
+    selectedCategory === "All"
+      ? works
+      : works.filter((work) => work.categoryName === selectedCategory);
+
     return(
         <div>
         {/* Helmet */}
@@ -66,7 +107,34 @@ const Projects = () =>{
       ></div>
     </div>
 
-    
+    <div className=" text-white py-8 mt-[-600px] mb-14 z-24 relative">
+        <h1 className="text-center text-4xl font-bold">Our Projects</h1>
+        <div className="text-center mt-4">
+          <select
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            className={`${loading? "bg-gray-300" : "bg-gray-800 "} text-white px-4 py-2 rounded`}
+          >
+            {categories.map((category) => (
+              <option key={category._id} value={category.name}>
+                {category.name}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-8 px-4">
+          {loading
+            ? Array.from({ length: 6 }).map((_, index) => (
+                <div
+                  key={index}
+                  className="bg-gray-300 h-64 animate-pulse rounded-lg"
+                ></div>
+              ))
+            : filteredWorks.map((project) => (
+                <ProjectCard key={project._id} project={project} />
+              ))}
+        </div>
+      </div>
 
        
       <Footer className="!z-24"/>
