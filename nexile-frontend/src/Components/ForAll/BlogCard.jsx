@@ -40,7 +40,7 @@ const BlogCard = ({ blog }) => {
           </p>
 
           {/* Read More Button */}
-          <Link to="/">
+        <Link to={`/blog/${blog.title.replace(/\s+/g, "-")}`}>
             <p className="text-white bg-[#131313] w-fit px-3 py-1 text-sm rounded-md hover:bg-[#1a1a1a] transition">
               Read more
             </p>

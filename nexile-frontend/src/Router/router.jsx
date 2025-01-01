@@ -8,6 +8,8 @@ import WhatWeDo from "../pages/WhatWeDo/WhatWeDo";
 import Faqs from "../pages/Faqs/Faqs";
 import Projects from "../pages/Projects/Projects";
 import SingleProject from "../pages/SinglePage/SingleProject";
+import { endPoint } from "../Components/ForAll/ForAll";
+import SingleBlog from "../pages/SinglePage/SingleBlog";
 
 export const router = createBrowserRouter([
     {
@@ -48,7 +50,12 @@ export const router = createBrowserRouter([
     {
         path:'/project/:title',
         element:<SingleProject/>,
-        errorElement:<Error />
+        errorElement:<Error />,
+    },
+    {
+        path:'/blog/:title',
+        element:<SingleBlog/>,
+        errorElement:<Error />,
     },
     
 

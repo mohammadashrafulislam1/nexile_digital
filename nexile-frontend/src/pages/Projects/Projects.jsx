@@ -107,8 +107,8 @@ const Projects = () =>{
       ></div>
     </div>
 
-    <div className=" text-white py-8 mt-[-600px] mb-14 z-24 relative">
-        <h1 className="text-center text-4xl font-bold">Our Projects</h1>
+    <div className=" text-white py-8 lg:mt-[-560px] mt-[-760px] md:mt-[-840px] mb-14 z-24 relative">
+        <h1 className="text-center lg:text-4xl text-3xl font-bold">Our Projects</h1>
         <div className="text-center mt-4">
           <select
             value={selectedCategory}
