@@ -100,14 +100,14 @@ const SingleBlog = () =>{
                 <SkeletonLoader />
               ) : blog ? (
                 <div className="h-[1040px] ">
-                  <h2 className="lg:text-[60px] text-[60px] font-bold lg:leading-[70px] leading-[60px] text-white text-center uppercase z-40" style={{ letterSpacing: '-3px' }}>
+                  <h2 className="lg:text-[60px] text-[40px] font-bold lg:leading-[70px] leading-[40px] my-4 text-white text-center uppercase z-40" style={{ letterSpacing: '-3px' }}>
                     {realUrl}
                   </h2>
                  <div className="flex justify-between items-center  w-[70%]  mx-auto">
                  <p className="lg:text-[20px] text-[16px] text-[#00ECFB] font-[100] text-center">{blog?.category}</p>
                  <p className="lg:text-[20px] text-[16px] text-[#00ECFB] font-[100] text-center">{formatDate(blog?.created_at)}</p>
                  </div>
-                 <img src={blog?.image} alt={blog?.title - blog?.category} className=" w-[910px] h-[560px] mx-auto rounded-[10px] mt-7"/>
+                 <img src={blog?.image} alt={blog?.title - blog?.category} className="lg:w-[910px] w-[97%] md:h-[560px] h-[400px] mx-auto rounded-[10px] mt-7 object-cover"/>
               
                 </div>
               ) : (
@@ -117,28 +117,29 @@ const SingleBlog = () =>{
               {/* Black shadow at the bottom */}
               <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-black to-transparent z-10"></div>
             </div>
-             <div className=" mt-[-200px] mb-24 ">
+             <div className="lg:mt-[-180px]  mt-[-300px] mb-24 ">
              <div className="rounded-lg p-[2px] bg-gradient-to-r from-[#9DE8EE] via-[#FA7C0B] 
-        to-[#9F8CED] shadow-lg hover:shadow-xl transition duration-300z-24 relative p-4 w-[90%]  mx-auto">
-            <p className="text-white mx-auto bg-[#141414] p-10 rounded-lg text-[16px]">{blog?.description}</p></div>
-           {/* Tags */}
+        to-[#9F8CED] shadow-lg hover:shadow-xl transition duration-300z-24 relative md:w-[90%] w-[96%]  mx-auto">
+            <p className="text-white mx-auto bg-[#141414] md:p-10 p-4 rounded-lg text-[16px]">{blog?.description}</p></div>
+     {/* Tags */}
 {Array.isArray(blog?.tags) && blog.tags.length > 0 && (
-  <div className="text-center mt-6">
+  <div className="text-center my-12">
     <p className="text-white text-xl font-bold">Tags:</p>
-    <div className="flex justify-center gap-4 mt-2">
-      {blog.tags.map((tag, index) => (
+    <div className="flex flex-wrap justify-center gap-4 mt-2">
+      {/* Parse the JSON string if necessary */}
+      {JSON.parse(blog.tags[0]).map((tag, index) => (
         <button
           key={index}
-          className="bg-[#00ECFB] text-white px-4 py-2 rounded-full hover:bg-[#00a9c2] transition-colors focus:outline-none"
+          className="bg-gray-500 text-white px-4 py-2 rounded-full hover:bg-[#00a9c2] transition-colors focus:outline-none"
         >
-          {tag} {/* Each tag is now rendered individually as a separate button */}
+          {tag.trim()} {/* Remove extra spaces */}
         </button>
       ))}
     </div>
   </div>
 )}
 
-                                </div>
+                  </div>
             <Footer className="!z-24" />
           </div>
         </div>
